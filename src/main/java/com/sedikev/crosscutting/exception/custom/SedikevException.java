@@ -1,4 +1,4 @@
-package com.sedikev.crosscutting.exception;
+package com.sedikev.crosscutting.exception.custom;
 
 import com.sedikev.crosscutting.exception.enums.Layer;
 import com.sedikev.crosscutting.helpers.ObjectHelper;

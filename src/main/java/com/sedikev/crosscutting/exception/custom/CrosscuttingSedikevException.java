@@ -1,9 +1,8 @@
 package com.sedikev.crosscutting.exception.custom;
 
 import com.sedikev.crosscutting.exception.enums.Layer;
-import com.sedikev.crosscutting.exception.SedikevException;
 
-public class CrosscuttingSedikevException extends SedikevException{
+public class CrosscuttingSedikevException extends SedikevException {
 
     private static final long serialVersionUID = 1L;
     private static final Layer layer = Layer.CROSSCUTTING;
