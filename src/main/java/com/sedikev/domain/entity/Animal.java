@@ -15,8 +15,7 @@ import java.math.BigDecimal;
 public class Animal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     private String id;
 
     @JoinColumn(name = "id_lote")
