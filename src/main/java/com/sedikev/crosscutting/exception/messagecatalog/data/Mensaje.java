@@ -1,4 +1,4 @@
-package com.sedikev.crosscutting.messagecatalog.data;
+package com.sedikev.crosscutting.exception.messagecatalog.data;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
