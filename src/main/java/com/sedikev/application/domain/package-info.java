@@ -1,1 +1,0 @@
-package com.sedikev.application.domain;
