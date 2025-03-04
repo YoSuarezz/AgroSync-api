@@ -1,9 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.domain.entity.Pago;
+import com.sedikev.domain.entity.PagoEntity;
 import com.sedikev.domain.repository.PagoRepository;
 import com.sedikev.domain.service.PagoService;
-import com.sedikev.infrastructure.persistence.PagoRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +16,12 @@ public class PagoServiceImpl implements PagoService {
     private PagoRepository pagoRepository;
 
     @Transactional
-    public Pago save(Pago pago) {
-        return pagoRepository.save(pago);
+    public PagoEntity save(PagoEntity pagoEntity) {
+        return pagoRepository.save(pagoEntity);
     }
 
     @Transactional(readOnly = true)
-    public Pago findById(Long id) {
+    public PagoEntity findById(Long id) {
         return pagoRepository.findById(id).orElse(null);
     }
 
@@ -32,7 +31,7 @@ public class PagoServiceImpl implements PagoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Pago> findAll() {
-        return (List<Pago>) pagoRepository.findAll();
+    public List<PagoEntity> findAll() {
+        return (List<PagoEntity>) pagoRepository.findAll();
     }
 }

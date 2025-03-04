@@ -12,7 +12,7 @@
 	<artifactId>sedikev</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sedikev</name>
-	<description>Sistema de gestión de compra y venta de ganado, con manejo de cartera.</description>
+	<description>Sistema de gestión de compra y ventaEntity de ganado, con manejo de carteraEntity.</description>
 	<url/>
 	<licenses>
 		<license/>

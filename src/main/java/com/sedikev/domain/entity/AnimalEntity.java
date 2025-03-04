@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name = "animal")
-public class Animal {
+public class AnimalEntity {
 
     @Id
     @Column(name = "id", unique = true)
@@ -20,7 +20,7 @@ public class Animal {
 
     @JoinColumn(name = "id_lote")
     @ManyToOne
-    private Lote lote;
+    private LoteEntity loteEntity;
 
     @Column(name = "nombre")
     private String nombre;

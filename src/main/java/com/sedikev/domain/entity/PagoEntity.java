@@ -13,21 +13,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "gasto")
-public class Gasto {
+@Table(name = "pago")
+public class PagoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "id_lote")
+    @JoinColumn(name = "id_venta")
     @ManyToOne
-    private Lote lote;
+    private VentaEntity ventaEntity;
 
-    @JoinColumn(name = "id_proveedor")
+    @JoinColumn(name = "id_comprador")
     @ManyToOne
-    private Usuario proveedor;
+    private UsuarioEntity comprador;
+
+    @Column(name = "tipo_pago")
+    private String tipo_pago;
 
     @Column(name = "cantidad")
     private BigDecimal cantidad;

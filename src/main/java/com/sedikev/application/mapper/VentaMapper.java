@@ -1,16 +1,18 @@
 package com.sedikev.application.mapper;
 
+import com.sedikev.application.domain.VentaDomain;
 import com.sedikev.application.dto.VentaDTO;
-import com.sedikev.domain.entity.Venta;
+import com.sedikev.domain.entity.VentaEntity;
 import org.mapstruct.*;
-import java.util.List;
+import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface VentaMapper {
 
-    VentaDTO toDTO(Venta venta);
-    Venta toEntity(VentaDTO ventaDTO);
+    VentaMapper INSTANCE = Mappers.getMapper(VentaMapper.class);
 
-    List<VentaDTO> toDTOList(List<Venta> ventas);
-    List<Venta> toEntityList(List<VentaDTO> ventaDTOs);
+    VentaDTO toDTO(VentaDomain ventaDomain);
+    VentaDomain toDomain(VentaDTO ventaDTO);
+    VentaEntity toEntity(VentaDomain ventaDomain);
+    VentaDomain toDomain(VentaEntity ventaEntity);
 }

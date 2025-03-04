@@ -1,17 +1,17 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.Venta;
+import com.sedikev.domain.entity.VentaEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface VentaRepository {
 
-    Venta save(Venta venta);
+    VentaEntity save(VentaEntity ventaEntity);
 
-    Optional<Venta> findById(Long id);
+    Optional<VentaEntity> findById(Long id);
 
     void deleteById(Long id);
 
-    List<Venta> findAll();
+    List<VentaEntity> findAll();
 }

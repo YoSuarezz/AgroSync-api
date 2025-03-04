@@ -1,9 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.domain.entity.Gasto;
+import com.sedikev.domain.entity.GastoEntity;
 import com.sedikev.domain.repository.GastoRepository;
 import com.sedikev.domain.service.GastoService;
-import com.sedikev.infrastructure.persistence.GastoRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +16,12 @@ public class GastoServiceImpl implements GastoService {
     private GastoRepository gastoRepository;
 
     @Transactional
-    public Gasto save(Gasto gasto) {
-        return gastoRepository.save(gasto);
+    public GastoEntity save(GastoEntity gastoEntity) {
+        return gastoRepository.save(gastoEntity);
     }
 
     @Transactional(readOnly = true)
-    public Gasto findById(Long id) {
+    public GastoEntity findById(Long id) {
         return gastoRepository.findById(id).orElse(null);
     }
 
@@ -32,7 +31,7 @@ public class GastoServiceImpl implements GastoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Gasto> findAll() {
-        return (List<Gasto>) gastoRepository.findAll();
+    public List<GastoEntity> findAll() {
+        return (List<GastoEntity>) gastoRepository.findAll();
     }
 }

@@ -1,16 +1,18 @@
 package com.sedikev.application.mapper;
 
 import com.sedikev.application.dto.AnimalDTO;
-import com.sedikev.domain.entity.Animal;
-import org.mapstruct.*;
-import java.util.List;
+import com.sedikev.application.domain.AnimalDomain;
+import com.sedikev.domain.entity.AnimalEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface AnimalMapper {
 
-    AnimalDTO toDTO(Animal animal);
-    Animal toEntity(AnimalDTO animalDTO);
+    AnimalMapper INSTANCE = Mappers.getMapper(AnimalMapper.class);
 
-    List<AnimalDTO> toDTOList(List<Animal> animals);
-    List<Animal> toEntityList(List<AnimalDTO> animalDTOs);
+    AnimalDTO toDTO(AnimalDomain animalDomain);
+    AnimalDomain toDomain(AnimalDTO animalDTO);
+    AnimalEntity toEntity(AnimalDomain animalDomain);
+    AnimalDomain toDomain(AnimalEntity animalEntity);
 }

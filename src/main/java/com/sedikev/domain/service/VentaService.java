@@ -1,16 +1,16 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.domain.entity.Venta;
+import com.sedikev.domain.entity.VentaEntity;
 
 import java.util.List;
 
 public interface VentaService {
 
-    Venta save(Venta venta);
+    VentaEntity save(VentaEntity ventaEntity);
 
-    Venta findById(Long id);
+    VentaEntity findById(Long id);
 
     void deleteById(Long id);
 
-    List<Venta> findAll();
+    List<VentaEntity> findAll();
 }

@@ -1,10 +1,8 @@
 package com.sedikev.application.domain;
 
-import lombok.*;
+import lombok.Data;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class AnimalDomain {
     private String id;
     private Integer idLote;
@@ -12,4 +10,8 @@ public class AnimalDomain {
     private Float peso;
     private String sexo;
     private Integer numLote;
+
+    public boolean esMachote() {
+        return "M".equals(sexo);
+    }
 }

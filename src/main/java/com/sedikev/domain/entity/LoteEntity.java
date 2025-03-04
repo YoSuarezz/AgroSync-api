@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "lote")
-public class Lote {
+public class LoteEntity {
 
     @Id
     @Column(name = "id")
@@ -25,7 +25,7 @@ public class Lote {
 
     @JoinColumn(name = "id_proveedor")
     @ManyToOne
-    private Usuario proveedor;
+    private UsuarioEntity proveedor;
 
     @Column(name = "contramarca")
     private int contramarca;
@@ -39,9 +39,9 @@ public class Lote {
 
     @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Animal> lista_animal;
+    private List<AnimalEntity> lista_animalEntity;
 
     @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Gasto> lista_gasto;
+    private List<GastoEntity> lista_gastoEntity;
 }

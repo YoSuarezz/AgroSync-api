@@ -1,16 +1,18 @@
 package com.sedikev.application.mapper;
 
+import com.sedikev.application.domain.CarteraDomain;
 import com.sedikev.application.dto.CarteraDTO;
-import com.sedikev.domain.entity.Cartera;
+import com.sedikev.domain.entity.CarteraEntity;
 import org.mapstruct.*;
-import java.util.List;
+import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface CarteraMapper {
 
-    CarteraDTO toDTO(Cartera cartera);
-    Cartera toEntity(CarteraDTO carteraDTO);
+    CarteraMapper INSTANCE = Mappers.getMapper(CarteraMapper.class);
 
-    List<CarteraDTO> toDTOList(List<Cartera> carteras);
-    List<Cartera> toEntityList(List<CarteraDTO> carteraDTOs);
+    CarteraDTO toDTO(CarteraDomain carteraDomain);
+    CarteraDomain toDomain(CarteraDTO carteraDTO);
+    CarteraEntity toEntity(CarteraDomain carteraDomain);
+    CarteraDomain toDomain(CarteraEntity carteraEntity);
 }

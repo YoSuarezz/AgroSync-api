@@ -1,19 +1,19 @@
 package com.sedikev.domain.service;
 
 
-import com.sedikev.domain.entity.Animal;
+import com.sedikev.domain.entity.AnimalEntity;
 
 import java.util.List;
 
 public interface AnimalService {
 
-    Animal save(Animal animal);
+    AnimalEntity save(AnimalEntity animalEntity);
 
-    Animal findById(String id);
+    AnimalEntity findById(String id);
 
     void deleteById(String id);
 
-    List<Animal> findAll();
+    List<AnimalEntity> findAll();
 
-    List<Animal> findByLote(Long id_lote);
+    List<AnimalEntity> findByLote(Long id_lote);
 }

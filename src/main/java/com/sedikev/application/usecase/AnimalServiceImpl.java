@@ -1,6 +1,6 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.domain.entity.Animal;
+import com.sedikev.domain.entity.AnimalEntity;
 import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.domain.service.AnimalService;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +20,12 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalRepository animalRepository;
 
     @Transactional
-    public Animal save(Animal animal) {
-        return animalRepository.save(animal);
+    public AnimalEntity save(AnimalEntity animalEntity) {
+        return animalRepository.save(animalEntity);
     }
 
     @Transactional(readOnly = true)
-    public Animal findById(String id) {
+    public AnimalEntity findById(String id) {
         return animalRepository.findById(id).orElse(null);
     }
 
@@ -35,18 +35,18 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Transactional(readOnly = true)
-    public List<Animal> findAll() {
-        return (List<Animal>) animalRepository.findAll();
+    public List<AnimalEntity> findAll() {
+        return (List<AnimalEntity>) animalRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public List<Animal> findByLote(Long id_lote) {
-        List<Animal> lista_animal = new ArrayList<>();
-        for (Animal animal: animalRepository.findAll()) {
-            if (Objects.equals(animal.getLote().getId(), id_lote)){
-                lista_animal.add(animal);
+    public List<AnimalEntity> findByLote(Long id_lote) {
+        List<AnimalEntity> lista_animalEntity = new ArrayList<>();
+        for (AnimalEntity animalEntity : animalRepository.findAll()) {
+            if (Objects.equals(animalEntity.getLoteEntity().getId(), id_lote)){
+                lista_animalEntity.add(animalEntity);
             }
         }
-        return lista_animal;
+        return lista_animalEntity;
     }
 }

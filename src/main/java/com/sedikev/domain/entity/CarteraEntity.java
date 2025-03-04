@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name = "cartera")
-public class Cartera {
+public class CarteraEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Cartera {
 
     @JoinColumn(name = "id_usuario")
     @OneToOne
-    private Usuario usuario;
+    private UsuarioEntity usuarioEntity;
 
     @Column(name = "saldo")
     private BigDecimal saldo;

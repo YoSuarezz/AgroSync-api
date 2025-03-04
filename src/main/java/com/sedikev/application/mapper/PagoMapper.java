@@ -1,16 +1,19 @@
 package com.sedikev.application.mapper;
 
+import com.sedikev.application.domain.PagoDomain;
 import com.sedikev.application.dto.PagoDTO;
-import com.sedikev.domain.entity.Pago;
+import com.sedikev.domain.entity.PagoEntity;
 import org.mapstruct.*;
-import java.util.List;
+import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+
+@Mapper
 public interface PagoMapper {
 
-    PagoDTO toDTO(Pago pago);
-    Pago toEntity(PagoDTO pagoDTO);
+    PagoMapper INSTANCE = Mappers.getMapper(PagoMapper.class);
 
-    List<PagoDTO> toDTOList(List<Pago> pagos);
-    List<Pago> toEntityList(List<PagoDTO> pagoDTOs);
+    PagoDTO toDTO(PagoDomain pagoDomain);
+    PagoDomain toDomain(PagoDTO pagoDTO);
+    PagoEntity toEntity(PagoDomain pagoDomain);
+    PagoDomain toDomain(PagoEntity pagoEntity);
 }

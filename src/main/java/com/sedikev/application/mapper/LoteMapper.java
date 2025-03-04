@@ -1,16 +1,20 @@
 package com.sedikev.application.mapper;
 
+import com.sedikev.application.domain.LoteDomain;
 import com.sedikev.application.dto.LoteDTO;
-import com.sedikev.domain.entity.Lote;
+import com.sedikev.domain.entity.LoteEntity;
 import org.mapstruct.*;
+import org.mapstruct.factory.Mappers;
+
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface LoteMapper {
 
-    LoteDTO toDTO(Lote lote);
-    Lote toEntity(LoteDTO loteDTO);
+    LoteMapper INSTANCE = Mappers.getMapper(LoteMapper.class);
 
-    List<LoteDTO> toDTOList(List<Lote> lotes);
-    List<Lote> toEntityList(List<LoteDTO> loteDTOs);
+    LoteDTO toDTO(LoteDomain loteDomain);
+    LoteDomain toDomain(LoteDTO loteDTO);
+    LoteEntity toEntity(LoteDomain loteDomain);
+    LoteDomain toDomain(LoteEntity loteEntity);
 }

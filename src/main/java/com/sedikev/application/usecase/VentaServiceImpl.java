@@ -1,9 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.domain.entity.Venta;
+import com.sedikev.domain.entity.VentaEntity;
 import com.sedikev.domain.repository.VentaRepository;
 import com.sedikev.domain.service.VentaService;
-import com.sedikev.infrastructure.persistence.VentaRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +16,12 @@ public class VentaServiceImpl implements VentaService {
     private VentaRepository ventaRepository;
 
     @Transactional
-    public Venta save(Venta venta) {
-        return ventaRepository.save(venta);
+    public VentaEntity save(VentaEntity ventaEntity) {
+        return ventaRepository.save(ventaEntity);
     }
 
     @Transactional(readOnly = true)
-    public Venta findById(Long id) {
+    public VentaEntity findById(Long id) {
         return ventaRepository.findById(id).orElse(null);
     }
 
@@ -32,7 +31,7 @@ public class VentaServiceImpl implements VentaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Venta> findAll() {
-        return (List<Venta>) ventaRepository.findAll();
+    public List<VentaEntity> findAll() {
+        return (List<VentaEntity>) ventaRepository.findAll();
     }
 }

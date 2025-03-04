@@ -1,17 +1,17 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.Lote;
+import com.sedikev.domain.entity.LoteEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface LoteRepository {
 
-    Lote save(Lote lote);
+    LoteEntity save(LoteEntity loteEntity);
 
-    Optional<Lote> findById(Long id);
+    Optional<LoteEntity> findById(Long id);
 
     void deleteById(Long id);
 
-    List<Lote> findAll();
+    List<LoteEntity> findAll();
 }

@@ -1,5 +1,6 @@
 package com.sedikev.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,38 +9,39 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "pago")
-public class Pago {
+@Table(name = "venta")
+public class VentaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @JoinColumn(name = "id_venta")
-    @ManyToOne
-    private Venta venta;
+    @JoinColumn(name = "id_animal")
+    @OneToOne
+    private AnimalEntity animalEntity;
 
     @JoinColumn(name = "id_comprador")
     @ManyToOne
-    private Usuario comprador;
+    private UsuarioEntity comprador;
 
-    @Column(name = "tipo_pago")
-    private String tipo_pago;
+    @Column(name = "estado")
+    private String estado;
 
-    @Column(name = "cantidad")
-    private BigDecimal cantidad;
-
-    @Column(name = "descripcion")
-    @Lob
-    private String descripcion;
+    @Column(name = "precio_kilo")
+    private BigDecimal precio_kilo;
 
     @Column(name = "fecha")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
+
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<PagoEntity> lista_pagoEntities;
 }

@@ -1,9 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.domain.entity.Lote;
+import com.sedikev.domain.entity.LoteEntity;
 import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.domain.service.LoteService;
-import com.sedikev.infrastructure.persistence.LoteRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +16,12 @@ public class LoteServiceImpl implements LoteService {
     private LoteRepository loteRepository;
 
     @Transactional
-    public Lote save(Lote lote) {
-        return loteRepository.save(lote);
+    public LoteEntity save(LoteEntity loteEntity) {
+        return loteRepository.save(loteEntity);
     }
 
     @Transactional(readOnly = true)
-    public Lote findById(Long id) {
+    public LoteEntity findById(Long id) {
         return loteRepository.findById(id).orElse(null);
     }
 
@@ -32,7 +31,7 @@ public class LoteServiceImpl implements LoteService {
     }
 
     @Transactional(readOnly = true)
-    public List<Lote> findAll() {
-        return (List<Lote>) loteRepository.findAll();
+    public List<LoteEntity> findAll() {
+        return (List<LoteEntity>) loteRepository.findAll();
     }
 }

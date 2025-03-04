@@ -1,16 +1,16 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.domain.entity.Gasto;
+import com.sedikev.domain.entity.GastoEntity;
 
 import java.util.List;
 
 public interface GastoService {
 
-    Gasto save(Gasto gasto);
+    GastoEntity save(GastoEntity gastoEntity);
 
-    Gasto findById(Long id);
+    GastoEntity findById(Long id);
 
     void deleteById(Long id);
 
-    List<Gasto> findAll();
+    List<GastoEntity> findAll();
 }

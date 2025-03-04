@@ -1,16 +1,16 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.domain.entity.Pago;
+import com.sedikev.domain.entity.PagoEntity;
 
 import java.util.List;
 
 public interface PagoService {
 
-    Pago save(Pago pago);
+    PagoEntity save(PagoEntity pagoEntity);
 
-    Pago findById(Long id);
+    PagoEntity findById(Long id);
 
     void deleteById(Long id);
 
-    List<Pago> findAll();
+    List<PagoEntity> findAll();
 }

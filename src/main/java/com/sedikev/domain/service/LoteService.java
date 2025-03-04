@@ -1,16 +1,16 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.domain.entity.Lote;
+import com.sedikev.domain.entity.LoteEntity;
 
 import java.util.List;
 
 public interface LoteService {
 
-    Lote save(Lote lote);
+    LoteEntity save(LoteEntity loteEntity);
 
-    Lote findById(Long id);
+    LoteEntity findById(Long id);
 
     void deleteById(Long id);
 
-    List<Lote> findAll();
+    List<LoteEntity> findAll();
 }

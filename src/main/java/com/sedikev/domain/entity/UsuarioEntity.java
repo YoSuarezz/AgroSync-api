@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "usuario")
-public class Usuario {
+public class UsuarioEntity {
 
     @Id
     @Column(name = "id")
@@ -31,17 +31,17 @@ public class Usuario {
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Lote> lista_lote;
+    private List<LoteEntity> lista_loteEntity;
 
     @OneToMany(mappedBy = "comprador", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Venta> lista_venta;
+    private List<VentaEntity> lista_ventaEntity;
 
     @OneToMany(mappedBy = "comprador", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Pago> lista_pago;
+    private List<PagoEntity> lista_pagoEntities;
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Gasto> lista_gasto;
+    private List<GastoEntity> lista_gastoEntity;
 }

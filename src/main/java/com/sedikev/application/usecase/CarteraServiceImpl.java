@@ -1,9 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.domain.entity.Cartera;
+import com.sedikev.domain.entity.CarteraEntity;
 import com.sedikev.domain.repository.CarteraRepository;
 import com.sedikev.domain.service.CarteraService;
-import com.sedikev.infrastructure.persistence.CarteraRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +16,12 @@ public class CarteraServiceImpl implements CarteraService {
     private CarteraRepository carteraRepository;
 
     @Transactional
-    public Cartera save(Cartera cartera) {
-        return carteraRepository.save(cartera);
+    public CarteraEntity save(CarteraEntity carteraEntity) {
+        return carteraRepository.save(carteraEntity);
     }
 
     @Transactional(readOnly = true)
-    public Cartera findById(Long id) {
+    public CarteraEntity findById(Long id) {
         return carteraRepository.findById(id).orElse(null);
     }
 
@@ -32,7 +31,7 @@ public class CarteraServiceImpl implements CarteraService {
     }
 
     @Transactional(readOnly = true)
-    public List<Cartera> findAll() {
-        return (List<Cartera>) carteraRepository.findAll();
+    public List<CarteraEntity> findAll() {
+        return (List<CarteraEntity>) carteraRepository.findAll();
     }
 }

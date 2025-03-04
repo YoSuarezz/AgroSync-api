@@ -1,12 +1,14 @@
 package com.sedikev.application.domain;
 
-import lombok.*;
+import lombok.Data;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class CarteraDomain {
     private Long id;
     private Integer idUsuario;
     private Float saldo;
+
+    public boolean tieneSaldoSuficiente(Float cantidad) {
+        return saldo >= cantidad;
+    }
 }

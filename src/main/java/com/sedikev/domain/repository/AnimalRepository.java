@@ -1,17 +1,17 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.Animal;
+import com.sedikev.domain.entity.AnimalEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface AnimalRepository {
 
-    Animal save(Animal animal);
+    AnimalEntity save(AnimalEntity animalEntity);
 
-    Optional<Animal> findById(String id);
+    Optional<AnimalEntity> findById(String id);
 
     void deleteById(String id);
 
-    List<Animal> findAll();
+    List<AnimalEntity> findAll();
 }
