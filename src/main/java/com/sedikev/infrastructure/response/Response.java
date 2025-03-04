@@ -1,4 +1,16 @@
 package com.sedikev.infrastructure.response;
 
-public class Response {
+import lombok.Data;
+
+@Data
+public class Response<T> {
+    private String status;
+    private String message;
+    private T data;
+
+    public Response(String status, String message, T data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+    }
 }

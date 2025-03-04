@@ -1,4 +1,4 @@
-package com.sedikev.application.dto;
+package com.sedikev.application.domain;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoteDTO {
+public class LoteDomain {
     private Long id;
     private Integer idProveedor;
     private Integer contramarca;
