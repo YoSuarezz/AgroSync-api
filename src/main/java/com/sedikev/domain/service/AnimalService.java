@@ -1,19 +1,18 @@
 package com.sedikev.domain.service;
 
-
-import com.sedikev.domain.entity.AnimalEntity;
+import com.sedikev.application.domain.AnimalDomain;
 
 import java.util.List;
 
 public interface AnimalService {
 
-    AnimalEntity save(AnimalEntity animalEntity);
+    AnimalDomain save(AnimalDomain animalDomain); // Guardar un animal (recibe y retorna un dominio)
 
-    AnimalEntity findById(String id);
+    AnimalDomain findById(String id); // Buscar un animal por ID (retorna un dominio)
 
-    void deleteById(String id);
+    void deleteById(String id); // Eliminar un animal por ID
 
-    List<AnimalEntity> findAll();
+    List<AnimalDomain> findAll(); // Obtener todos los animales (retorna una lista de dominios)
 
-    List<AnimalEntity> findByLote(Long id_lote);
+    List<AnimalDomain> findByLote(Long idLote); // Buscar animales por ID de lote (retorna una lista de dominios)
 }
