@@ -27,7 +27,7 @@ public class Gasto {
 
     @JoinColumn(name = "id_proveedor")
     @ManyToOne
-    private Usuario usuario;
+    private Usuario proveedor;
 
     @Column(name = "cantidad")
     private BigDecimal cantidad;

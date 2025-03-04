@@ -43,5 +43,5 @@ public class Lote {
 
     @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Pago> lista_pago;
+    private List<Gasto> lista_gasto;
 }

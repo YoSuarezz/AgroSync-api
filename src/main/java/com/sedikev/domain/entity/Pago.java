@@ -27,7 +27,7 @@ public class Pago {
 
     @JoinColumn(name = "id_comprador")
     @ManyToOne
-    private Usuario usuario;
+    private Usuario comprador;
 
     @Column(name = "tipo_pago")
     private String tipo_pago;
