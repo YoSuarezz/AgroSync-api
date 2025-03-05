@@ -27,11 +27,11 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public AnimalDomain save(AnimalDomain animalDomain) {
         // Convertir el dominio a una entidad
-        AnimalEntity animalEntity = animalMapper.toEntity(animalDomain);
+        AnimalEntity animalEntity = animalMapper.animalDomainToAnimalEntity(animalDomain);
         // Guardar la entidad en la base de datos
         AnimalEntity savedEntity = animalRepository.save(animalEntity);
         // Convertir la entidad guardada de vuelta a un dominio
-        return animalMapper.toDomain(savedEntity);
+        return animalMapper.animalEntityToAnimalDomain(savedEntity);
     }
 
     @Transactional(readOnly = true)
@@ -40,7 +40,7 @@ public class AnimalServiceImpl implements AnimalService {
         // Buscar la entidad por ID
         AnimalEntity animalEntity = animalRepository.findById(id).orElse(null);
         // Convertir la entidad a un dominio
-        return animalMapper.toDomain(animalEntity);
+        return animalMapper.animalEntityToAnimalDomain(animalEntity);
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class AnimalServiceImpl implements AnimalService {
     public List<AnimalDomain> findAll() {
         // Obtener todas las entidades y convertirlas a dominios
         return animalRepository.findAll().stream()
-                .map(animalMapper::toDomain)
+                .map(animalMapper::animalEntityToAnimalDomain)
                 .collect(Collectors.toList());
     }
 
@@ -65,7 +65,7 @@ public class AnimalServiceImpl implements AnimalService {
         // Filtrar las entidades por ID de lote y convertirlas a dominios
         return animalRepository.findAll().stream()
                 .filter(animalEntity -> idLote.equals(animalEntity.getLoteEntity().getId()))
-                .map(animalMapper::toDomain)
+                .map(animalMapper::animalEntityToAnimalDomain)
                 .collect(Collectors.toList());
     }
 }

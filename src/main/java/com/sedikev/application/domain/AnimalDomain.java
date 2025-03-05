@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AnimalDomain {
     private String id;
-    private Integer idLote;
+    private Long idLote;
     private String nombre;
     private Float peso;
     private String sexo;

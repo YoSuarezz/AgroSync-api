@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 public class AnimalDTO {
     private String id;
-    private Integer idLote;
+    private Long idLote;
     private String nombre;
     private Float peso;
     private String sexo;
