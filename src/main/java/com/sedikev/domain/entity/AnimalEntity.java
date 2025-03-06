@@ -26,7 +26,7 @@ public class AnimalEntity {
     private String nombre;
 
     @Column(name = "peso")
-    private BigDecimal peso;
+    private Float peso;
 
     @Column(name = "sexo")
     private String sexo;

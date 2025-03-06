@@ -27,13 +27,13 @@ public class PagoEntity {
 
     @JoinColumn(name = "id_comprador")
     @ManyToOne
-    private UsuarioEntity comprador;
+    private UsuarioEntity usuarioEntity;
 
     @Column(name = "tipo_pago")
     private String tipo_pago;
 
     @Column(name = "cantidad")
-    private BigDecimal cantidad;
+    private Float cantidad;
 
     @Column(name = "descripcion")
     @Lob

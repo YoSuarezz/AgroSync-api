@@ -14,8 +14,6 @@ public interface AnimalMapper {
 
     AnimalDTO animalDomainToAnimalDTO(AnimalDomain animalDomain);
     AnimalDomain animalDTOToAnimalDomain(AnimalDTO animalDTO);
-    @Mapping(source = "idLote", target = "loteEntity.id")
     AnimalEntity animalDomainToAnimalEntity(AnimalDomain animalDomain);
-    @Mapping(source = "loteEntity.id", target = "id_lote")
     AnimalDomain animalEntityToAnimalDomain(AnimalEntity animalEntity);
 }

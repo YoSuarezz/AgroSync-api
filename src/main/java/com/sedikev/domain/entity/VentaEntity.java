@@ -29,13 +29,13 @@ public class VentaEntity {
 
     @JoinColumn(name = "id_comprador")
     @ManyToOne
-    private UsuarioEntity comprador;
+    private UsuarioEntity usuarioEntity;
 
     @Column(name = "estado")
     private String estado;
 
     @Column(name = "precio_kilo")
-    private BigDecimal precio_kilo;
+    private Float precio_kilo;
 
     @Column(name = "fecha")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -43,5 +43,5 @@ public class VentaEntity {
 
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<PagoEntity> lista_pagoEntities;
+    private List<PagoEntity> lista_pagoEntity;
 }

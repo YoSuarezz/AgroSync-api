@@ -24,5 +24,5 @@ public class CarteraEntity {
     private UsuarioEntity usuarioEntity;
 
     @Column(name = "saldo")
-    private BigDecimal saldo;
+    private Float saldo;
 }

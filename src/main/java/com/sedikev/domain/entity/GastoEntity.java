@@ -27,10 +27,10 @@ public class GastoEntity {
 
     @JoinColumn(name = "id_proveedor")
     @ManyToOne
-    private UsuarioEntity proveedor;
+    private UsuarioEntity usuarioEntity;
 
     @Column(name = "cantidad")
-    private BigDecimal cantidad;
+    private Float cantidad;
 
     @Column(name = "descripcion")
     @Lob

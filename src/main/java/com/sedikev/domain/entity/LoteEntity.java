@@ -25,23 +25,23 @@ public class LoteEntity {
 
     @JoinColumn(name = "id_proveedor")
     @ManyToOne
-    private UsuarioEntity proveedor;
+    private UsuarioEntity usuarioEntity;
 
     @Column(name = "contramarca")
     private int contramarca;
 
     @Column(name = "precio_kilo")
-    private BigDecimal precio_kilo;
+    private Float precio_kilo;
 
     @Column(name = "fecha")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
 
-    @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "loteEntity", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<AnimalEntity> lista_animalEntity;
 
-    @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "loteEntity", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<GastoEntity> lista_gastoEntity;
 }
