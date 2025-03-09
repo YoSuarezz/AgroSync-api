@@ -44,6 +44,6 @@ public class VentaServiceImpl implements VentaService {
     public List<VentaDomain> findAll() {
         return ventaRepository.findAll().stream()
                 .map(ventaMapper::toDomain)
-                .collect(Collectors.toList());w
+                .collect(Collectors.toList());
     }
 }
