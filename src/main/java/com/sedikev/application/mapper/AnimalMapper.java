@@ -12,8 +12,8 @@ public interface AnimalMapper {
 
     AnimalMapper INSTANCE = Mappers.getMapper(AnimalMapper.class);
 
-    AnimalDTO animalDomainToAnimalDTO(AnimalDomain animalDomain);
-    AnimalDomain animalDTOToAnimalDomain(AnimalDTO animalDTO);
-    AnimalEntity animalDomainToAnimalEntity(AnimalDomain animalDomain);
-    AnimalDomain animalEntityToAnimalDomain(AnimalEntity animalEntity);
+    AnimalDTO toDTO(AnimalDomain animalDomain);
+    AnimalDomain toDomain(AnimalDTO animalDTO);
+    AnimalEntity toEntity(AnimalDomain animalDomain);
+    AnimalDomain toDomain(AnimalEntity animalEntity);
 }

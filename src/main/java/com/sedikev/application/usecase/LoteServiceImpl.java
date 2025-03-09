@@ -1,28 +1,38 @@
 package com.sedikev.application.usecase;
 
+import com.sedikev.application.domain.LoteDomain;
+import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.domain.entity.LoteEntity;
 import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.domain.service.LoteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class LoteServiceImpl implements LoteService {
 
     @Autowired
-    private LoteRepository loteRepository;
+    private final LoteRepository loteRepository;
+
+    @Autowired
+    private final LoteMapper loteMapper;
 
     @Transactional
-    public LoteEntity save(LoteEntity loteEntity) {
-        return loteRepository.save(loteEntity);
+    public LoteDomain save(LoteDomain loteDomain) {
+        LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
+        LoteEntity loteSaved = loteRepository.save(loteEntity);
+        return loteMapper.toDomain(loteSaved);
     }
 
     @Transactional(readOnly = true)
-    public LoteEntity findById(Long id) {
-        return loteRepository.findById(id).orElse(null);
+    public LoteDomain findById(Long id) {
+        return loteMapper.toDomain(loteRepository.findById(id).orElse(null));
     }
 
     @Transactional
@@ -31,7 +41,9 @@ public class LoteServiceImpl implements LoteService {
     }
 
     @Transactional(readOnly = true)
-    public List<LoteEntity> findAll() {
-        return (List<LoteEntity>) loteRepository.findAll();
+    public List<LoteDomain> findAll() {
+        return loteRepository.findAll().stream()
+                .map(loteMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

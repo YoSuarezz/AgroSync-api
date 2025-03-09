@@ -26,46 +26,38 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional
     @Override
     public AnimalDomain save(AnimalDomain animalDomain) {
-        // Convertir el dominio a una entidad
-        AnimalEntity animalEntity = animalMapper.animalDomainToAnimalEntity(animalDomain);
-        // Guardar la entidad en la base de datos
+        AnimalEntity animalEntity = animalMapper.toEntity(animalDomain);
         AnimalEntity savedEntity = animalRepository.save(animalEntity);
-        // Convertir la entidad guardada de vuelta a un dominio
-        return animalMapper.animalEntityToAnimalDomain(savedEntity);
+        return animalMapper.toDomain(savedEntity);
     }
 
     @Transactional(readOnly = true)
     @Override
     public AnimalDomain findById(String id) {
-        // Buscar la entidad por ID
         AnimalEntity animalEntity = animalRepository.findById(id).orElse(null);
-        // Convertir la entidad a un dominio
-        return animalMapper.animalEntityToAnimalDomain(animalEntity);
+        return animalMapper.toDomain(animalEntity);
     }
 
     @Transactional
     @Override
     public void deleteById(String id) {
-        // Eliminar la entidad por ID
         animalRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<AnimalDomain> findAll() {
-        // Obtener todas las entidades y convertirlas a dominios
         return animalRepository.findAll().stream()
-                .map(animalMapper::animalEntityToAnimalDomain)
+                .map(animalMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<AnimalDomain> findByLote(Long idLote) {
-        // Filtrar las entidades por ID de lote y convertirlas a dominios
         return animalRepository.findAll().stream()
                 .filter(animalEntity -> idLote.equals(animalEntity.getLoteEntity().getId()))
-                .map(animalMapper::animalEntityToAnimalDomain)
+                .map(animalMapper::toDomain)
                 .collect(Collectors.toList());
     }
 }

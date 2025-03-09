@@ -1,16 +1,16 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.domain.entity.CarteraEntity;
+import com.sedikev.application.domain.CarteraDomain;
 
 import java.util.List;
 
 public interface CarteraService {
 
-    CarteraEntity save(CarteraEntity carteraEntity);
+    CarteraDomain save(CarteraDomain carteraDomain);
 
-    CarteraEntity findById(Long id);
+    CarteraDomain findById(Long id);
 
     void deleteById(Long id);
 
-    List<CarteraEntity> findAll();
+    List<CarteraDomain> findAll();
 }

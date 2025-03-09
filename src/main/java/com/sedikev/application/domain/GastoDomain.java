@@ -8,9 +8,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GastoDomain {
+
     private Long id;
-    private Integer idLote;
-    private Integer idProveedor;
+    private LoteDomain loteDomain;
+    private UsuarioDomain usuarioDomain;
     private Float cantidad;
     private String descripcion;
     private Date fecha;

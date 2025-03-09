@@ -1,16 +1,17 @@
 package com.sedikev.domain.service;
 
+import com.sedikev.application.domain.UsuarioDomain;
 import com.sedikev.domain.entity.UsuarioEntity;
 
 import java.util.List;
 
 public interface UsuarioService {
 
-    UsuarioEntity save(UsuarioEntity usuarioEntity);
+    UsuarioDomain save(UsuarioDomain UsuarioDomain);
 
-    UsuarioEntity findById(Long id);
+    UsuarioDomain findById(Long id);
 
     void deleteById(Long Id);
 
-    List<UsuarioEntity> findAll();
+    List<UsuarioDomain> findAll();
 }

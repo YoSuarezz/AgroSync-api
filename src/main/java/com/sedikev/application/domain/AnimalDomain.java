@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Data
 public class AnimalDomain {
+
     private String id;
-    private LoteEntity loteEntity;
+    private LoteDomain loteDomain;
     private String nombre;
     private Float peso;
     private String sexo;
