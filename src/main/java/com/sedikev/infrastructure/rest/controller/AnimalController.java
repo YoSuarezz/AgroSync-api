@@ -1,6 +1,6 @@
-package com.sedikev.infrastructure.controller;
+package com.sedikev.infrastructure.rest.controller;
 
-import com.sedikev.application.domain.AnimalDomain;
+import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.domain.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;

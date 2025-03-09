@@ -1,0 +1,1 @@
+package com.sedikev.infrastructure.adapter.exceptions;

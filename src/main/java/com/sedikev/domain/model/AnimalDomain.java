@@ -1,6 +1,5 @@
-package com.sedikev.application.domain;
+package com.sedikev.domain.model;
 
-import com.sedikev.domain.entity.LoteEntity;
 import lombok.Data;
 
 @Data

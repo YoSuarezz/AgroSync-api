@@ -1,8 +1,8 @@
 package com.sedikev.application.mapper;
 
-import com.sedikev.application.domain.PagoDomain;
+import com.sedikev.domain.model.PagoDomain;
 import com.sedikev.application.dto.PagoDTO;
-import com.sedikev.domain.entity.PagoEntity;
+import com.sedikev.infrastructure.adapter.entity.PagoEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

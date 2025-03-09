@@ -1,8 +1,8 @@
 package com.sedikev.application.mapper;
 
-import com.sedikev.application.domain.GastoDomain;
+import com.sedikev.domain.model.GastoDomain;
 import com.sedikev.application.dto.GastoDTO;
-import com.sedikev.domain.entity.GastoEntity;
+import com.sedikev.infrastructure.adapter.entity.GastoEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

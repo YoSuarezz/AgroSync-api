@@ -1,8 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.application.domain.PagoDomain;
+import com.sedikev.domain.model.PagoDomain;
 import com.sedikev.application.mapper.PagoMapper;
-import com.sedikev.domain.entity.PagoEntity;
+import com.sedikev.infrastructure.adapter.entity.PagoEntity;
 import com.sedikev.domain.repository.PagoRepository;
 import com.sedikev.domain.service.PagoService;
 import lombok.RequiredArgsConstructor;

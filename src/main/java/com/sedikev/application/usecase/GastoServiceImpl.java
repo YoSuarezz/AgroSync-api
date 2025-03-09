@@ -1,8 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.application.domain.GastoDomain;
+import com.sedikev.domain.model.GastoDomain;
 import com.sedikev.application.mapper.GastoMapper;
-import com.sedikev.domain.entity.GastoEntity;
+import com.sedikev.infrastructure.adapter.entity.GastoEntity;
 import com.sedikev.domain.repository.GastoRepository;
 import com.sedikev.domain.service.GastoService;
 import lombok.RequiredArgsConstructor;

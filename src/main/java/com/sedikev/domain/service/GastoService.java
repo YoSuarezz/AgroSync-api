@@ -1,6 +1,6 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.application.domain.GastoDomain;
+import com.sedikev.domain.model.GastoDomain;
 
 import java.util.List;
 

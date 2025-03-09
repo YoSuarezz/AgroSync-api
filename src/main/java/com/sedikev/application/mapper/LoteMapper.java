@@ -1,12 +1,10 @@
 package com.sedikev.application.mapper;
 
-import com.sedikev.application.domain.LoteDomain;
+import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.application.dto.LoteDTO;
-import com.sedikev.domain.entity.LoteEntity;
+import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 @Mapper
 public interface LoteMapper {

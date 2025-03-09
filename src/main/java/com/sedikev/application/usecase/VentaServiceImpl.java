@@ -1,8 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.application.domain.VentaDomain;
+import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.application.mapper.VentaMapper;
-import com.sedikev.domain.entity.VentaEntity;
+import com.sedikev.infrastructure.adapter.entity.VentaEntity;
 import com.sedikev.domain.repository.VentaRepository;
 import com.sedikev.domain.service.VentaService;
 import lombok.RequiredArgsConstructor;

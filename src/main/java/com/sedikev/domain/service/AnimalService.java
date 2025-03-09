@@ -1,6 +1,6 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.application.domain.AnimalDomain;
+import com.sedikev.domain.model.AnimalDomain;
 
 import java.util.List;
 

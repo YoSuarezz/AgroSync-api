@@ -1,4 +1,4 @@
-package com.sedikev.domain.entity;
+package com.sedikev.infrastructure.adapter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

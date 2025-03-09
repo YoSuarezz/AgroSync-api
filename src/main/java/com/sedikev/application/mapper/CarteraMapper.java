@@ -1,8 +1,8 @@
 package com.sedikev.application.mapper;
 
-import com.sedikev.application.domain.CarteraDomain;
+import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.application.dto.CarteraDTO;
-import com.sedikev.domain.entity.CarteraEntity;
+import com.sedikev.infrastructure.adapter.entity.CarteraEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

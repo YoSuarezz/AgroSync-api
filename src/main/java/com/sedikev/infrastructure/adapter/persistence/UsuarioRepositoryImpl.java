@@ -1,6 +1,6 @@
-package com.sedikev.infrastructure.persistence;
+package com.sedikev.infrastructure.adapter.persistence;
 
-import com.sedikev.domain.entity.UsuarioEntity;
+import com.sedikev.infrastructure.adapter.entity.UsuarioEntity;
 import com.sedikev.domain.repository.UsuarioRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 

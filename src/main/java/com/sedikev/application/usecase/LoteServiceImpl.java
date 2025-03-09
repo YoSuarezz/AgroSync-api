@@ -1,8 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.application.domain.LoteDomain;
+import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.application.mapper.LoteMapper;
-import com.sedikev.domain.entity.LoteEntity;
+import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.domain.service.LoteService;
 import lombok.RequiredArgsConstructor;

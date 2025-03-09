@@ -1,4 +1,4 @@
-package com.sedikev.infrastructure.response;
+package com.sedikev.infrastructure.adapter.response;
 
 import lombok.Data;
 

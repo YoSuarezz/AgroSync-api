@@ -1,8 +1,8 @@
 package com.sedikev.application.mapper;
 
-import com.sedikev.application.domain.VentaDomain;
+import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.application.dto.VentaDTO;
-import com.sedikev.domain.entity.VentaEntity;
+import com.sedikev.infrastructure.adapter.entity.VentaEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

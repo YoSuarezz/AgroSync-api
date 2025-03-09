@@ -1,6 +1,6 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.CarteraEntity;
+import com.sedikev.infrastructure.adapter.entity.CarteraEntity;
 
 import java.util.List;
 import java.util.Optional;

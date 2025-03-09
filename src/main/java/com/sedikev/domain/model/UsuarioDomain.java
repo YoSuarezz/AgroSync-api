@@ -1,4 +1,4 @@
-package com.sedikev.application.domain;
+package com.sedikev.domain.model;
 
 import lombok.*;
 

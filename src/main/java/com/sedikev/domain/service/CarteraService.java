@@ -1,6 +1,6 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.application.domain.CarteraDomain;
+import com.sedikev.domain.model.CarteraDomain;
 
 import java.util.List;
 

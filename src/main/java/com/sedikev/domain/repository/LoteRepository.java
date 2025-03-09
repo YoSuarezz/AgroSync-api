@@ -1,6 +1,6 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.LoteEntity;
+import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 
 import java.util.List;
 import java.util.Optional;

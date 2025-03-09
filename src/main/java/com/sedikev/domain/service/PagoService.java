@@ -1,7 +1,6 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.application.domain.PagoDomain;
-import com.sedikev.domain.entity.PagoEntity;
+import com.sedikev.domain.model.PagoDomain;
 
 import java.util.List;
 

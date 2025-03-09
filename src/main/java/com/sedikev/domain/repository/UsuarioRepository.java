@@ -1,6 +1,6 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.UsuarioEntity;
+import com.sedikev.infrastructure.adapter.entity.UsuarioEntity;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.PagoEntity;
+import com.sedikev.infrastructure.adapter.entity.PagoEntity;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.GastoEntity;
+import com.sedikev.infrastructure.adapter.entity.GastoEntity;
 
 import java.util.List;
 import java.util.Optional;

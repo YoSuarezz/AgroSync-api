@@ -1,4 +1,4 @@
-package com.sedikev.application.domain;
+package com.sedikev.domain.model;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.util.Date;
 public class LoteDomain {
 
     private Long id;
-    private UsuarioDomain usuarioDomainw;
+    private UsuarioDomain usuarioDomain;
     private Integer contramarca;
     private Float precio_kilo;
     private Date fecha;

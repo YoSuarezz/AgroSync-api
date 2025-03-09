@@ -1,8 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.application.domain.CarteraDomain;
+import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.application.mapper.CarteraMapper;
-import com.sedikev.domain.entity.CarteraEntity;
+import com.sedikev.infrastructure.adapter.entity.CarteraEntity;
 import com.sedikev.domain.repository.CarteraRepository;
 import com.sedikev.domain.service.CarteraService;
 import lombok.RequiredArgsConstructor;

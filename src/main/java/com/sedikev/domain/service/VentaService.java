@@ -1,7 +1,6 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.application.domain.VentaDomain;
-import com.sedikev.domain.entity.VentaEntity;
+import com.sedikev.domain.model.VentaDomain;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.application.domain.AnimalDomain;
+import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.application.mapper.AnimalMapper;
-import com.sedikev.domain.entity.AnimalEntity;
+import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
 import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.domain.service.AnimalService;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
 package com.sedikev.application.usecase;
 
-import com.sedikev.application.domain.UsuarioDomain;
+import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.application.mapper.UsuarioMapper;
-import com.sedikev.domain.entity.UsuarioEntity;
+import com.sedikev.infrastructure.adapter.entity.UsuarioEntity;
 import com.sedikev.domain.repository.UsuarioRepository;
 import com.sedikev.domain.service.UsuarioService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.sedikev.domain.repository;
 
-import com.sedikev.domain.entity.AnimalEntity;
+import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
 
 import java.util.List;
 import java.util.Optional;

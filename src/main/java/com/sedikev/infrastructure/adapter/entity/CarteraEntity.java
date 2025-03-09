@@ -1,11 +1,9 @@
-package com.sedikev.domain.entity;
+package com.sedikev.infrastructure.adapter.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor

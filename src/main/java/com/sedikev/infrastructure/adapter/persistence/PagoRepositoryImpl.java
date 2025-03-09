@@ -1,6 +1,6 @@
-package com.sedikev.infrastructure.persistence;
+package com.sedikev.infrastructure.adapter.persistence;
 
-import com.sedikev.domain.entity.PagoEntity;
+import com.sedikev.infrastructure.adapter.entity.PagoEntity;
 import com.sedikev.domain.repository.PagoRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
