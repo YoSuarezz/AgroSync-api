@@ -2,6 +2,7 @@ package com.sedikev.domain.model;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -12,7 +13,7 @@ public class GastoDomain {
     private Long id;
     private LoteDomain loteDomain;
     private UsuarioDomain usuarioDomain;
-    private Float cantidad;
+    private BigDecimal cantidad;
     private String descripcion;
     private Date fecha;
 }

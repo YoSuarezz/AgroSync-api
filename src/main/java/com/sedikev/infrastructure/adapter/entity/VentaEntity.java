@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class VentaEntity {
     private String estado;
 
     @Column(name = "precio_kilo")
-    private Float precio_kilo;
+    private BigDecimal precio_kilo;
 
     @Column(name = "fecha")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

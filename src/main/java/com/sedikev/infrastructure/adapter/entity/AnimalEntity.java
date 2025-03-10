@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +26,7 @@ public class AnimalEntity {
     private String nombre;
 
     @Column(name = "peso")
-    private Float peso;
+    private BigDecimal peso;
 
     @Column(name = "sexo")
     private String sexo;

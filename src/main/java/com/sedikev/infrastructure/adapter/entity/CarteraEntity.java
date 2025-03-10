@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +24,5 @@ public class CarteraEntity {
     private UsuarioEntity usuarioEntity;
 
     @Column(name = "saldo")
-    private Float saldo;
+    private BigDecimal saldo;
 }
