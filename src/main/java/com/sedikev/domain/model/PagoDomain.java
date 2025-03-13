@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class PagoDomain {
 
     private Long id;

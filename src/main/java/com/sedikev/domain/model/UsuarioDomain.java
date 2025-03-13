@@ -3,8 +3,6 @@ package com.sedikev.domain.model;
 import lombok.*;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class UsuarioDomain {
 
     private Long id;

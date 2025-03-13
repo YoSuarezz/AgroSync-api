@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class LoteDomain {
 
     private Long id;
