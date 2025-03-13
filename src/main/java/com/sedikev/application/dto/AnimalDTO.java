@@ -1,5 +1,6 @@
 package com.sedikev.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 public class AnimalDTO {
 
     private String id;
+    @JsonIgnoreProperties(value = "usuario")
     private LoteDTO lote;
     private String nombre;
     private BigDecimal peso;
