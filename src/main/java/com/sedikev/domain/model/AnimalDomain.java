@@ -1,5 +1,6 @@
 package com.sedikev.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 public class AnimalDomain {
 
     private String id;
+    @JsonIgnoreProperties(value = "usuario")
     private LoteDomain lote;
     private String nombre;
     private BigDecimal peso;

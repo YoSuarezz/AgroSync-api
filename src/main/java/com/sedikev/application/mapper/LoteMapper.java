@@ -6,7 +6,7 @@ import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UsuarioMapper.class})
 public interface LoteMapper {
 
     LoteMapper INSTANCE = Mappers.getMapper(LoteMapper.class);
@@ -14,5 +14,6 @@ public interface LoteMapper {
     LoteDTO toDTO(LoteDomain loteDomain);
     LoteDomain toDomain(LoteDTO loteDTO);
     LoteEntity toEntity(LoteDomain loteDomain);
+    @Mapping(source = "usuario", target = "usuario")
     LoteDomain toDomain(LoteEntity loteEntity);
 }
