@@ -6,7 +6,7 @@ import com.sedikev.infrastructure.adapter.entity.GastoEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface GastoMapper {
 
     GastoMapper INSTANCE = Mappers.getMapper(GastoMapper.class);

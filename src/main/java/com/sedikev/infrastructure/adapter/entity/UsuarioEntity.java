@@ -29,19 +29,19 @@ public class UsuarioEntity {
     @Column(name = "tipo_usuario")
     private String tipo_usuario;
 
-    @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<LoteEntity> lista_loteEntity;
 
-    @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<VentaEntity> lista_ventaEntity;
 
-    @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<PagoEntity> lista_pagoEntity;
 
-    @OneToMany(mappedBy = "usuarioEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<GastoEntity> lista_gastoEntity;
 }

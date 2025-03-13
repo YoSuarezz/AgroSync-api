@@ -21,7 +21,7 @@ public class CarteraEntity {
 
     @JoinColumn(name = "id_usuario")
     @OneToOne
-    private UsuarioEntity usuarioEntity;
+    private UsuarioEntity usuario;
 
     @Column(name = "saldo")
     private BigDecimal saldo;

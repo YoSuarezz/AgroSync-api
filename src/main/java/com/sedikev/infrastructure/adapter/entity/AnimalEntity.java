@@ -20,7 +20,7 @@ public class AnimalEntity {
 
     @JoinColumn(name = "id_lote")
     @ManyToOne
-    private LoteEntity loteEntity;
+    private LoteEntity lote;
 
     @Column(name = "nombre")
     private String nombre;

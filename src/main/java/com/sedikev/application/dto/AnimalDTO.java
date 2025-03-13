@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 public class AnimalDTO {
 
     private String id;
-    private LoteDTO loteDTO;
+    private LoteDTO lote;
     private String nombre;
     private BigDecimal peso;
     private String sexo;
-    private Integer numLote;
+    private Integer num_lote;
 }

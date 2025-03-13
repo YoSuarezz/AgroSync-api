@@ -56,7 +56,7 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public List<AnimalDomain> findByLote(Long idLote) {
         return animalRepository.findAll().stream()
-                .filter(animalEntity -> idLote.equals(animalEntity.getLoteEntity().getId()))
+                .filter(animalEntity -> idLote.equals(animalEntity.getLote().getId()))
                 .map(animalMapper::toDomain)
                 .collect(Collectors.toList());
     }

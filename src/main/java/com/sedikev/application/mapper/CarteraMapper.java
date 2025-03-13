@@ -6,7 +6,7 @@ import com.sedikev.infrastructure.adapter.entity.CarteraEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CarteraMapper {
 
     CarteraMapper INSTANCE = Mappers.getMapper(CarteraMapper.class);

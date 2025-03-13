@@ -23,11 +23,11 @@ public class GastoEntity {
 
     @JoinColumn(name = "id_lote")
     @ManyToOne
-    private LoteEntity loteEntity;
+    private LoteEntity lote;
 
-    @JoinColumn(name = "id_proveedor")
+    @JoinColumn(name = "id_usuario")
     @ManyToOne
-    private UsuarioEntity usuarioEntity;
+    private UsuarioEntity usuario;
 
     @Column(name = "cantidad")
     private BigDecimal cantidad;

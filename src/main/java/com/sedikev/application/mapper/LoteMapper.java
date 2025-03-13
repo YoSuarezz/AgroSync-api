@@ -6,7 +6,7 @@ import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface LoteMapper {
 
     LoteMapper INSTANCE = Mappers.getMapper(LoteMapper.class);

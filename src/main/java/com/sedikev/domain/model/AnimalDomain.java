@@ -8,13 +8,9 @@ import java.math.BigDecimal;
 public class AnimalDomain {
 
     private String id;
-    private LoteDomain loteDomain;
+    private Long id_lote;
     private String nombre;
     private BigDecimal peso;
     private String sexo;
-    private Integer numLote;
-
-    public boolean esMachote() {
-        return "M".equals(sexo);
-    }
+    private Integer num_lote;
 }

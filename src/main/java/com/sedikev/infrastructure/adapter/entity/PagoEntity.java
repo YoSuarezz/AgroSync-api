@@ -23,11 +23,11 @@ public class PagoEntity {
 
     @JoinColumn(name = "id_venta")
     @ManyToOne
-    private VentaEntity ventaEntity;
+    private VentaEntity venta;
 
-    @JoinColumn(name = "id_comprador")
+    @JoinColumn(name = "id_usuario")
     @ManyToOne
-    private UsuarioEntity usuarioEntity;
+    private UsuarioEntity usuario;
 
     @Column(name = "tipo_pago")
     private String tipo_pago;

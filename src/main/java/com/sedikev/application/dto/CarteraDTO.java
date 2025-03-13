@@ -10,6 +10,6 @@ import java.math.BigDecimal;
 public class CarteraDTO {
 
     private Long id;
-    private UsuarioDTO usuarioDTO;
+    private UsuarioDTO usuario;
     private BigDecimal saldo;
 }

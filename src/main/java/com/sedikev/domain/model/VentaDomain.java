@@ -3,6 +3,7 @@ package com.sedikev.domain.model;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -11,9 +12,9 @@ import java.util.Date;
 public class VentaDomain {
 
     private Long id;
-    private AnimalDomain animalDomain;
-    private UsuarioDomain usuarioDomain;
+    private AnimalDomain animal;
+    private UsuarioDomain usuario;
     private String estado;
     private BigDecimal precio_kilo;
-    private Date fecha;
+    private LocalDate fecha;
 }

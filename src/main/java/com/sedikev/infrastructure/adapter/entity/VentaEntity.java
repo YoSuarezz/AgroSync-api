@@ -25,11 +25,11 @@ public class VentaEntity {
 
     @JoinColumn(name = "id_animal")
     @OneToOne
-    private AnimalEntity animalEntity;
+    private AnimalEntity animal;
 
     @JoinColumn(name = "id_comprador")
     @ManyToOne
-    private UsuarioEntity usuarioEntity;
+    private UsuarioEntity usuario;
 
     @Column(name = "estado")
     private String estado;

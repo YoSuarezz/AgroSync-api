@@ -7,7 +7,7 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PagoMapper {
 
     PagoMapper INSTANCE = Mappers.getMapper(PagoMapper.class);

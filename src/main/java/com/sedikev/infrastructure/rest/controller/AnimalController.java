@@ -1,42 +1,55 @@
 package com.sedikev.infrastructure.rest.controller;
 
+import com.sedikev.application.dto.AnimalDTO;
 import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.domain.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Component
+@RestController
+@RequestMapping(path = "/api")
 public class AnimalController {
 
-    private final AnimalService animalService;
-    private final AnimalMapper animalMapper;
+    @Autowired
+    private AnimalService animalService;
 
     @Autowired
-    public AnimalController(AnimalService animalService, AnimalMapper animalMapper) {
-        this.animalService = animalService;
-        this.animalMapper = animalMapper;
+    private AnimalMapper animalMapper;
+
+    @PostMapping(path = "animal")
+    public AnimalDTO create(@RequestBody AnimalDTO animalDTO) {
+        AnimalDomain animalDomain = animalMapper.toDomain(animalDTO);
+        AnimalDomain animalSaved = animalService.save(animalDomain);
+        return animalMapper.toDTO(animalSaved);
     }
 
-    public AnimalDomain crearAnimal(AnimalDomain animalDomain) {
-        return animalService.save(animalDomain);
+    @PutMapping(path = "animal")
+    public AnimalDTO update(@RequestBody AnimalDTO animalDTO) {
+        AnimalDomain animalDomain = animalMapper.toDomain(animalDTO);
+        AnimalDomain animalSaved = animalService.save(animalDomain);
+        return animalMapper.toDTO(animalSaved);
     }
 
-    public AnimalDomain obtenerAnimalPorId(String id) {
-        return animalService.findById(id);
-    }
-
-    public List<AnimalDomain> obtenerTodosLosAnimales() {
-        return animalService.findAll();
-    }
-
-    public List<AnimalDomain> obtenerAnimalesPorLote(Long idLote) {
-        return animalService.findByLote(idLote);
-    }
-
-    public void eliminarAnimal(String id) {
+    @DeleteMapping(path = "animal/{id}")
+    public void delete(@PathVariable String id) {
         animalService.deleteById(id);
     }
+
+    @GetMapping(path = "animal/{id}")
+    public AnimalDTO findById(@PathVariable String id) {
+        return animalMapper.toDTO(animalService.findById(id));
+    }
+
+    @GetMapping(path = "animals")
+    public List<AnimalDTO> findAll(){
+        return animalService.findAll().stream()
+                .map(animalMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
 }

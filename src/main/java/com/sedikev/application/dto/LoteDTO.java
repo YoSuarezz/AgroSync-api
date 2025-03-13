@@ -3,6 +3,7 @@ package com.sedikev.application.dto;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -11,8 +12,8 @@ import java.util.Date;
 public class LoteDTO {
 
     private Long id;
-    private UsuarioDTO usuarioDTO;
+    private UsuarioDTO usuario;
     private Integer contramarca;
     private BigDecimal precio_kilo;
-    private Date fecha;
+    private LocalDate fecha;
 }

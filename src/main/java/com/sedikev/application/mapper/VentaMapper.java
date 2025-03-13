@@ -6,7 +6,7 @@ import com.sedikev.infrastructure.adapter.entity.VentaEntity;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface VentaMapper {
 
     VentaMapper INSTANCE = Mappers.getMapper(VentaMapper.class);

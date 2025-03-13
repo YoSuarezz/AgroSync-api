@@ -23,9 +23,9 @@ public class LoteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "id_proveedor")
+    @JoinColumn(name = "id_usuario")
     @ManyToOne
-    private UsuarioEntity usuarioEntity;
+    private UsuarioEntity usuario;
 
     @Column(name = "contramarca")
     private int contramarca;
@@ -37,11 +37,11 @@ public class LoteEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
 
-    @OneToMany(mappedBy = "loteEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<AnimalEntity> lista_animalEntity;
 
-    @OneToMany(mappedBy = "loteEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<GastoEntity> lista_gastoEntity;
 }
