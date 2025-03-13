@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class AnimalDomain {
 
     private String id;
-    private Long id_lote;
+    private LoteDomain lote;
     private String nombre;
     private BigDecimal peso;
     private String sexo;
