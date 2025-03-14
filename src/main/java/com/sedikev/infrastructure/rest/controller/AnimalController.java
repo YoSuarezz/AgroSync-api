@@ -5,7 +5,6 @@ import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.domain.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
