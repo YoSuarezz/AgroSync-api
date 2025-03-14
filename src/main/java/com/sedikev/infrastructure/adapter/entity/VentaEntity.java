@@ -27,7 +27,7 @@ public class VentaEntity {
     @OneToOne
     private AnimalEntity animal;
 
-    @JoinColumn(name = "id_comprador")
+    @JoinColumn(name = "id_usuario")
     @ManyToOne
     private UsuarioEntity usuario;
 
