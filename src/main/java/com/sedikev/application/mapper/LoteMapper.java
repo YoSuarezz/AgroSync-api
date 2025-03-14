@@ -11,9 +11,12 @@ public interface LoteMapper {
 
     LoteMapper INSTANCE = Mappers.getMapper(LoteMapper.class);
 
+    @Mapping(source = "id", target = "id")
     LoteDTO toDTO(LoteDomain loteDomain);
+    @Mapping(source = "id", target = "id")
     LoteDomain toDomain(LoteDTO loteDTO);
+    @Mapping(source = "id", target = "id")
     LoteEntity toEntity(LoteDomain loteDomain);
-    @Mapping(source = "usuario", target = "usuario")
+    @Mapping(source = "id", target = "id")
     LoteDomain toDomain(LoteEntity loteEntity);
 }

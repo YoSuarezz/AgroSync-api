@@ -12,9 +12,12 @@ public interface AnimalMapper {
 
     AnimalMapper INSTANCE = Mappers.getMapper(AnimalMapper.class);
 
+    @Mapping(source = "id", target = "id")
     AnimalDTO toDTO(AnimalDomain animalDomain);
+    @Mapping(source = "id", target = "id")
     AnimalDomain toDomain(AnimalDTO animalDTO);
+    @Mapping(source = "id", target = "id")
     AnimalEntity toEntity(AnimalDomain animalDomain);
-    @Mapping(source = "lote", target = "lote")
+    @Mapping(source = "id", target = "id")
     AnimalDomain toDomain(AnimalEntity animalEntity);
 }

@@ -11,8 +11,12 @@ public interface VentaMapper {
 
     VentaMapper INSTANCE = Mappers.getMapper(VentaMapper.class);
 
+    @Mapping(source = "id", target = "id")
     VentaDTO toDTO(VentaDomain ventaDomain);
+    @Mapping(source = "id", target = "id")
     VentaDomain toDomain(VentaDTO ventaDTO);
+    @Mapping(source = "id", target = "id")
     VentaEntity toEntity(VentaDomain ventaDomain);
+    @Mapping(source = "id", target = "id")
     VentaDomain toDomain(VentaEntity ventaEntity);
 }

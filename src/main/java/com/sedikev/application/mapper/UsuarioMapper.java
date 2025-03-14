@@ -11,8 +11,12 @@ public interface UsuarioMapper {
 
     UsuarioMapper INSTANCE = Mappers.getMapper(UsuarioMapper.class);
 
+    @Mapping(source = "id", target = "id")
     UsuarioDTO toDTO(UsuarioDomain usuarioDomain);
+    @Mapping(source = "id", target = "id")
     UsuarioDomain toDomain(UsuarioDTO usuarioDTO);
+    @Mapping(source = "id", target = "id")
     UsuarioEntity toEntity(UsuarioDomain usuarioDomain);
+    @Mapping(source = "id", target = "id")
     UsuarioDomain toDomain(UsuarioEntity usuarioEntity);
 }
