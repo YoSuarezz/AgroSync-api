@@ -4,7 +4,10 @@ import com.sedikev.application.dto.GastoDTO;
 import com.sedikev.application.mapper.GastoMapper;
 import com.sedikev.domain.model.GastoDomain;
 import com.sedikev.domain.service.GastoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,34 +24,43 @@ public class GastoController {
     private GastoMapper gastoMapper;
 
     @PostMapping(path = "gasto")
-    public GastoDTO create(@RequestBody GastoDTO gastoDTO) {
+    public ResponseEntity<GastoDTO> create(@Valid @RequestBody GastoDTO gastoDTO) {
         GastoDomain gastoDomain = gastoMapper.toDomain(gastoDTO);
         GastoDomain gastoSaved = gastoService.save(gastoDomain);
-        return gastoMapper.toDTO(gastoSaved);
+        GastoDTO responseDTO = gastoMapper.toDTO(gastoSaved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PutMapping(path = "gasto")
-    public GastoDTO update(@RequestBody GastoDTO gastoDTO) {
+    public ResponseEntity<GastoDTO> update(@Valid @RequestBody GastoDTO gastoDTO) {
         GastoDomain gastoDomain = gastoMapper.toDomain(gastoDTO);
         GastoDomain gastoSaved = gastoService.save(gastoDomain);
-        return gastoMapper.toDTO(gastoSaved);
+        GastoDTO responseDTO = gastoMapper.toDTO(gastoSaved);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping(path = "gasto/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         gastoService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "gasto/{id}")
-    public GastoDTO findById(@PathVariable Long id) {
-        return gastoMapper.toDTO(gastoService.findById(id));
+    public ResponseEntity<GastoDTO> findById(@PathVariable Long id) {
+        GastoDomain gastoDomain = gastoService.findById(id);
+        if (gastoDomain == null) {
+            return ResponseEntity.notFound().build();
+        }
+        GastoDTO responseDTO = gastoMapper.toDTO(gastoDomain);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping(path = "gastos")
-    public List<GastoDTO> findAll(){
-        return gastoService.findAll().stream()
+    public ResponseEntity<List<GastoDTO>> findAll() {
+        List<GastoDomain> gastoDomains = gastoService.findAll();
+        List<GastoDTO> responseDTOs = gastoDomains.stream()
                 .map(gastoMapper::toDTO)
                 .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDTOs);
     }
-
 }

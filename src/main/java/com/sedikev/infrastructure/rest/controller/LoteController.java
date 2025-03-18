@@ -4,7 +4,10 @@ import com.sedikev.application.dto.LoteDTO;
 import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.LoteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,34 +24,43 @@ public class LoteController {
     private LoteMapper loteMapper;
 
     @PostMapping(path = "lote")
-    public LoteDTO create(@RequestBody LoteDTO loteDTO) {
+    public ResponseEntity<LoteDTO> create(@Valid @RequestBody LoteDTO loteDTO) {
         LoteDomain loteDomain = loteMapper.toDomain(loteDTO);
         LoteDomain loteSaved = loteService.save(loteDomain);
-        return loteMapper.toDTO(loteSaved);
+        LoteDTO responseDTO = loteMapper.toDTO(loteSaved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PutMapping(path = "lote")
-    public LoteDTO update(@RequestBody LoteDTO loteDTO) {
+    public ResponseEntity<LoteDTO> update(@Valid @RequestBody LoteDTO loteDTO) {
         LoteDomain loteDomain = loteMapper.toDomain(loteDTO);
         LoteDomain loteSaved = loteService.save(loteDomain);
-        return loteMapper.toDTO(loteSaved);
+        LoteDTO responseDTO = loteMapper.toDTO(loteSaved);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping(path = "lote/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         loteService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "lote/{id}")
-    public LoteDTO findById(@PathVariable Long id) {
-        return loteMapper.toDTO(loteService.findById(id));
+    public ResponseEntity<LoteDTO> findById(@PathVariable Long id) {
+        LoteDomain loteDomain = loteService.findById(id);
+        if (loteDomain == null) {
+            return ResponseEntity.notFound().build();
+        }
+        LoteDTO responseDTO = loteMapper.toDTO(loteDomain);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping(path = "lotes")
-    public List<LoteDTO> findAll(){
-        return loteService.findAll().stream()
+    public ResponseEntity<List<LoteDTO>> findAll() {
+        List<LoteDomain> loteDomains = loteService.findAll();
+        List<LoteDTO> responseDTOs = loteDomains.stream()
                 .map(loteMapper::toDTO)
                 .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDTOs);
     }
-
 }

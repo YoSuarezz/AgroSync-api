@@ -4,7 +4,10 @@ import com.sedikev.application.dto.UsuarioDTO;
 import com.sedikev.application.mapper.UsuarioMapper;
 import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.domain.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,34 +24,43 @@ public class UsuarioController {
     private UsuarioMapper usuarioMapper;
 
     @PostMapping(path = "usuario")
-    public UsuarioDTO create(@RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioDTO> create(@Valid @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDomain usuarioDomain = usuarioMapper.toDomain(usuarioDTO);
         UsuarioDomain usuarioSaved = usuarioService.save(usuarioDomain);
-        return usuarioMapper.toDTO(usuarioSaved);
+        UsuarioDTO responseDTO = usuarioMapper.toDTO(usuarioSaved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PutMapping(path = "usuario")
-    public UsuarioDTO update(@RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioDTO> update(@Valid @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDomain usuarioDomain = usuarioMapper.toDomain(usuarioDTO);
         UsuarioDomain usuarioSaved = usuarioService.save(usuarioDomain);
-        return usuarioMapper.toDTO(usuarioSaved);
+        UsuarioDTO responseDTO = usuarioMapper.toDTO(usuarioSaved);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping(path = "usuario/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         usuarioService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "usuario/{id}")
-    public UsuarioDTO findById(@PathVariable Long id) {
-        return usuarioMapper.toDTO(usuarioService.findById(id));
+    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id) {
+        UsuarioDomain usuarioDomain = usuarioService.findById(id);
+        if (usuarioDomain == null) {
+            return ResponseEntity.notFound().build();
+        }
+        UsuarioDTO responseDTO = usuarioMapper.toDTO(usuarioDomain);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping(path = "usuarios")
-    public List<UsuarioDTO> findAll(){
-        return usuarioService.findAll().stream()
+    public ResponseEntity<List<UsuarioDTO>> findAll() {
+        List<UsuarioDomain> usuarioDomains = usuarioService.findAll();
+        List<UsuarioDTO> responseDTOs = usuarioDomains.stream()
                 .map(usuarioMapper::toDTO)
                 .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDTOs);
     }
-
 }

@@ -5,6 +5,7 @@ import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
 import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.domain.service.AnimalService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AnimalServiceImpl implements AnimalService {
 
-    @Autowired
     private final AnimalRepository animalRepository;
-
-    @Autowired
     private final AnimalMapper animalMapper;
 
     @Transactional
@@ -34,8 +32,9 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional(readOnly = true)
     @Override
     public AnimalDomain findById(String id) {
-        AnimalEntity animalEntity = animalRepository.findById(id).orElse(null);
-        return animalMapper.toDomain(animalEntity);
+        return animalRepository.findById(id)
+                .map(animalMapper::toDomain)
+                .orElseThrow(() -> new EntityNotFoundException("Animal no encontrado con ID: " + id));
     }
 
     @Transactional
