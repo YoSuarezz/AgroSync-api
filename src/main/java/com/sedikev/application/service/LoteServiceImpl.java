@@ -1,4 +1,4 @@
-package com.sedikev.application.usecase;
+package com.sedikev.application.service;
 
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.application.mapper.LoteMapper;
@@ -17,10 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LoteServiceImpl implements LoteService {
 
-    @Autowired
     private final LoteRepository loteRepository;
-
-    @Autowired
     private final LoteMapper loteMapper;
 
     @Transactional

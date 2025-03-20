@@ -1,4 +1,4 @@
-package com.sedikev.application.usecase;
+package com.sedikev.application.service;
 
 import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.application.mapper.CarteraMapper;
@@ -17,10 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CarteraServiceImpl implements CarteraService {
 
-    @Autowired
     private final CarteraRepository carteraRepository;
-
-    @Autowired
     private final CarteraMapper carteraMapper;
 
     @Transactional

@@ -1,4 +1,4 @@
-package com.sedikev.application.usecase;
+package com.sedikev.application.service;
 
 import com.sedikev.domain.model.GastoDomain;
 import com.sedikev.application.mapper.GastoMapper;
@@ -17,10 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GastoServiceImpl implements GastoService {
 
-    @Autowired
     private final GastoRepository gastoRepository;
-
-    @Autowired
     private final GastoMapper gastoMapper;
 
     @Transactional

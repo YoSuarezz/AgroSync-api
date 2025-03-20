@@ -1,4 +1,4 @@
-package com.sedikev.application.usecase;
+package com.sedikev.application.service;
 
 import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.application.mapper.UsuarioMapper;
@@ -17,10 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
-    @Autowired
     private final UsuarioRepository usuarioRepository;
-
-    @Autowired
     private final UsuarioMapper usuarioMapper;
 
     @Transactional

@@ -5,6 +5,7 @@ import com.sedikev.application.mapper.GastoMapper;
 import com.sedikev.domain.model.GastoDomain;
 import com.sedikev.domain.service.GastoService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
+@RequiredArgsConstructor
 public class GastoController {
 
-    @Autowired
-    private GastoService gastoService;
-
-    @Autowired
-    private GastoMapper gastoMapper;
+    private final GastoService gastoService;
+    private final GastoMapper gastoMapper;
 
     @PostMapping(path = "gasto")
-    public ResponseEntity<GastoDTO> create(@Valid @RequestBody GastoDTO gastoDTO) {
+    public ResponseEntity<GastoDTO> create(@RequestBody GastoDTO gastoDTO) {
         GastoDomain gastoDomain = gastoMapper.toDomain(gastoDTO);
         GastoDomain gastoSaved = gastoService.save(gastoDomain);
         GastoDTO responseDTO = gastoMapper.toDTO(gastoSaved);
@@ -32,7 +31,7 @@ public class GastoController {
     }
 
     @PutMapping(path = "gasto")
-    public ResponseEntity<GastoDTO> update(@Valid @RequestBody GastoDTO gastoDTO) {
+    public ResponseEntity<GastoDTO> update(@RequestBody GastoDTO gastoDTO) {
         GastoDomain gastoDomain = gastoMapper.toDomain(gastoDTO);
         GastoDomain gastoSaved = gastoService.save(gastoDomain);
         GastoDTO responseDTO = gastoMapper.toDTO(gastoSaved);

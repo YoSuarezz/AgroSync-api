@@ -1,4 +1,4 @@
-package com.sedikev.application.usecase;
+package com.sedikev.application.service;
 
 import com.sedikev.domain.model.PagoDomain;
 import com.sedikev.application.mapper.PagoMapper;
@@ -17,10 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PagoServiceImpl implements PagoService {
 
-    @Autowired
     private final PagoRepository pagoRepository;
-
-    @Autowired
     private final PagoMapper pagoMapper;
 
     @Transactional

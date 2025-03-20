@@ -5,6 +5,7 @@ import com.sedikev.application.mapper.PagoMapper;
 import com.sedikev.domain.model.PagoDomain;
 import com.sedikev.domain.service.PagoService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
+@RequiredArgsConstructor
 public class PagoController {
 
-    @Autowired
-    private PagoService pagoService;
-
-    @Autowired
-    private PagoMapper pagoMapper;
+    private final PagoService pagoService;
+    private final PagoMapper pagoMapper;
 
     @PostMapping(path = "pago")
-    public ResponseEntity<PagoDTO> create(@Valid @RequestBody PagoDTO pagoDTO) {
+    public ResponseEntity<PagoDTO> create(@RequestBody PagoDTO pagoDTO) {
         PagoDomain pagoDomain = pagoMapper.toDomain(pagoDTO);
         PagoDomain pagoSaved = pagoService.save(pagoDomain);
         PagoDTO responseDTO = pagoMapper.toDTO(pagoSaved);
@@ -32,7 +31,7 @@ public class PagoController {
     }
 
     @PutMapping(path = "pago")
-    public ResponseEntity<PagoDTO> update(@Valid @RequestBody PagoDTO pagoDTO) {
+    public ResponseEntity<PagoDTO> update(@RequestBody PagoDTO pagoDTO) {
         PagoDomain pagoDomain = pagoMapper.toDomain(pagoDTO);
         PagoDomain pagoSaved = pagoService.save(pagoDomain);
         PagoDTO responseDTO = pagoMapper.toDTO(pagoSaved);

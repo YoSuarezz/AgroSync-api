@@ -5,6 +5,7 @@ import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.domain.service.AnimalService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
+@RequiredArgsConstructor
 public class AnimalController {
 
-    @Autowired
-    private AnimalService animalService;
-
-    @Autowired
-    private AnimalMapper animalMapper;
+    private final AnimalService animalService;
+    private final AnimalMapper animalMapper;
 
     @PostMapping(path = "animal")
-    public ResponseEntity<AnimalDTO> create(@Valid @RequestBody AnimalDTO animalDTO) {
+    public ResponseEntity<AnimalDTO> create(@RequestBody AnimalDTO animalDTO) {
         AnimalDomain animalDomain = animalMapper.toDomain(animalDTO);
         AnimalDomain animalSaved = animalService.save(animalDomain);
         AnimalDTO responseDTO = animalMapper.toDTO(animalSaved);
@@ -32,7 +31,7 @@ public class AnimalController {
     }
 
     @PutMapping(path = "animal")
-    public ResponseEntity<AnimalDTO> update(@Valid @RequestBody AnimalDTO animalDTO) {
+    public ResponseEntity<AnimalDTO> update(@RequestBody AnimalDTO animalDTO) {
         AnimalDomain animalDomain = animalMapper.toDomain(animalDTO);
         AnimalDomain animalSaved = animalService.save(animalDomain);
         AnimalDTO responseDTO = animalMapper.toDTO(animalSaved);
@@ -60,7 +59,7 @@ public class AnimalController {
         List<AnimalDTO> responseDTOs = animalDomains.stream()
                 .map(animalMapper::toDTO)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(responseDTOs); // Código 200 OK
+        return ResponseEntity.ok(responseDTOs);
     }
 
 }

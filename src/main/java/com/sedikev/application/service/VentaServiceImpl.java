@@ -1,4 +1,4 @@
-package com.sedikev.application.usecase;
+package com.sedikev.application.service;
 
 import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.application.mapper.VentaMapper;
@@ -17,10 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VentaServiceImpl implements VentaService {
 
-    @Autowired
     private final VentaRepository ventaRepository;
-
-    @Autowired
     private final VentaMapper ventaMapper;
 
     @Transactional

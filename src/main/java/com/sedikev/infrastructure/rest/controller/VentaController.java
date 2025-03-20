@@ -9,6 +9,7 @@ import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.domain.service.CarteraService;
 import com.sedikev.domain.service.VentaService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
+@RequiredArgsConstructor
 public class VentaController {
 
-    @Autowired
-    private VentaService ventaService;
-
-    @Autowired
-    private VentaMapper ventaMapper;
+    private final VentaService ventaService;
+    private final VentaMapper ventaMapper;
 
     @PostMapping(path = "venta")
-    public ResponseEntity<VentaDTO> create(@Valid @RequestBody VentaDTO ventaDTO) {
+    public ResponseEntity<VentaDTO> create(@RequestBody VentaDTO ventaDTO) {
         VentaDomain ventaDomain = ventaMapper.toDomain(ventaDTO);
         VentaDomain ventaSaved = ventaService.save(ventaDomain);
         VentaDTO responseDTO = ventaMapper.toDTO(ventaSaved);
@@ -36,7 +35,7 @@ public class VentaController {
     }
 
     @PutMapping(path = "venta")
-    public ResponseEntity<VentaDTO> update(@Valid @RequestBody VentaDTO ventaDTO) {
+    public ResponseEntity<VentaDTO> update(@RequestBody VentaDTO ventaDTO) {
         VentaDomain ventaDomain = ventaMapper.toDomain(ventaDTO);
         VentaDomain ventaSaved = ventaService.save(ventaDomain);
         VentaDTO responseDTO = ventaMapper.toDTO(ventaSaved);

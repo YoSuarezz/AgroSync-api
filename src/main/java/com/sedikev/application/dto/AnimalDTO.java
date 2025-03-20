@@ -1,10 +1,10 @@
 package com.sedikev.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-
 @Data
 @Getter
 @Setter

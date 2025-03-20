@@ -5,6 +5,7 @@ import com.sedikev.application.mapper.CarteraMapper;
 import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.service.CarteraService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
+@RequiredArgsConstructor
 public class CarteraController {
 
-    @Autowired
-    private CarteraService carteraService;
-
-    @Autowired
-    private CarteraMapper carteraMapper;
+    private final CarteraService carteraService;
+    private final CarteraMapper carteraMapper;
 
     @PostMapping(path = "cartera")
-    public ResponseEntity<CarteraDTO> create(@Valid @RequestBody CarteraDTO carteraDTO) {
+    public ResponseEntity<CarteraDTO> create(@RequestBody CarteraDTO carteraDTO) {
         CarteraDomain carteraDomain = carteraMapper.toDomain(carteraDTO);
         CarteraDomain carteraSaved = carteraService.save(carteraDomain);
         CarteraDTO responseDTO = carteraMapper.toDTO(carteraSaved);
@@ -32,7 +31,7 @@ public class CarteraController {
     }
 
     @PutMapping(path = "cartera")
-    public ResponseEntity<CarteraDTO> update(@Valid @RequestBody CarteraDTO carteraDTO) {
+    public ResponseEntity<CarteraDTO> update(@RequestBody CarteraDTO carteraDTO) {
         CarteraDomain carteraDomain = carteraMapper.toDomain(carteraDTO);
         CarteraDomain carteraSaved = carteraService.save(carteraDomain);
         CarteraDTO responseDTO = carteraMapper.toDTO(carteraSaved);

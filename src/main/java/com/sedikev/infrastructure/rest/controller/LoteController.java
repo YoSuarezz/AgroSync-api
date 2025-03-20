@@ -5,6 +5,7 @@ import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.LoteService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
+@RequiredArgsConstructor
 public class LoteController {
 
-    @Autowired
-    private LoteService loteService;
-
-    @Autowired
-    private LoteMapper loteMapper;
+    private final LoteService loteService;
+    private final LoteMapper loteMapper;
 
     @PostMapping(path = "lote")
-    public ResponseEntity<LoteDTO> create(@Valid @RequestBody LoteDTO loteDTO) {
+    public ResponseEntity<LoteDTO> create(@RequestBody LoteDTO loteDTO) {
         LoteDomain loteDomain = loteMapper.toDomain(loteDTO);
         LoteDomain loteSaved = loteService.save(loteDomain);
         LoteDTO responseDTO = loteMapper.toDTO(loteSaved);
@@ -32,7 +31,7 @@ public class LoteController {
     }
 
     @PutMapping(path = "lote")
-    public ResponseEntity<LoteDTO> update(@Valid @RequestBody LoteDTO loteDTO) {
+    public ResponseEntity<LoteDTO> update(@RequestBody LoteDTO loteDTO) {
         LoteDomain loteDomain = loteMapper.toDomain(loteDTO);
         LoteDomain loteSaved = loteService.save(loteDomain);
         LoteDTO responseDTO = loteMapper.toDTO(loteSaved);
