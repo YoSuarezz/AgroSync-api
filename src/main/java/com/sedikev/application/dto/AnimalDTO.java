@@ -10,18 +10,17 @@ import java.math.BigDecimal;
 @Setter
 public class AnimalDTO {
 
-    private String id;
+    private int id;
     private LoteDTO lote;
-    private String nombre;
     private BigDecimal peso;
     private String sexo;
     private Integer num_lote;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -31,14 +30,6 @@ public class AnimalDTO {
 
     public void setLote(LoteDTO lote) {
         this.lote = lote;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public BigDecimal getPeso() {

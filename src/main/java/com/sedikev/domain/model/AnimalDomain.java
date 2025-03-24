@@ -13,7 +13,6 @@ public class AnimalDomain {
 
     private String id;
     private LoteDomain lote;
-    private String nombre;
     private BigDecimal peso;
     private String sexo;
     private Integer num_lote;
@@ -32,14 +31,6 @@ public class AnimalDomain {
 
     public void setLote(LoteDomain lote) {
         this.lote = lote;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public BigDecimal getPeso() {

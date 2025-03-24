@@ -1,7 +1,9 @@
 package com.sedikev.application.service;
 
+import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.model.PagoDomain;
 import com.sedikev.application.mapper.PagoMapper;
+import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import com.sedikev.infrastructure.adapter.entity.PagoEntity;
 import com.sedikev.domain.repository.PagoRepository;
 import com.sedikev.domain.service.PagoService;
@@ -26,6 +28,14 @@ public class PagoServiceImpl implements PagoService {
         PagoEntity pagoSaved = pagoRepository.save(pagoEntity);
         return pagoMapper.toDomain(pagoSaved);
     }
+
+    @Transactional
+    public LoteDomain update(LoteDomain loteDomain) {
+        LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
+        LoteEntity loteSaved = loteRepository.save(loteEntity);
+        return loteMapper.toDomain(loteSaved);
+    }
+
 
     @Transactional(readOnly = true)
     public PagoDomain findById(Long id) {

@@ -8,6 +8,8 @@ public interface GastoService {
 
     GastoDomain save(GastoDomain gastoDomain);
 
+    GastoDomain update(GastoDomain gastoDomain);
+
     GastoDomain findById(Long id);
 
     void deleteById(Long id);

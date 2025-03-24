@@ -27,6 +27,14 @@ public class LoteServiceImpl implements LoteService {
         return loteMapper.toDomain(loteSaved);
     }
 
+    @Transactional
+    public LoteDomain update(LoteDomain loteDomain) {
+        LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
+        LoteEntity loteSaved = loteRepository.save(loteEntity);
+        return loteMapper.toDomain(loteSaved);
+    }
+
+
     @Transactional(readOnly = true)
     public LoteDomain findById(Long id) {
         return loteMapper.toDomain(loteRepository.findById(id).orElse(null));

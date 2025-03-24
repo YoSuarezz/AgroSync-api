@@ -8,6 +8,8 @@ public interface LoteService {
 
     LoteDomain save(LoteDomain LoteDomain);
 
+    LoteDomain update(LoteDomain LoteDomain);
+
     LoteDomain findById(Long id);
 
     void deleteById(Long id);

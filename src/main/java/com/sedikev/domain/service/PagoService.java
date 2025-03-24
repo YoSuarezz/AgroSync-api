@@ -8,6 +8,8 @@ public interface PagoService {
 
     PagoDomain save(PagoDomain PagoDomain);
 
+    PagoDomain update(PagoDomain PagoDomain);
+
     PagoDomain findById(Long id);
 
     void deleteById(Long id);

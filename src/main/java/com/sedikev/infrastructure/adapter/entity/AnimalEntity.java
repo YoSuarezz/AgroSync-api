@@ -22,9 +22,6 @@ public class AnimalEntity {
     @ManyToOne
     private LoteEntity lote;
 
-    @Column(name = "nombre")
-    private String nombre;
-
     @Column(name = "peso")
     private BigDecimal peso;
 
@@ -48,14 +45,6 @@ public class AnimalEntity {
 
     public void setLote(LoteEntity lote) {
         this.lote = lote;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public BigDecimal getPeso() {

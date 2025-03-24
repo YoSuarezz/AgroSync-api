@@ -8,6 +8,8 @@ public interface VentaService {
 
     VentaDomain save(VentaDomain VentaDomain);
 
+    VentaDomain update(VentaDomain VentaDomain);
+
     VentaDomain findById(Long id);
 
     void deleteById(Long id);

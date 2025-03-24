@@ -27,6 +27,13 @@ public class VentaServiceImpl implements VentaService {
         return ventaMapper.toDomain(ventaSaved);
     }
 
+    @Transactional
+    public VentaDomain update(VentaDomain ventaDomain) {
+        VentaEntity ventaEntity = ventaMapper.toEntity(ventaDomain);
+        VentaEntity ventaSaved = ventaRepository.save(ventaEntity);
+        return ventaMapper.toDomain(ventaSaved);
+    }
+
     @Transactional(readOnly = true)
     public VentaDomain findById(Long id) {
         return ventaMapper.toDomain(ventaRepository.findById(id).orElse(null));

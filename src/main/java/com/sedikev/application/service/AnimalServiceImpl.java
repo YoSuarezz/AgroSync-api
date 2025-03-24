@@ -1,5 +1,7 @@
 package com.sedikev.application.service;
 
+import com.sedikev.application.usecase.animal.*;
+import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
@@ -17,45 +19,40 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AnimalServiceImpl implements AnimalService {
 
-    private final AnimalRepository animalRepository;
-    private final AnimalMapper animalMapper;
+    private final CreateAnimalUseCase createAnimalUseCase;
+    private final UpdateAnimalUseCase updateAnimalUseCase;
+    private final DeleteAnimalUseCase deleteAnimalUseCase;
+    private final GetAnimalByIdUseCase getAnimalByIdUseCase;
+    private final GetAllAnimalsUseCase getAllAnimalsUseCase;
+    private final GetAnimalsByLoteUseCase getAnimalsByLoteUseCase;
 
-    @Transactional
     @Override
     public AnimalDomain save(AnimalDomain animalDomain) {
-        AnimalEntity animalEntity = animalMapper.toEntity(animalDomain);
-        AnimalEntity savedEntity = animalRepository.save(animalEntity);
-        return animalMapper.toDomain(savedEntity);
+        return createAnimalUseCase.ejecutar(animalDomain);
     }
 
-    @Transactional(readOnly = true)
+    @Override
+    public AnimalDomain update(AnimalDomain animalDomain) {
+        return updateAnimalUseCase.ejecutar(animalDomain);
+    }
+
     @Override
     public AnimalDomain findById(String id) {
-        return animalRepository.findById(id)
-                .map(animalMapper::toDomain)
-                .orElseThrow(() -> new EntityNotFoundException("Animal no encontrado con ID: " + id));
+        return getAnimalByIdUseCase.ejecutar(id);
     }
 
-    @Transactional
     @Override
     public void deleteById(String id) {
-        animalRepository.deleteById(id);
+        deleteAnimalUseCase.ejecutar(id);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<AnimalDomain> findAll() {
-        return animalRepository.findAll().stream()
-                .map(animalMapper::toDomain)
-                .collect(Collectors.toList());
+        return getAllAnimalsUseCase.ejecutar(null);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<AnimalDomain> findByLote(Long idLote) {
-        return animalRepository.findAll().stream()
-                .filter(animalEntity -> idLote.equals(animalEntity.getLote().getId()))
-                .map(animalMapper::toDomain)
-                .collect(Collectors.toList());
+        return getAnimalsByLoteUseCase.ejecutar(idLote);
     }
 }

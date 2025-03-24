@@ -27,6 +27,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMapper.toDomain(usuarioSaved);
     }
 
+    @Transactional
+    public UsuarioDomain update(UsuarioDomain usuarioDomain) {
+        UsuarioEntity usuarioEntity = usuarioMapper.toEntity(usuarioDomain);
+        UsuarioEntity usuarioSaved = usuarioRepository.save(usuarioEntity);
+        return usuarioMapper.toDomain(usuarioSaved);
+    }
+
     @Transactional(readOnly = true)
     public UsuarioDomain findById(Long id) {
         return usuarioMapper.toDomain(usuarioRepository.findById(id).orElse(null));

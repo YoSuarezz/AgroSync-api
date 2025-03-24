@@ -28,6 +28,14 @@ public class CarteraServiceImpl implements CarteraService {
         return carteraMapper.toDomain(carteraSaved);
     }
 
+    @Transactional
+    @Override
+    public CarteraDomain update(CarteraDomain carteraDomain) {
+        CarteraEntity carteraEntity = carteraMapper.toEntity(carteraDomain);
+        CarteraEntity carteraSaved = carteraRepository.save(carteraEntity);
+        return carteraMapper.toDomain(carteraSaved);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public CarteraDomain findById(Long id) {

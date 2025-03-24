@@ -27,6 +27,13 @@ public class GastoServiceImpl implements GastoService {
         return gastoMapper.toDomain(gastoSaved);
     }
 
+    @Transactional
+    public GastoDomain update(GastoDomain gastoDomain) {
+        GastoEntity gastoEntity = gastoMapper.toEntity(gastoDomain);
+        GastoEntity gastoSaved = gastoRepository.save(gastoEntity);
+        return gastoMapper.toDomain(gastoSaved);
+    }
+
     @Transactional(readOnly = true)
     public GastoDomain findById(Long id) {
         return gastoMapper.toDomain(gastoRepository.findById(id).orElse(null));
