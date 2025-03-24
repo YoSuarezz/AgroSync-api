@@ -1,14 +1,10 @@
 package com.sedikev.application.service;
 
+import com.sedikev.application.usecase.usuario.*;
 import com.sedikev.domain.model.UsuarioDomain;
-import com.sedikev.application.mapper.UsuarioMapper;
-import com.sedikev.infrastructure.adapter.entity.UsuarioEntity;
-import com.sedikev.domain.repository.UsuarioRepository;
 import com.sedikev.domain.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,37 +13,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final UsuarioMapper usuarioMapper;
+    private final CreateUsuarioUseCase createUsuarioUseCase;
+    private final UpdateUsuarioUseCase updateUsuarioUseCase;
+    private final DeleteUsuarioUseCase deleteUsuarioUseCase;
+    private final GetUsuarioByIdUseCase getUsuarioByIdUseCase;
+    private final GetAllUsuariosUseCase getAllUsuariosUseCase;
 
-    @Transactional
+    @Override
     public UsuarioDomain save(UsuarioDomain usuarioDomain) {
-        UsuarioEntity usuarioEntity = usuarioMapper.toEntity(usuarioDomain);
-        UsuarioEntity usuarioSaved = usuarioRepository.save(usuarioEntity);
-        return usuarioMapper.toDomain(usuarioSaved);
+        return createUsuarioUseCase.ejecutar(usuarioDomain);
     }
 
-    @Transactional
+    @Override
     public UsuarioDomain update(UsuarioDomain usuarioDomain) {
-        UsuarioEntity usuarioEntity = usuarioMapper.toEntity(usuarioDomain);
-        UsuarioEntity usuarioSaved = usuarioRepository.save(usuarioEntity);
-        return usuarioMapper.toDomain(usuarioSaved);
+        return updateUsuarioUseCase.ejecutar(usuarioDomain);
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public UsuarioDomain findById(Long id) {
-        return usuarioMapper.toDomain(usuarioRepository.findById(id).orElse(null));
+        return getUsuarioByIdUseCase.ejecutar(id);
     }
 
-    @Transactional
+    @Override
     public void deleteById(Long id) {
-        usuarioRepository.deleteById(id);
+        deleteUsuarioUseCase.ejecutar(id);
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public List<UsuarioDomain> findAll() {
-        return usuarioRepository.findAll().stream()
-                .map(usuarioMapper::toDomain)
-                .collect(Collectors.toList());
+        return getAllUsuariosUseCase.ejecutar(null);
     }
 }

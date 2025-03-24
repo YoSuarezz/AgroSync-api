@@ -1,14 +1,10 @@
 package com.sedikev.application.service;
 
+import com.sedikev.application.usecase.gasto.*;
 import com.sedikev.domain.model.GastoDomain;
-import com.sedikev.application.mapper.GastoMapper;
-import com.sedikev.infrastructure.adapter.entity.GastoEntity;
-import com.sedikev.domain.repository.GastoRepository;
 import com.sedikev.domain.service.GastoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,37 +13,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GastoServiceImpl implements GastoService {
 
-    private final GastoRepository gastoRepository;
-    private final GastoMapper gastoMapper;
+    private final CreateGastoUseCase createGastoUseCase;
+    private final UpdateGastoUseCase updateGastoUseCase;
+    private final DeleteGastoUseCase deleteGastoUseCase;
+    private final GetGastoByIdUseCase getGastoByIdUseCase;
+    private final GetAllGastosUseCase getAllGastosUseCase;
 
-    @Transactional
+    @Override
     public GastoDomain save(GastoDomain gastoDomain) {
-        GastoEntity gastoEntity = gastoMapper.toEntity(gastoDomain);
-        GastoEntity gastoSaved = gastoRepository.save(gastoEntity);
-        return gastoMapper.toDomain(gastoSaved);
+        return createGastoUseCase.ejecutar(gastoDomain);
     }
 
-    @Transactional
+    @Override
     public GastoDomain update(GastoDomain gastoDomain) {
-        GastoEntity gastoEntity = gastoMapper.toEntity(gastoDomain);
-        GastoEntity gastoSaved = gastoRepository.save(gastoEntity);
-        return gastoMapper.toDomain(gastoSaved);
+        return updateGastoUseCase.ejecutar(gastoDomain);
     }
 
-    @Transactional(readOnly = true)
-    public GastoDomain findById(Long id) {
-        return gastoMapper.toDomain(gastoRepository.findById(id).orElse(null));
-    }
-
-    @Transactional
+    @Override
     public void deleteById(Long id) {
-        gastoRepository.deleteById(id);
+        deleteGastoUseCase.ejecutar(id);
     }
 
-    @Transactional(readOnly = true)
+    @Override
+    public GastoDomain findById(Long id) {
+        return getGastoByIdUseCase.ejecutar(id);
+    }
+
+    @Override
     public List<GastoDomain> findAll() {
-        return gastoRepository.findAll().stream()
-                .map(gastoMapper::toDomain)
-                .collect(Collectors.toList());
+        return getAllGastosUseCase.ejecutar(null);
     }
 }

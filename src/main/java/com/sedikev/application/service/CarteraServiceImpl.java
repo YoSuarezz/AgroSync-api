@@ -1,14 +1,10 @@
 package com.sedikev.application.service;
 
+import com.sedikev.application.usecase.cartera.*;
 import com.sedikev.domain.model.CarteraDomain;
-import com.sedikev.application.mapper.CarteraMapper;
-import com.sedikev.infrastructure.adapter.entity.CarteraEntity;
-import com.sedikev.domain.repository.CarteraRepository;
 import com.sedikev.domain.service.CarteraService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,43 +13,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CarteraServiceImpl implements CarteraService {
 
-    private final CarteraRepository carteraRepository;
-    private final CarteraMapper carteraMapper;
+    private final CreateCarteraUseCase createCarteraUseCase;
+    private final UpdateCarteraUseCase updateCarteraUseCase;
+    private final DeleteCarteraUseCase deleteCarteraUseCase;
+    private final GetCarteraByIdUseCase getCarteraByIdUseCase;
+    private final GetAllCarterasUseCase getAllCarterasUseCase;
 
-    @Transactional
     @Override
     public CarteraDomain save(CarteraDomain carteraDomain) {
-        CarteraEntity carteraEntity = carteraMapper.toEntity(carteraDomain);
-        CarteraEntity carteraSaved = carteraRepository.save(carteraEntity);
-        return carteraMapper.toDomain(carteraSaved);
+        return createCarteraUseCase.ejecutar(carteraDomain);
     }
 
-    @Transactional
     @Override
     public CarteraDomain update(CarteraDomain carteraDomain) {
-        CarteraEntity carteraEntity = carteraMapper.toEntity(carteraDomain);
-        CarteraEntity carteraSaved = carteraRepository.save(carteraEntity);
-        return carteraMapper.toDomain(carteraSaved);
+        return updateCarteraUseCase.ejecutar(carteraDomain);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public CarteraDomain findById(Long id) {
-        CarteraEntity carteraEntity = carteraRepository.findById(id).orElse(null);
-        return carteraMapper.toDomain(carteraEntity);
-    }
-
-    @Transactional
     @Override
     public void deleteById(Long id) {
-        carteraRepository.deleteById(id);
+        deleteCarteraUseCase.ejecutar(id);
     }
 
-    @Transactional(readOnly = true)
+    @Override
+    public CarteraDomain findById(Long id) {
+        return getCarteraByIdUseCase.ejecutar(id);
+    }
+
     @Override
     public List<CarteraDomain> findAll() {
-        return carteraRepository.findAll().stream()
-                .map(carteraMapper::toDomain)
-                .collect(Collectors.toList());
+        return getAllCarterasUseCase.ejecutar(null);
     }
 }

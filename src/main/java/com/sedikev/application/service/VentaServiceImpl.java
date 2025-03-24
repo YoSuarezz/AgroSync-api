@@ -1,14 +1,10 @@
 package com.sedikev.application.service;
 
+import com.sedikev.application.usecase.venta.*;
 import com.sedikev.domain.model.VentaDomain;
-import com.sedikev.application.mapper.VentaMapper;
-import com.sedikev.infrastructure.adapter.entity.VentaEntity;
-import com.sedikev.domain.repository.VentaRepository;
 import com.sedikev.domain.service.VentaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,37 +13,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VentaServiceImpl implements VentaService {
 
-    private final VentaRepository ventaRepository;
-    private final VentaMapper ventaMapper;
+    private final CreateVentaUseCase createVentaUseCase;
+    private final UpdateVentaUseCase updateVentaUseCase;
+    private final DeleteVentaUseCase deleteVentaUseCase;
+    private final GetVentaByIdUseCase getVentaByIdUseCase;
+    private final GetAllVentasUseCase getAllVentasUseCase;
 
-    @Transactional
+    @Override
     public VentaDomain save(VentaDomain ventaDomain) {
-        VentaEntity ventaEntity = ventaMapper.toEntity(ventaDomain);
-        VentaEntity ventaSaved = ventaRepository.save(ventaEntity);
-        return ventaMapper.toDomain(ventaSaved);
+        return createVentaUseCase.ejecutar(ventaDomain);
     }
 
-    @Transactional
+    @Override
     public VentaDomain update(VentaDomain ventaDomain) {
-        VentaEntity ventaEntity = ventaMapper.toEntity(ventaDomain);
-        VentaEntity ventaSaved = ventaRepository.save(ventaEntity);
-        return ventaMapper.toDomain(ventaSaved);
+        return updateVentaUseCase.ejecutar(ventaDomain);
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public VentaDomain findById(Long id) {
-        return ventaMapper.toDomain(ventaRepository.findById(id).orElse(null));
+        return getVentaByIdUseCase.ejecutar(id);
     }
 
-    @Transactional
+    @Override
     public void deleteById(Long id) {
-        ventaRepository.deleteById(id);
+        deleteVentaUseCase.ejecutar(id);
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public List<VentaDomain> findAll() {
-        return ventaRepository.findAll().stream()
-                .map(ventaMapper::toDomain)
-                .collect(Collectors.toList());
+        return getAllVentasUseCase.ejecutar(null);
     }
 }

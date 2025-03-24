@@ -1,16 +1,10 @@
 package com.sedikev.application.service;
 
 import com.sedikev.application.usecase.animal.*;
-import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.AnimalDomain;
-import com.sedikev.application.mapper.AnimalMapper;
-import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
-import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.domain.service.AnimalService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;

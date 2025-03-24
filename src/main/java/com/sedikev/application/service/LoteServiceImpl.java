@@ -1,14 +1,10 @@
 package com.sedikev.application.service;
 
+import com.sedikev.application.usecase.lote.*;
 import com.sedikev.domain.model.LoteDomain;
-import com.sedikev.application.mapper.LoteMapper;
-import com.sedikev.infrastructure.adapter.entity.LoteEntity;
-import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.domain.service.LoteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,38 +13,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LoteServiceImpl implements LoteService {
 
-    private final LoteRepository loteRepository;
-    private final LoteMapper loteMapper;
+    private final CreateLoteUseCase createLoteUseCase;
+    private final UpdateLoteUseCase updateLoteUseCase;
+    private final DeleteLoteUseCase deleteLoteUseCase;
+    private final GetLoteByIdUseCase getLoteByIdUseCase;
+    private final GetAllLotesUseCase getAllLotesUseCase;
 
-    @Transactional
+    @Override
     public LoteDomain save(LoteDomain loteDomain) {
-        LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
-        LoteEntity loteSaved = loteRepository.save(loteEntity);
-        return loteMapper.toDomain(loteSaved);
+        return createLoteUseCase.ejecutar(loteDomain);
     }
 
-    @Transactional
+    @Override
     public LoteDomain update(LoteDomain loteDomain) {
-        LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
-        LoteEntity loteSaved = loteRepository.save(loteEntity);
-        return loteMapper.toDomain(loteSaved);
+        return updateLoteUseCase.ejecutar(loteDomain);
     }
 
-
-    @Transactional(readOnly = true)
+    @Override
     public LoteDomain findById(Long id) {
-        return loteMapper.toDomain(loteRepository.findById(id).orElse(null));
+        return getLoteByIdUseCase.ejecutar(id);
     }
 
-    @Transactional
+    @Override
     public void deleteById(Long id) {
-        loteRepository.deleteById(id);
+        deleteLoteUseCase.ejecutar(id);
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public List<LoteDomain> findAll() {
-        return loteRepository.findAll().stream()
-                .map(loteMapper::toDomain)
-                .collect(Collectors.toList());
+        return getAllLotesUseCase.ejecutar(null);
     }
 }

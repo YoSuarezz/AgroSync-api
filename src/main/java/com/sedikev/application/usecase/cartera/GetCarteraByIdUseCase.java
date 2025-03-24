@@ -1,10 +1,10 @@
 package com.sedikev.application.usecase.cartera;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
+import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.repository.CarteraRepository;
 import com.sedikev.application.mapper.CarteraMapper;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -20,6 +20,6 @@ public class GetCarteraByIdUseCase implements UseCaseWithReturn<Long, CarteraDom
 
         return carteraRepository.findById(id)
                 .map(carteraMapper::toDomain)
-                .orElseThrow(() -> new EntityNotFoundException("cartera no encontrada con ID: " + id));
+                .orElseThrow(() -> new BusinessSedikevException("cartera no encontrada con ID: " + id));
     }
 }

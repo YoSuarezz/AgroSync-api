@@ -5,8 +5,6 @@ import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.application.usecase.UseCaseWithReturn;
-import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -23,6 +21,6 @@ public class GetAnimalByIdUseCase implements UseCaseWithReturn<String, AnimalDom
         // Mapear la entidad al dominio
         return animalRepository.findById(id)
                 .map(animalMapper::toDomain)
-                .orElseThrow(() -> new EntityNotFoundException("Animal no encontrado con ID: " + id));
+                .orElseThrow(() -> new BusinessSedikevException("Animal no encontrado con ID: " + id));
     }
 }

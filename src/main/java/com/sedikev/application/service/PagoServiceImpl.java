@@ -1,16 +1,10 @@
 package com.sedikev.application.service;
 
-import com.sedikev.domain.model.LoteDomain;
+import com.sedikev.application.usecase.pago.*;
 import com.sedikev.domain.model.PagoDomain;
-import com.sedikev.application.mapper.PagoMapper;
-import com.sedikev.infrastructure.adapter.entity.LoteEntity;
-import com.sedikev.infrastructure.adapter.entity.PagoEntity;
-import com.sedikev.domain.repository.PagoRepository;
 import com.sedikev.domain.service.PagoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,38 +13,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PagoServiceImpl implements PagoService {
 
-    private final PagoRepository pagoRepository;
-    private final PagoMapper pagoMapper;
+    private final CreatePagoUseCase createPagoUseCase;
+    private final UpdatePagoUseCase updatePagoUseCase;
+    private final DeletePagoUseCase deletePagoUseCase;
+    private final GetPagoByIdUseCase getPagoByIdUseCase;
+    private final GetAllPagosUseCase getAllPagosUseCase;
 
-    @Transactional
+    @Override
     public PagoDomain save(PagoDomain pagoDomain) {
-        PagoEntity pagoEntity = pagoMapper.toEntity(pagoDomain);
-        PagoEntity pagoSaved = pagoRepository.save(pagoEntity);
-        return pagoMapper.toDomain(pagoSaved);
+        return createPagoUseCase.ejecutar(pagoDomain);
     }
 
-    @Transactional
-    public LoteDomain update(LoteDomain loteDomain) {
-        LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
-        LoteEntity loteSaved = loteRepository.save(loteEntity);
-        return loteMapper.toDomain(loteSaved);
+    @Override
+    public PagoDomain update(PagoDomain pagoDomain) {
+        return updatePagoUseCase.ejecutar(pagoDomain);
     }
 
-
-    @Transactional(readOnly = true)
+    @Override
     public PagoDomain findById(Long id) {
-        return pagoMapper.toDomain(pagoRepository.findById(id).orElse(null));
+        return getPagoByIdUseCase.ejecutar(id);
     }
 
-    @Transactional
+    @Override
     public void deleteById(Long id) {
-        pagoRepository.deleteById(id);
+        deletePagoUseCase.ejecutar(id);
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public List<PagoDomain> findAll() {
-        return pagoRepository.findAll().stream()
-                .map(pagoMapper::toDomain)
-                .collect(Collectors.toList());
+        return getAllPagosUseCase.ejecutar(null);
     }
 }
