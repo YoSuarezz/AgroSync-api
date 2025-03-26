@@ -7,9 +7,11 @@ import com.sedikev.domain.repository.GastoRepository;
 import com.sedikev.application.mapper.GastoMapper;
 import com.sedikev.infrastructure.adapter.entity.GastoEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 @RequiredArgsConstructor
 public class UpdateGastoUseCase implements UseCaseWithReturn<GastoDomain, GastoDomain> {
 

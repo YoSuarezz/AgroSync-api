@@ -6,7 +6,9 @@ import com.sedikev.domain.model.PagoDomain;
 import com.sedikev.domain.repository.PagoRepository;
 import com.sedikev.application.mapper.PagoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class GetPagoByIdUseCase implements UseCaseWithReturn<Long, PagoDomain> {
 

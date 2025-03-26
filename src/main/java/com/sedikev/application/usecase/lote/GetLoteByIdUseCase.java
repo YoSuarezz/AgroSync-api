@@ -6,7 +6,9 @@ import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.application.mapper.LoteMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class GetLoteByIdUseCase implements UseCaseWithReturn<Long, LoteDomain> {
 

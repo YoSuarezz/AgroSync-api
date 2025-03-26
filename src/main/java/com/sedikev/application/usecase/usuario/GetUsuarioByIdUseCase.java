@@ -6,7 +6,9 @@ import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.domain.repository.UsuarioRepository;
 import com.sedikev.application.mapper.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class GetUsuarioByIdUseCase implements UseCaseWithReturn<Long, UsuarioDomain> {
 

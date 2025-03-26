@@ -4,7 +4,9 @@ import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.repository.UsuarioRepository;
 import com.sedikev.application.usecase.UseCaseWithoutReturn;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class DeleteUsuarioUseCase implements UseCaseWithoutReturn<Long> {
 

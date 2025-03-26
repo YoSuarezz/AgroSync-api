@@ -10,8 +10,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface PagoMapper {
 
-    PagoMapper INSTANCE = Mappers.getMapper(PagoMapper.class);
-
     @Mapping(source = "id", target = "id")
     PagoDTO toDTO(PagoDomain pagoDomain);
     @Mapping(source = "id", target = "id")

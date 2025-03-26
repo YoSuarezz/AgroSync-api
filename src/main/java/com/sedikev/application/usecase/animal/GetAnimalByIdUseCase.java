@@ -6,9 +6,11 @@ import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 @RequiredArgsConstructor
 public class GetAnimalByIdUseCase implements UseCaseWithReturn<String, AnimalDomain> {
 

@@ -6,9 +6,10 @@ import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.repository.CarteraRepository;
 import com.sedikev.application.mapper.CarteraMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
+@Component
 @RequiredArgsConstructor
 public class GetCarteraByIdUseCase implements UseCaseWithReturn<Long, CarteraDomain> {
 

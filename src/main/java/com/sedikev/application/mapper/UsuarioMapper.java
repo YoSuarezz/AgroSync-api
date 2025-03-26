@@ -9,8 +9,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
 
-    UsuarioMapper INSTANCE = Mappers.getMapper(UsuarioMapper.class);
-
     @Mapping(source = "id", target = "id")
     UsuarioDTO toDTO(UsuarioDomain usuarioDomain);
     @Mapping(source = "id", target = "id")

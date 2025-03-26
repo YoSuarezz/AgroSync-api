@@ -5,10 +5,12 @@ import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.repository.CarteraRepository;
 import com.sedikev.application.mapper.CarteraMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 @RequiredArgsConstructor
 public class GetAllCarterasUseCase implements UseCaseWithReturn<Void, List<CarteraDomain>> {
 

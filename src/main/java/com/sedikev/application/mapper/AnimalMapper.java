@@ -12,7 +12,6 @@ import java.util.Optional;
 @Mapper(componentModel = "spring", uses = {LoteMapper.class})
 public interface AnimalMapper {
 
-    AnimalMapper INSTANCE = Mappers.getMapper(AnimalMapper.class);
 
     @Mapping(source = "id", target = "id")
     AnimalDTO toDTO(AnimalDomain animalDomain);

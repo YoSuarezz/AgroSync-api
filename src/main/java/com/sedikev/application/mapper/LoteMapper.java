@@ -9,8 +9,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring", uses = {UsuarioMapper.class})
 public interface LoteMapper {
 
-    LoteMapper INSTANCE = Mappers.getMapper(LoteMapper.class);
-
     @Mapping(source = "id", target = "id")
     LoteDTO toDTO(LoteDomain loteDomain);
     @Mapping(source = "id", target = "id")

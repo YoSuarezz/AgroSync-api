@@ -7,7 +7,9 @@ import com.sedikev.domain.repository.UsuarioRepository;
 import com.sedikev.application.mapper.UsuarioMapper;
 import com.sedikev.infrastructure.adapter.entity.UsuarioEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class UpdateUsuarioUseCase implements UseCaseWithReturn<UsuarioDomain, UsuarioDomain> {
 

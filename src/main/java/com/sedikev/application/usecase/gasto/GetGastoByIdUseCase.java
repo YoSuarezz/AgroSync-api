@@ -6,9 +6,11 @@ import com.sedikev.domain.model.GastoDomain;
 import com.sedikev.domain.repository.GastoRepository;
 import com.sedikev.application.mapper.GastoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 @RequiredArgsConstructor
 public class GetGastoByIdUseCase implements UseCaseWithReturn<Long, GastoDomain> {
 

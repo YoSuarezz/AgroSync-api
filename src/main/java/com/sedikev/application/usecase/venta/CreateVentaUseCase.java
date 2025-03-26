@@ -7,9 +7,11 @@ import com.sedikev.domain.repository.VentaRepository;
 import com.sedikev.application.mapper.VentaMapper;
 import com.sedikev.infrastructure.adapter.entity.VentaEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 @RequiredArgsConstructor
 public class CreateVentaUseCase implements UseCaseWithReturn<VentaDomain, VentaDomain> {
 

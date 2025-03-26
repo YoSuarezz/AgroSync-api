@@ -9,8 +9,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface CarteraMapper {
 
-    CarteraMapper INSTANCE = Mappers.getMapper(CarteraMapper.class);
-
     @Mapping(source = "id", target = "id")
     CarteraDTO toDTO(CarteraDomain carteraDomain);
     @Mapping(source = "id", target = "id")

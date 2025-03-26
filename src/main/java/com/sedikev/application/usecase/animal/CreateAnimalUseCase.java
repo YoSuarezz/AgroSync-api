@@ -7,10 +7,12 @@ import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Component
 @RequiredArgsConstructor
 public class CreateAnimalUseCase implements UseCaseWithReturn<AnimalDomain, AnimalDomain> {
 

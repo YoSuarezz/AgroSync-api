@@ -6,7 +6,9 @@ import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.domain.repository.VentaRepository;
 import com.sedikev.application.mapper.VentaMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class GetVentaByIdUseCase implements UseCaseWithReturn<Long, VentaDomain> {
 

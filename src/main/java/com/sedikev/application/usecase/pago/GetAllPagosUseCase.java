@@ -5,10 +5,12 @@ import com.sedikev.domain.model.PagoDomain;
 import com.sedikev.domain.repository.PagoRepository;
 import com.sedikev.application.mapper.PagoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 @RequiredArgsConstructor
 public class GetAllPagosUseCase implements UseCaseWithReturn<Void, List<PagoDomain>> {
 

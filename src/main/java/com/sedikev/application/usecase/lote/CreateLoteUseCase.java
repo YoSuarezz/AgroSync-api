@@ -7,9 +7,11 @@ import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 @RequiredArgsConstructor
 public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDomain> {
 

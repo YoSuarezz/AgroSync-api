@@ -5,10 +5,12 @@ import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.domain.repository.UsuarioRepository;
 import com.sedikev.application.mapper.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 @RequiredArgsConstructor
 public class GetAllUsuariosUseCase implements UseCaseWithReturn<Void, List<UsuarioDomain>> {
 

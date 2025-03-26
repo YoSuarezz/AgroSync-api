@@ -7,9 +7,11 @@ import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.repository.CarteraRepository;
 import com.sedikev.infrastructure.adapter.entity.CarteraEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 @RequiredArgsConstructor
 public class CreateCarteraUseCase implements UseCaseWithReturn<CarteraDomain, CarteraDomain> {
 

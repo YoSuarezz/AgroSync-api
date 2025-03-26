@@ -7,10 +7,12 @@ import com.sedikev.domain.repository.PagoRepository;
 import com.sedikev.application.mapper.PagoMapper;
 import com.sedikev.infrastructure.adapter.entity.PagoEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Component
 @RequiredArgsConstructor
 public class UpdatePagoUseCase implements UseCaseWithReturn<PagoDomain, PagoDomain> {
 

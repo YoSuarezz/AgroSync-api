@@ -6,10 +6,12 @@ import com.sedikev.domain.repository.GastoRepository;
 import com.sedikev.application.mapper.GastoMapper;
 import com.sedikev.infrastructure.adapter.entity.GastoEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 @RequiredArgsConstructor
 public class GetAllGastosUseCase implements UseCaseWithReturn<Void, List<GastoDomain>> {
 
