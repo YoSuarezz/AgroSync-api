@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UsuarioServiceImpl implements UsuarioService {
+public class UsuarioFacadeImpl implements UsuarioService {
 
     private final CreateUsuarioUseCase createUsuarioUseCase;
     private final UpdateUsuarioUseCase updateUsuarioUseCase;

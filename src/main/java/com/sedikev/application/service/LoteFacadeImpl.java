@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class LoteServiceImpl implements LoteService {
+public class LoteFacadeImpl implements LoteService {
 
     private final CreateLoteUseCase createLoteUseCase;
     private final UpdateLoteUseCase updateLoteUseCase;

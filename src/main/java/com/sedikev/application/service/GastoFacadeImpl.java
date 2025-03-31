@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class GastoServiceImpl implements GastoService {
+public class GastoFacadeImpl implements GastoService {
 
     private final CreateGastoUseCase createGastoUseCase;
     private final UpdateGastoUseCase updateGastoUseCase;

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PagoServiceImpl implements PagoService {
+public class PagoFacadeImpl implements PagoService {
 
     private final CreatePagoUseCase createPagoUseCase;
     private final UpdatePagoUseCase updatePagoUseCase;

@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<javafx.version>21.0.6</javafx.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -103,9 +104,19 @@
 			<version>21.0.2</version>
 		</dependency>
 		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-graphics</artifactId>
+			<version>21.0.2</version>
+		</dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.15.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.1.Final</version>
 		</dependency>
 	</dependencies>
 
@@ -146,6 +157,13 @@
 				<version>0.0.8</version>
 				<configuration>
 					<mainClass>com.sedikev.JavaFxApplication</mainClass>
+					<executable>C:/Program Files/Java/jdk-21/bin/java</executable>
+					<options>
+						<option>--module-path</option>
+						<option>C:/Users/Juan Diego Duque/Documents/javafx/javafx-sdk-21.0.6/lib</option>
+						<option>--add-modules</option>
+						<option>javafx.controls,javafx.fxml</option>
+					</options>
 				</configuration>
 			</plugin>
 		</plugins>

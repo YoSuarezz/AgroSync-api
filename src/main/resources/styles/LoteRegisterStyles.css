@@ -1,0 +1,15 @@
+.label {
+    -fx-font-weight: bold;
+}
+
+/* styles.css */
+.text-field {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;  /* Solo borde inferior */
+    -fx-border-color: #a0a0a0;  /* Color gris */
+}
+
+/* Cambiar color al enfocar */
+.text-field:focused {
+    -fx-border-color: #0078d7;  /* Azul al seleccionar */
+}

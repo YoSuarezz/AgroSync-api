@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CarteraServiceImpl implements CarteraService {
+public class CarteraFacadeImpl implements CarteraService {
 
     private final CreateCarteraUseCase createCarteraUseCase;
     private final UpdateCarteraUseCase updateCarteraUseCase;

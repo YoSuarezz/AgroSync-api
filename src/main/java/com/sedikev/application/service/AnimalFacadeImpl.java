@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AnimalServiceImpl implements AnimalService {
+public class AnimalFacadeImpl implements AnimalService {
 
     private final CreateAnimalUseCase createAnimalUseCase;
     private final UpdateAnimalUseCase updateAnimalUseCase;

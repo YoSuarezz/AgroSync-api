@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class VentaServiceImpl implements VentaService {
+public class VentaFacadeImpl implements VentaService {
 
     private final CreateVentaUseCase createVentaUseCase;
     private final UpdateVentaUseCase updateVentaUseCase;

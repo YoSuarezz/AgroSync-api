@@ -5,40 +5,39 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class JavaFxApplication extends Application {
 
     private ConfigurableApplicationContext springContext;
-    private Parent root;
+    private FXMLLoader fxmlLoader;
 
     public static void main(String[] args) {
-        // Este método lanza la aplicación JavaFX
-        Application.launch(args);
+        launch(args);
     }
 
     @Override
-    public void init() throws Exception {
-        // Aquí iniciamos Spring Boot
+    public void init() {
         springContext = SpringApplication.run(SedikevApplication.class);
-
-        // Cargamos el FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-        loader.setControllerFactory(springContext::getBean);
-        root = loader.load();
+        fxmlLoader = new FXMLLoader();
+        fxmlLoader.setControllerFactory(springContext::getBean);
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Sedikev App");
-        primaryStage.setScene(new Scene(root, 800, 600));
+    public void start(Stage primaryStage) throws Exception {
+        fxmlLoader.setLocation(getClass().getResource("/fxml/main.fxml"));
+        Parent root = fxmlLoader.load();
+
+        primaryStage.setTitle("SEDIKEV - Sistema Principal");
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
     @Override
     public void stop() {
-        // Cerramos el contexto de Spring al salir
         springContext.close();
     }
 }
