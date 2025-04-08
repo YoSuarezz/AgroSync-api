@@ -1,12 +1,10 @@
-package com.sedikev.infrastructure.rest.controller;
+package com.sedikev.infrastructure.rest.controller.antiguos;
 
 import com.sedikev.application.dto.AnimalDTO;
 import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.domain.service.AnimalService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

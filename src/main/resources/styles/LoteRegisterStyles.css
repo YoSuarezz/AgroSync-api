@@ -13,3 +13,7 @@
 .text-field:focused {
     -fx-border-color: #0078d7;  /* Azul al seleccionar */
 }
+
+.button {
+    -fx-cursor: hand; /* Cambia el cursor al pasar sobre el texto */
+}

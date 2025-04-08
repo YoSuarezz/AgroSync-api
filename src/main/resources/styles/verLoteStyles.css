@@ -37,3 +37,7 @@
     -fx-background-color: white;
     -fx-border-color: #e0e0e0;
 }
+
+.button {
+    -fx-cursor: hand; /* Cambia el cursor al pasar sobre el texto */
+}

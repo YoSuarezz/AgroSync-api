@@ -1,16 +1,10 @@
-package com.sedikev.infrastructure.rest.controller;
+package com.sedikev.infrastructure.rest.controller.antiguos;
 
-import com.sedikev.application.dto.CarteraDTO;
 import com.sedikev.application.dto.VentaDTO;
-import com.sedikev.application.mapper.CarteraMapper;
 import com.sedikev.application.mapper.VentaMapper;
-import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.model.VentaDomain;
-import com.sedikev.domain.service.CarteraService;
 import com.sedikev.domain.service.VentaService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,12 +1,10 @@
-package com.sedikev.infrastructure.rest.controller;
+package com.sedikev.infrastructure.rest.controller.antiguos;
 
 import com.sedikev.application.dto.LoteDTO;
 import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.LoteService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

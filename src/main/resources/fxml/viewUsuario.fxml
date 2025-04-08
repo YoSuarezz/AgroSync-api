@@ -4,13 +4,16 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/LoteRegisterStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.venta.CreateVentaController">
+<AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/verLoteStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.usuario.ViewUsuarioController">
    <children>
       <StackPane prefHeight="598.0" prefWidth="244.0" style="-fx-background-color: linear-gradient(to bottom, #84fab0, #8fd3f4);" />
       <Label layoutX="36.0" layoutY="41.0" prefHeight="149.0" prefWidth="216.0" text="Elige una opcion" textFill="WHITE" wrapText="true">
@@ -24,12 +27,12 @@
                <content>
                   <AnchorPane maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="57.0" prefWidth="130.0">
                      <children>
-                        <Button fx:id="id_registerLote" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goRegisterLote" prefWidth="99.0" style="-fx-background-color: transparent;" text="Registrar Lote" textFill="WHITE">
+                        <Button fx:id="id_registerLote1" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goRegisterLote" prefWidth="99.0" style="-fx-background-color: transparent;" text="Registrar Lote" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_viewLote" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewLote" style="-fx-background-color: transparent;" text="Ver Lotes" textFill="WHITE">
+                        <Button fx:id="id_viewLote1" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewLote" style="-fx-background-color: transparent;" text="Ver Lotes" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -45,12 +48,12 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="id_registerSale" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goRegisterSale" text="Registrar Venta" textFill="WHITE">
+                        <Button fx:id="id_registerSale1" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goRegisterSale" text="Registrar Venta" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_viewSale" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewSale" text="Ver Ventas" textFill="WHITE">
+                        <Button fx:id="id_viewSale1" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewSale" text="Ver Ventas" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -66,12 +69,12 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="id_registerUser" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goRegisterUser" text="Registrar Usuarios" textFill="WHITE">
+                        <Button fx:id="id_registerUser1" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goRegisterUser" text="Registrar Usuarios" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_viewUser" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewUser" text="Ver Usuarios" textFill="WHITE">
+                        <Button fx:id="id_viewUser1" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewUser" text="Ver Usuarios" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -87,12 +90,12 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="id_viewClient" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goViewClient" text="Clientes" textFill="WHITE">
+                        <Button fx:id="id_viewClient1" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goViewClient" text="Clientes" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_viewSupplier" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewSupplier" text="Proveedores" textFill="WHITE">
+                        <Button fx:id="id_viewSupplier1" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewSupplier" text="Proveedores" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -106,21 +109,25 @@
             </TitledPane>
          </panes>
       </Accordion>
-      <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Registrar Venta" textAlignment="CENTER" textFill="#1abc9c" wrapText="true">
+      <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Ver Usuario" textAlignment="CENTER" textFill="#1abc9c" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Label layoutX="348.0" layoutY="103.0" prefHeight="17.0" prefWidth="122.0" text="Cliente" />
-      <Label layoutX="552.0" layoutY="103.0" prefHeight="17.0" prefWidth="154.0" text="Precio x kilo" />
-      <TextField layoutX="552.0" layoutY="131.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: 205" />
-      <Label layoutX="348.0" layoutY="220.0" prefHeight="17.0" prefWidth="122.0" text="Contramarca" />
-      <TextField layoutX="349.0" layoutY="248.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: 205" />
-      <Label layoutX="553.0" layoutY="219.0" prefHeight="17.0" prefWidth="101.0" text="Semana" />
-      <TextField layoutX="553.0" layoutY="247.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: 17" />
-      <Button layoutX="489.0" layoutY="490.0" mnemonicParsing="false" style="-fx-background-color: #1abc9c;" text="Registrar Venta" textFill="WHITE" />
-      <Label layoutX="455.0" layoutY="320.0" prefHeight="17.0" prefWidth="122.0" text="Animal" />
-      <ChoiceBox layoutX="456.0" layoutY="348.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-color: transparent transparent #a0a0a0 transparent;" />
-      <ChoiceBox layoutX="348.0" layoutY="131.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-color: transparent transparent #a0a0a0 transparent;" />
+      <Label layoutX="284.0" layoutY="119.0" prefHeight="17.0" prefWidth="101.0" text="Nombre" />
+      <TextField layoutX="284.0" layoutY="139.0" prefHeight="26.0" prefWidth="161.0" promptText="Ejemplo: Augusto" />
+      <TableView layoutX="288.0" layoutY="181.0" prefHeight="345.0" prefWidth="469.0">
+         <columns>
+            <TableColumn prefWidth="208.0" style="-fx-background-color: white;" text="Nombre" />
+            <TableColumn minWidth="5.0" prefWidth="70.0" style="-fx-background-color: white;" text="Tipo" />
+            <TableColumn minWidth="0.0" prefWidth="126.0" style="-fx-background-color: white;" text="Telefono" />
+            <TableColumn minWidth="0.0" prefWidth="30.0" style="-fx-background-color: white;" text="Act" />
+            <TableColumn prefWidth="34.0" style="-fx-background-color: white;" text="Ver" />
+         </columns>
+      </TableView>
+      <Pagination layoutX="270.0" layoutY="167.0" prefHeight="406.0" prefWidth="500.0" />
+      <Label layoutX="284.0" layoutY="81.0" prefHeight="17.0" prefWidth="101.0" text="Buscar por:" />
+      <Label layoutX="498.0" layoutY="120.0" prefHeight="17.0" prefWidth="101.0" text="Tipo" />
+      <ChoiceBox layoutX="497.0" layoutY="142.0" prefHeight="25.0" prefWidth="134.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-color: #a0a0a0;" />
    </children>
 </AnchorPane>

@@ -75,3 +75,7 @@
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, #1abc9c, 1, 1, 0, 0);
 }
+
+.button {
+    -fx-cursor: hand; /* Cambia el cursor al pasar sobre el texto */
+}

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/LoteRegisterStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.venta.CreateVentaController">
+<AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/LoteRegisterStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.usuario.CreateUsuarioController">
    <children>
       <StackPane prefHeight="598.0" prefWidth="244.0" style="-fx-background-color: linear-gradient(to bottom, #84fab0, #8fd3f4);" />
       <Label layoutX="36.0" layoutY="41.0" prefHeight="149.0" prefWidth="216.0" text="Elige una opcion" textFill="WHITE" wrapText="true">
@@ -106,21 +106,17 @@
             </TitledPane>
          </panes>
       </Accordion>
-      <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Registrar Venta" textAlignment="CENTER" textFill="#1abc9c" wrapText="true">
+      <Label alignment="CENTER" layoutX="241.0" layoutY="14.0" prefHeight="62.0" prefWidth="550.0" text="Registrar Usuario" textAlignment="CENTER" textFill="#1abc9c" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Label layoutX="348.0" layoutY="103.0" prefHeight="17.0" prefWidth="122.0" text="Cliente" />
-      <Label layoutX="552.0" layoutY="103.0" prefHeight="17.0" prefWidth="154.0" text="Precio x kilo" />
+      <Label layoutX="348.0" layoutY="103.0" prefHeight="17.0" prefWidth="122.0" text="Tipo de Usuario" />
+      <Label layoutX="552.0" layoutY="103.0" prefHeight="17.0" prefWidth="154.0" text="Nombre" />
       <TextField layoutX="552.0" layoutY="131.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: 205" />
-      <Label layoutX="348.0" layoutY="220.0" prefHeight="17.0" prefWidth="122.0" text="Contramarca" />
+      <Label layoutX="348.0" layoutY="220.0" prefHeight="17.0" prefWidth="122.0" text="Telefono" />
       <TextField layoutX="349.0" layoutY="248.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: 205" />
-      <Label layoutX="553.0" layoutY="219.0" prefHeight="17.0" prefWidth="101.0" text="Semana" />
-      <TextField layoutX="553.0" layoutY="247.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: 17" />
-      <Button layoutX="489.0" layoutY="490.0" mnemonicParsing="false" style="-fx-background-color: #1abc9c;" text="Registrar Venta" textFill="WHITE" />
-      <Label layoutX="455.0" layoutY="320.0" prefHeight="17.0" prefWidth="122.0" text="Animal" />
-      <ChoiceBox layoutX="456.0" layoutY="348.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-color: transparent transparent #a0a0a0 transparent;" />
+      <Button layoutX="473.0" layoutY="490.0" mnemonicParsing="false" style="-fx-background-color: #1abc9c;" text="Registrar Usuario" textFill="WHITE" />
       <ChoiceBox layoutX="348.0" layoutY="131.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-color: transparent transparent #a0a0a0 transparent;" />
    </children>
 </AnchorPane>

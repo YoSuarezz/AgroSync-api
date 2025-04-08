@@ -1,12 +1,10 @@
-package com.sedikev.infrastructure.rest.controller;
+package com.sedikev.infrastructure.rest.controller.antiguos;
 
 import com.sedikev.application.dto.GastoDTO;
 import com.sedikev.application.mapper.GastoMapper;
 import com.sedikev.domain.model.GastoDomain;
 import com.sedikev.domain.service.GastoService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

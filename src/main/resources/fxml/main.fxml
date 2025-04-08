@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.JavaFxController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.JavaFxController">
    <children>
       <StackPane prefHeight="600.0" prefWidth="799.0" style="-fx-background-color: linear-gradient(to bottom, #84fab0, #8fd3f4);" />
       <StackPane prefHeight="600.0" prefWidth="244.0" style="-fx-background-color: white;" />
