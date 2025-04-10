@@ -1,35 +1,33 @@
 package com.sedikev.application.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.math.BigDecimal;
+
 @Data
 @Getter
 @Setter
 public class AnimalDTO {
 
-    private int id;
-    private LoteDTO lote;
+    private String id;
+    private Long idLote; // ID del lote, no el objeto completo
     private BigDecimal peso;
     private String sexo;
     private Integer num_lote;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public LoteDTO getLote() {
-        return lote;
+    public Long getIdLote() {
+        return idLote;
     }
 
-    public void setLote(LoteDTO lote) {
-        this.lote = lote;
+    public void setIdLote(Long idLote) {
+        this.idLote = idLote;
     }
 
     public BigDecimal getPeso() {

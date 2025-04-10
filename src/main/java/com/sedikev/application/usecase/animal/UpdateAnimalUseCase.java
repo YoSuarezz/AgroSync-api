@@ -25,20 +25,23 @@ public class UpdateAnimalUseCase implements UseCaseWithReturn<AnimalDomain, Anim
         if (animalDomain.getPeso() == null || animalDomain.getPeso().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessSedikevException("El peso debe ser un número positivo");
         }
+
         if (!animalRepository.existsById(animalDomain.getId())) {
             throw new BusinessSedikevException("El animal no existe");
         }
+
         if (!Objects.equals(animalDomain.getSexo(), "macho") && !Objects.equals(animalDomain.getSexo(), "hembra")) {
             throw new BusinessSedikevException("El sexo debe ser macho o hembra");
         }
-        if (animalDomain.getLote() == null || animalDomain.getLote().getId() == null) {
+
+        if (animalDomain.getIdLote() == null) {
             throw new BusinessSedikevException("El animal debe estar asociado a un lote");
         }
-        if (animalDomain.getNum_lote() <= 0 || animalDomain.getNum_lote() > 25) {
+
+        if (animalDomain.getNum_lote() == null || animalDomain.getNum_lote() <= 0 || animalDomain.getNum_lote() > 25) {
             throw new BusinessSedikevException("El animal debe estar asociado a un slot entre 1 y 25");
         }
 
-        // Mapear y actualizar el animal
         AnimalEntity animalEntity = animalMapper.toEntity(animalDomain);
         AnimalEntity animalUpdated = animalRepository.save(animalEntity);
         return animalMapper.toDomain(animalUpdated);

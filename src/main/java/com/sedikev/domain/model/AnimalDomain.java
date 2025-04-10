@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class AnimalDomain {
 
     private String id;
-    private LoteDomain lote;
+    private Long idLote;
     private BigDecimal peso;
     private String sexo;
     private Integer num_lote;
@@ -25,12 +25,12 @@ public class AnimalDomain {
         this.id = id;
     }
 
-    public LoteDomain getLote() {
-        return lote;
+    public Long getIdLote() {
+        return idLote;
     }
 
-    public void setLote(LoteDomain lote) {
-        this.lote = lote;
+    public void setIdLote(Long idLote) {
+        this.idLote = idLote;
     }
 
     public BigDecimal getPeso() {

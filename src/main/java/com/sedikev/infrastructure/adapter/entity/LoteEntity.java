@@ -19,12 +19,11 @@ import java.util.List;
 public class LoteEntity {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "id_usuario")
     @ManyToOne
+    @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
     @Column(name = "contramarca")
@@ -39,11 +38,11 @@ public class LoteEntity {
 
     @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<AnimalEntity> lista_animalEntity;
+    private List<AnimalEntity> animales;
 
     @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<GastoEntity> lista_gastoEntity;
+    private List<GastoEntity> gastos;
 
     public Long getId() {
         return id;
@@ -85,19 +84,19 @@ public class LoteEntity {
         this.fecha = fecha;
     }
 
-    public List<AnimalEntity> getLista_animalEntity() {
-        return lista_animalEntity;
+    public List<AnimalEntity> getAnimales() {
+        return animales;
     }
 
-    public void setLista_animalEntity(List<AnimalEntity> lista_animalEntity) {
-        this.lista_animalEntity = lista_animalEntity;
+    public void setAnimales(List<AnimalEntity> animales) {
+        this.animales = animales;
     }
 
-    public List<GastoEntity> getLista_gastoEntity() {
-        return lista_gastoEntity;
+    public List<GastoEntity> getGastos() {
+        return gastos;
     }
 
-    public void setLista_gastoEntity(List<GastoEntity> lista_gastoEntity) {
-        this.lista_gastoEntity = lista_gastoEntity;
+    public void setGastos(List<GastoEntity> gastos) {
+        this.gastos = gastos;
     }
 }

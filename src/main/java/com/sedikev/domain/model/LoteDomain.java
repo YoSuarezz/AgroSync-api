@@ -4,7 +4,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
 @Data
 @Getter
@@ -16,6 +16,7 @@ public class LoteDomain {
     private Integer contramarca;
     private BigDecimal precio_kilo;
     private LocalDate fecha;
+    private List<AnimalDomain> animales;
 
     public Long getId() {
         return id;
@@ -55,5 +56,13 @@ public class LoteDomain {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public List<AnimalDomain> getAnimales() {
+        return animales;
+    }
+
+    public void setAnimales(List<AnimalDomain> animales) {
+        this.animales = animales;
     }
 }
