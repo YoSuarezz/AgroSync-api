@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ComboBox?>
 <AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/LoteRegisterStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.lote.CreateLoteController">
    <children>
       <StackPane prefHeight="598.0" prefWidth="244.0" style="-fx-background-color: linear-gradient(to bottom, #84fab0, #8fd3f4);" />
@@ -114,7 +115,7 @@
          </font>
       </Label>
       <Label layoutX="284.0" layoutY="88.0" prefHeight="17.0" prefWidth="101.0" text="Proveedor" />
-      <TextField fx:id="id_proveedor" layoutX="284.0" layoutY="116.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: Augusto" />
+      <ComboBox fx:id="comboProveedor" layoutX="284.0" layoutY="116.0" prefHeight="26.0" prefWidth="134.0" />
       <Label layoutX="453.0" layoutY="88.0" prefHeight="17.0" prefWidth="101.0" text="Contramarca" />
       <TextField fx:id="id_contramarca" layoutX="453.0" layoutY="116.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: 205" />
       <Label layoutX="620.0" layoutY="89.0" prefHeight="17.0" prefWidth="101.0" text="Precio por kilo" />
@@ -127,17 +128,14 @@
       <Label layoutX="284.0" layoutY="205.0" prefHeight="17.0" prefWidth="101.0" text="Peso" />
       <TextField fx:id="id_peso" layoutX="284.0" layoutY="233.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: 336" />
       <Label layoutX="454.0" layoutY="204.0" prefHeight="17.0" prefWidth="101.0" text="Sexo" />
-      <TextField fx:id="id_sexo" layoutX="454.0" layoutY="232.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: 205" />
+      <ComboBox fx:id="comboSexo" layoutX="454.0" layoutY="232.0" prefHeight="26.0" prefWidth="134.0" />
       <Button fx:id="id_addAnimal" layoutX="642.0" layoutY="234.0" mnemonicParsing="false" onAction="#addAnimal" style="-fx-background-color: #1abc9c;" text="Añadir Animal" textFill="WHITE" />
-      <TableView layoutX="341.0" layoutY="284.0" prefHeight="230.0" prefWidth="360.0">
-        <columns>
-          <TableColumn prefWidth="31.0" style="-fx-background-color: white;" text="Slot" />
-          <TableColumn prefWidth="86.0" style="-fx-background-color: white;" text="Contramarca" />
-            <TableColumn minWidth="8.0" prefWidth="61.0" style="-fx-background-color: white;" text="Sexo" />
-            <TableColumn prefWidth="91.0" style="-fx-background-color: white;" text="Peso" />
-            <TableColumn prefWidth="46.0" style="-fx-background-color: white;" text="Updt" />
-            <TableColumn prefWidth="44.0" style="-fx-background-color: white;" text="Del" />
-        </columns>
+      <TableView fx:id="id_tableViewAnimales" layoutX="341.0" layoutY="284.0" prefHeight="230.0" prefWidth="350.0">
+         <columns>
+            <TableColumn fx:id="slotColumn" text="Numero" prefWidth="100.0" />
+            <TableColumn fx:id="pesoColumn" text="Peso" prefWidth="100.0" />
+            <TableColumn fx:id="sexoColumn" text="Sexo" prefWidth="100.0" />
+         </columns>
       </TableView>
       <Pagination layoutX="326.0" layoutY="268.0" prefHeight="292.0" prefWidth="392.0" />
       <Button fx:id="id_createLote" layoutX="483.0" layoutY="560.0" mnemonicParsing="false" onAction="#createLote" style="-fx-background-color: #1abc9c;" text="Añadir Lote" textFill="WHITE" />

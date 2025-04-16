@@ -49,7 +49,7 @@ public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
         int slot = 1;
         for (AnimalDomain animal : loteDomain.getAnimales()) {
             animal.setNum_lote(slot++);
-            createAnimalUseCase.validarAnimal(animal); // solo validar, no guardar
+            createAnimalUseCase.validarAnimal(animal);
         }
 
         // Guardar en cascada
