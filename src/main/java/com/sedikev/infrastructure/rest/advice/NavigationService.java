@@ -38,7 +38,6 @@ public class NavigationService {
             // 6. Configurar la nueva escena
             Scene scene = new Scene(root);
             stage.setScene(scene);
-
         } catch (IOException e) {
             e.printStackTrace();
             showErrorAlert("Error al cargar la vista: " + fxmlPath);

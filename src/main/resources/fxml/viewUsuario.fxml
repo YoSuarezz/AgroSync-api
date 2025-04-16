@@ -15,6 +15,7 @@
 
 <AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/verLoteStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.usuario.ViewUsuarioController">
    <children>
+      <!-- Barra Lateral -->
       <StackPane prefHeight="598.0" prefWidth="244.0" style="-fx-background-color: linear-gradient(to bottom, #84fab0, #8fd3f4);" />
       <Label layoutX="36.0" layoutY="41.0" prefHeight="149.0" prefWidth="216.0" text="Elige una opcion" textFill="WHITE" wrapText="true">
          <font>
@@ -109,25 +110,34 @@
             </TitledPane>
          </panes>
       </Accordion>
+
+      <!-- Contenido Principal -->
       <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Ver Usuario" textAlignment="CENTER" textFill="#1abc9c" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
+
+      <!-- Filtros de Búsqueda -->
       <Label layoutX="284.0" layoutY="119.0" prefHeight="17.0" prefWidth="101.0" text="Nombre" />
-      <TextField layoutX="284.0" layoutY="139.0" prefHeight="26.0" prefWidth="161.0" promptText="Ejemplo: Augusto" />
-      <TableView layoutX="288.0" layoutY="181.0" prefHeight="345.0" prefWidth="469.0">
+      <TextField fx:id="nombreField" layoutX="284.0" layoutY="139.0" prefHeight="26.0" prefWidth="161.0" promptText="Ejemplo: Augusto" />
+
+      <Label layoutX="498.0" layoutY="120.0" prefHeight="17.0" prefWidth="101.0" text="Tipo" />
+      <ChoiceBox fx:id="tipoChoiceBox" layoutX="497.0" layoutY="142.0" prefHeight="25.0" prefWidth="134.0" />
+
+      <Button text="Buscar" onAction="#buscarUsuarios" layoutX="640.0" layoutY="140.0" />
+
+      <!-- Tabla de Usuarios -->
+      <TableView fx:id="usuarioTableView" layoutX="288.0" layoutY="181.0" prefHeight="345.0" prefWidth="469.0">
          <columns>
-            <TableColumn prefWidth="208.0" style="-fx-background-color: white;" text="Nombre" />
-            <TableColumn minWidth="5.0" prefWidth="70.0" style="-fx-background-color: white;" text="Tipo" />
-            <TableColumn minWidth="0.0" prefWidth="126.0" style="-fx-background-color: white;" text="Telefono" />
-            <TableColumn minWidth="0.0" prefWidth="30.0" style="-fx-background-color: white;" text="Act" />
-            <TableColumn prefWidth="34.0" style="-fx-background-color: white;" text="Ver" />
+            <TableColumn fx:id="nombreColumn" text="Nombre" />
+            <TableColumn fx:id="tipoColumn" text="Tipo" />
+            <TableColumn fx:id="telefonoColumn" text="Telefono" />
+            <TableColumn fx:id="accionesColumn" text="Acciones" />
          </columns>
       </TableView>
+
+      <!-- Paginación -->
       <Pagination layoutX="270.0" layoutY="167.0" prefHeight="406.0" prefWidth="500.0" />
-      <Label layoutX="284.0" layoutY="81.0" prefHeight="17.0" prefWidth="101.0" text="Buscar por:" />
-      <Label layoutX="498.0" layoutY="120.0" prefHeight="17.0" prefWidth="101.0" text="Tipo" />
-      <ChoiceBox layoutX="497.0" layoutY="142.0" prefHeight="25.0" prefWidth="134.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-color: #a0a0a0;" />
    </children>
 </AnchorPane>
