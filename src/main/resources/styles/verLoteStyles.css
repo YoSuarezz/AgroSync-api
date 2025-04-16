@@ -41,3 +41,40 @@
 .button {
     -fx-cursor: hand; /* Cambia el cursor al pasar sobre el texto */
 }
+
+/* Estilo base del ComboBox */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #a0a0a0 transparent;
+}
+
+
+/* Estilo de la lista desplegable */
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+/* Estilo de los items de la lista */
+.combo-box-popup .list-cell {
+    -fx-padding: 8px 10px;
+    -fx-background-color: white;
+    -fx-text-fill: #333333;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #4a90e2;
+}
+
+/* Estilo del botón del ComboBox */
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.panel {
+    -fx-background-color: #27ae60;
+}

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TableColumn?>
@@ -13,26 +14,26 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/verLoteStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.cartera.viewClienteController">
+<AnchorPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.cartera.viewClienteController">
    <children>
-      <StackPane prefHeight="598.0" prefWidth="244.0" style="-fx-background-color: linear-gradient(to bottom, #84fab0, #8fd3f4);" />
+      <StackPane prefHeight="598.0" prefWidth="244.0" styleClass="panel" />
       <Label layoutX="36.0" layoutY="41.0" prefHeight="149.0" prefWidth="216.0" text="Elige una opcion" textFill="WHITE" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Accordion layoutX="36.0" layoutY="210.0" prefHeight="230.0" prefWidth="154.0" stylesheets="@../styles/styles.css">
+      <Accordion layoutX="36.0" layoutY="210.0" prefHeight="267.0" prefWidth="163.0" stylesheets="@../styles/styles.css">
          <panes>
             <TitledPane animated="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" prefWidth="132.0" text="Lotes" textFill="WHITE">
                <content>
                   <AnchorPane maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="57.0" prefWidth="130.0">
                      <children>
-                        <Button fx:id="id_registerLote1" layoutX="25.0" layoutY="5.0" mnemonicParsing="false" onAction="#goRegisterLote" prefWidth="99.0" style="-fx-background-color: transparent;" text="Registrar Lote" textFill="WHITE">
+                        <Button fx:id="id_registerLote1" layoutX="15.0" layoutY="5.0" mnemonicParsing="false" onAction="#goRegisterLote" prefHeight="30.0" prefWidth="113.0" style="-fx-background-color: transparent;" text="Registrar Lote" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Button>
-                        <Button fx:id="id_viewLote1" layoutX="25.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewLote" style="-fx-background-color: transparent;" text="Ver Lotes" textFill="WHITE">
+                        <Button fx:id="id_viewLote1" layoutX="17.0" layoutY="30.0" mnemonicParsing="false" onAction="#goViewLote" style="-fx-background-color: transparent;" text="Ver Lotes" textFill="WHITE">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -109,7 +110,7 @@
             </TitledPane>
          </panes>
       </Accordion>
-      <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Ver Cartera de Clientes" textAlignment="CENTER" textFill="#1abc9c" wrapText="true">
+      <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Cartera de Clientes" textAlignment="CENTER" textFill="#27ae60" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
@@ -127,6 +128,10 @@
       <Pagination layoutX="270.0" layoutY="167.0" prefHeight="406.0" prefWidth="500.0" />
       <Label layoutX="284.0" layoutY="81.0" prefHeight="17.0" prefWidth="101.0" text="Buscar por:" />
       <Label layoutX="498.0" layoutY="120.0" prefHeight="17.0" prefWidth="101.0" text="Tipo" />
-      <ChoiceBox layoutX="497.0" layoutY="142.0" prefHeight="25.0" prefWidth="134.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-color: #a0a0a0;" />
+      <ComboBox fx:id="comboTipo" layoutX="498.0" layoutY="139.0" prefHeight="27.0" prefWidth="140.0" />
    </children>
+   <stylesheets>
+      <URL value="@../styles/verLoteStyles.css" />
+      <URL value="@../styles/LoteRegisterStyles.css" />
+   </stylesheets>
 </AnchorPane>

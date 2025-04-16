@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
@@ -13,17 +14,17 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/verLoteStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.lote.ViewLoteController">
+<AnchorPane style="-fx-background-color: white;" stylesheets="@../styles/LoteRegisterStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.lote.ViewLoteController">
    <children>
-      <StackPane prefHeight="598.0" prefWidth="244.0" style="-fx-background-color: linear-gradient(to bottom, #84fab0, #8fd3f4);" />
-      <Label layoutX="36.0" layoutY="41.0" prefHeight="149.0" prefWidth="216.0" text="Elige una opcion" textFill="WHITE" wrapText="true">
+      <StackPane prefHeight="598.0" prefWidth="244.0" styleClass="panel" />
+      <Label layoutX="36.0" layoutY="41.0" prefHeight="149.0" prefWidth="216.0" stylesheets="@../styles/LoteRegisterStyles.css" text="Elige una opcion" textFill="WHITE" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Accordion layoutX="36.0" layoutY="210.0" prefHeight="230.0" prefWidth="154.0" stylesheets="@../styles/styles.css">
+      <Accordion layoutX="36.0" layoutY="210.0" prefHeight="270.0" prefWidth="182.0" stylesheets="@../styles/styles.css">
          <panes>
-            <TitledPane animated="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" prefWidth="132.0" text="Lotes" textFill="WHITE">
+            <TitledPane animated="false" maxHeight="35.0" minHeight="35.0" prefHeight="120.0" prefWidth="182.0" text="Lotes" textFill="WHITE">
                <content>
                   <AnchorPane maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="57.0" prefWidth="130.0">
                      <children>
@@ -109,13 +110,12 @@
             </TitledPane>
          </panes>
       </Accordion>
-      <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Ver Lote" textAlignment="CENTER" textFill="#1abc9c" wrapText="true">
+      <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Ver Lote" textAlignment="CENTER" textFill="#27ae60" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
       <Label layoutX="284.0" layoutY="119.0" prefHeight="17.0" prefWidth="101.0" text="Proveedor" />
-      <TextField layoutX="284.0" layoutY="139.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: Augusto" />
       <Label layoutX="457.0" layoutY="69.0" prefHeight="17.0" prefWidth="101.0" text="Contramarca" />
       <TextField layoutX="456.0" layoutY="88.0" prefHeight="26.0" prefWidth="95.0" promptText="Ejemplo: 205" />
       <Label layoutX="606.0" layoutY="69.0" prefHeight="17.0" prefWidth="101.0" text="Semana" />
@@ -136,5 +136,6 @@
       <TextField layoutX="608.0" layoutY="139.0" prefHeight="26.0" prefWidth="101.0" promptText="Ejemplo: 2025" />
       <Label layoutX="459.0" layoutY="120.0" prefHeight="17.0" prefWidth="101.0" text="Fecha" />
       <DatePicker layoutX="458.0" layoutY="141.0" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: white;" />
+      <ComboBox fx:id="comboProveedor" layoutX="285.0" layoutY="141.0" prefHeight="26.0" prefWidth="134.0" />
    </children>
 </AnchorPane>

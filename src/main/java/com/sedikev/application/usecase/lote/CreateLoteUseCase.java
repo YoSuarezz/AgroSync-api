@@ -29,27 +29,12 @@ public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
             throw new BusinessSedikevException("El precio por kilo no puede ser negativo");
         }
 
-        if (loteRepository.existsById(loteDomain.getId())) {
-            throw new BusinessSedikevException("El lote ya existe");
-        }
-
         if (loteDomain.getUsuario() == null || loteDomain.getUsuario().getId() == null) {
             throw new BusinessSedikevException("El lote debe estar asociado a un usuario");
         }
 
         if (loteDomain.getContramarca() <= 0) {
             throw new BusinessSedikevException("La contramarca debe ser mayor que cero");
-        }
-
-        // Validación y preparación de animales
-        if (loteDomain.getAnimales() == null || loteDomain.getAnimales().isEmpty()) {
-            throw new BusinessSedikevException("El lote debe tener al menos un animal");
-        }
-
-        int slot = 1;
-        for (AnimalDomain animal : loteDomain.getAnimales()) {
-            animal.setNum_lote(slot++);
-            createAnimalUseCase.validarAnimal(animal);
         }
 
         // Guardar en cascada

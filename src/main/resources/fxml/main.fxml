@@ -10,16 +10,16 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.JavaFxController">
    <children>
-      <StackPane prefHeight="600.0" prefWidth="799.0" style="-fx-background-color: linear-gradient(to bottom, #84fab0, #8fd3f4);" />
+      <StackPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #27ae60;" styleClass="lote" stylesheets="@../styles/LoteRegisterStyles.css" />
       <StackPane prefHeight="600.0" prefWidth="244.0" style="-fx-background-color: white;" />
-      <Label layoutX="33.0" layoutY="36.0" prefHeight="149.0" prefWidth="216.0" text="Elige una opcion" textFill="#1abc9c" wrapText="true">
+      <Label layoutX="33.0" layoutY="36.0" prefHeight="149.0" prefWidth="216.0" text="Elige una opcion" textFill="#27ae60" wrapText="true">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
       <Accordion layoutX="33.0" layoutY="205.0" prefHeight="230.0" prefWidth="154.0" stylesheets="@../styles/styles.css">
         <panes>
-          <TitledPane animated="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" prefWidth="132.0" text="Lotes">
+          <TitledPane animated="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" prefWidth="132.0" text="Lotes" textFill="#27ae60">
             <content>
               <AnchorPane maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="57.0" prefWidth="130.0">
                      <children>
@@ -40,7 +40,7 @@
                   <Font size="24.0" />
                </font>
           </TitledPane>
-          <TitledPane animated="false" text="Ventas">
+          <TitledPane animated="false" text="Ventas" textFill="#27ae60">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -61,7 +61,7 @@
                   <Font size="24.0" />
                </font>
           </TitledPane>
-          <TitledPane animated="false" text="Usuarios">
+          <TitledPane animated="false" text="Usuarios" textFill="#27ae60">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -82,7 +82,7 @@
                   <Font size="24.0" />
                </font>
           </TitledPane>
-            <TitledPane animated="false" text="Cartera">
+            <TitledPane animated="false" text="Cartera" textFill="#27ae60">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

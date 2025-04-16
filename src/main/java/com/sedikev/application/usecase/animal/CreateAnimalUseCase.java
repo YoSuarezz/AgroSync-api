@@ -26,10 +26,6 @@ public class CreateAnimalUseCase implements UseCaseWithReturn<AnimalDomain, Anim
             throw new BusinessSedikevException("El peso debe ser un número positivo");
         }
 
-        if (animalRepository.existsById(animalDomain.getId())) {
-            throw new BusinessSedikevException("El animal ya existe");
-        }
-
         if (!Objects.equals(animalDomain.getSexo(), "macho") && !Objects.equals(animalDomain.getSexo(), "hembra")) {
             throw new BusinessSedikevException("El sexo debe ser macho o hembra");
         }
@@ -45,19 +41,6 @@ public class CreateAnimalUseCase implements UseCaseWithReturn<AnimalDomain, Anim
         AnimalEntity animalEntity = animalMapper.toEntity(animalDomain);
         AnimalEntity animalSaved = animalRepository.save(animalEntity);
         return animalMapper.toDomain(animalSaved);
-    }
-    public void validarAnimal(AnimalDomain animalDomain) {
-        if (animalDomain.getPeso() == null || animalDomain.getPeso().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessSedikevException("El peso debe ser un número positivo");
-        }
-
-        if (!"macho".equalsIgnoreCase(animalDomain.getSexo()) && !"hembra".equalsIgnoreCase(animalDomain.getSexo())) {
-            throw new BusinessSedikevException("El sexo debe ser macho o hembra");
-        }
-
-        if (animalDomain.getNum_lote() == null || animalDomain.getNum_lote() <= 0 || animalDomain.getNum_lote() > 25) {
-            throw new BusinessSedikevException("El animal debe estar en un slot entre 1 y 25");
-        }
     }
 
 }

@@ -20,6 +20,10 @@
     -fx-padding: 0;
 }
 
+.panel {
+    -fx-background-color: #27ae60;
+}
+
 /* Estilo para el contenido cuando está expandido */
 .titled-pane > .content {
     -fx-background-color: transparent;

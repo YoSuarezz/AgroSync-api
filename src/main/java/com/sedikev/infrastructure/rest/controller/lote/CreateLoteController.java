@@ -6,8 +6,10 @@ import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.model.UsuarioDomain;
+import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
 import com.sedikev.domain.service.UsuarioService;
+import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,6 +35,7 @@ public class CreateLoteController {
     // Servicios inyectados
     @Autowired private NavigationService navigationService;
     @Autowired private LoteService loteService; // Se inyecta la fachada LoteFacadeImpl
+    @Autowired private AnimalService animalService;
     @Autowired private UsuarioService usuarioService;
     @Autowired private UsuarioMapper usuarioMapper;
 
@@ -118,12 +121,19 @@ public class CreateLoteController {
             LoteDomain lote = new LoteDomain();
             lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
             lote.setPrecio_kilo(new BigDecimal(id_precio_kilo.getText()));
-            lote.setAnimales(animalesEnLote);
             UsuarioDTO selectedUsuarioDTO = comboProveedor.getValue();
             UsuarioDomain usuarioDomain = usuarioMapper.toDomain(selectedUsuarioDTO);
             lote.setUsuario(usuarioDomain);
+            System.out.println(lote);
 
-            loteService.save(lote);
+            LoteDomain loteSaved = loteService.save(lote);
+
+            for (AnimalDomain animal : animalesEnLote) {
+                animal.setIdLote(loteSaved.getId()); // Asignar el ID del lote
+                animalService.save(animal); // Guardar cada animal
+            }
+
+
 
             mostrarAlerta("Éxito", "Lote creado correctamente", AlertType.INFORMATION);
             limpiarFormulario();

@@ -18,7 +18,7 @@ public interface LoteMapper {
     LoteDomain toDomain(LoteDTO dto);
 
     // DOMAIN -> ENTITY
-    @Mapping(source = "animales", target = "animales")
+    @Mapping(source = "id", target = "id")
     LoteEntity toEntity(LoteDomain domain);
 
     // ENTITY -> DOMAIN
