@@ -9,7 +9,6 @@ import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
 import com.sedikev.domain.service.UsuarioService;
-import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -54,6 +53,8 @@ public class CreateLoteController {
     @FXML private TableColumn<AnimalDomain, Integer> slotColumn;
     @FXML private TableColumn<AnimalDomain, BigDecimal> pesoColumn;
     @FXML private TableColumn<AnimalDomain, String> sexoColumn;
+    @FXML private TableColumn<AnimalDomain, Integer> contramarcaColumn;
+
 
     // Navegación
     @FXML private Button id_registerLote, id_registerSale, id_registerUser;
@@ -67,9 +68,19 @@ public class CreateLoteController {
         slotColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getNum_lote()).asObject());
         pesoColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getPeso()));
         sexoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSexo()));
+        contramarcaColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(
+                id_contramarca.getText().isEmpty() ? 0 : Integer.parseInt(id_contramarca.getText())
+        ).asObject());
+
 
         comboSexo.setItems(FXCollections.observableArrayList("Macho", "Hembra"));
         id_tableViewAnimales.setItems(animalesObservableList);
+
+        id_contramarca.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.isEmpty()) {
+                id_tableViewAnimales.refresh();
+            }
+        });
     }
 
     private void cargarProveedores() {

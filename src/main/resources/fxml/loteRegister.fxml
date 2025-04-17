@@ -133,11 +133,11 @@
       <TableView fx:id="id_tableViewAnimales" layoutX="341.0" layoutY="284.0" prefHeight="230.0" prefWidth="350.0">
          <columns>
             <TableColumn fx:id="slotColumn" prefWidth="38.0" text="Num" />
-            <TableColumn fx:id="pesoColumn" prefWidth="82.0" text="Contramarca" />
-            <TableColumn fx:id="sexoColumn" prefWidth="57.0" text="Semana" />
-            <TableColumn fx:id="sexoColumn1" prefWidth="56.0" text="Peso" />
-            <TableColumn fx:id="sexoColumn11" prefWidth="63.0" text="Sexo" />
-            <TableColumn fx:id="sexoColumn111" prefWidth="52.0" text="Elminar" />
+            <TableColumn fx:id="contramarcaColumn" prefWidth="82.0" text="Contramarca" />
+            <TableColumn fx:id="semanaColumn" prefWidth="57.0" text="Semana" />
+            <TableColumn fx:id="pesoColumn" prefWidth="56.0" text="Peso" />
+            <TableColumn fx:id="sexoColumn" prefWidth="63.0" text="Sexo" />
+            <TableColumn fx:id="eliminarColumn" prefWidth="52.0" text="Elminar" />
          </columns>
       </TableView>
       <Pagination currentPageIndex="1" disable="true" layoutX="326.0" layoutY="268.0" maxPageIndicatorCount="5" pageCount="2" prefHeight="292.0" prefWidth="392.0" />
