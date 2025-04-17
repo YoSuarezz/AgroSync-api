@@ -36,7 +36,7 @@ public class LoteEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
 
-    @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<AnimalEntity> animales;
 
