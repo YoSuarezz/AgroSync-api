@@ -188,7 +188,7 @@ public class ViewLoteController {
 
             // Mostrar la información fija del lote
             proveedorLabel.setText("Proveedor: " + selectedLote.getUsuario().getNombre());
-            precioKiloLabel.setText("Precio por Kilo: " + format.format(selectedLote.getPrecio_kilo()));
+            precioKiloLabel.setText("Precio por Kilo: $" + format.format(selectedLote.getPrecio_kilo()));
 
             // Calcular el kilaje total y el precio total
             BigDecimal kilajeTotal = animales.stream()
@@ -198,8 +198,8 @@ public class ViewLoteController {
             BigDecimal precioTotal = kilajeTotal.multiply(selectedLote.getPrecio_kilo());
 
             // Actualizar los Label de Kilaje Total y Precio Total
-            kilajeTotalLabel.setText("Kilaje Total: " + format.format(kilajeTotal));
-            precioTotalLabel.setText("Precio Total: " + format.format(precioTotal));
+            kilajeTotalLabel.setText("Kilaje Total: $" + format.format(kilajeTotal));
+            precioTotalLabel.setText("Precio Total: $" + format.format(precioTotal));
 
             // Hacer visibles los Label de Proveedor, Precio por Kilo, Kilaje Total y Precio Total
             proveedorLabel.setVisible(true);
