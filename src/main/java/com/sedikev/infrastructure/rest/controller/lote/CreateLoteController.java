@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -57,6 +58,7 @@ public class CreateLoteController {
     @FXML private TableColumn<AnimalDomain, String> sexoColumn;
     @FXML private TableColumn<AnimalDomain, Integer> contramarcaColumn;
     @FXML private TableColumn<AnimalDomain, Integer> semanaColumn;
+    @FXML private TableColumn<AnimalDomain, Void> eliminarColumn;
 
 
     // Navegación
@@ -79,6 +81,23 @@ public class CreateLoteController {
         contramarcaColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(
                 id_contramarca.getText().isEmpty() ? 0 : Integer.parseInt(id_contramarca.getText())
         ).asObject());
+        eliminarColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button deleteBtn = new Button("X");
+
+            {
+                deleteBtn.setStyle("-fx-background-color: #ff4444; -fx-text-fill: white;");
+                deleteBtn.setOnAction(event -> {
+                    AnimalDomain animal = getTableView().getItems().get(getIndex());
+                    eliminarAnimal(animal);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : deleteBtn);
+            }
+        });
 
 
         comboSexo.setItems(FXCollections.observableArrayList("Macho", "Hembra"));
@@ -229,6 +248,20 @@ public class CreateLoteController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    private void eliminarAnimal(AnimalDomain animal) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmar");
+        confirm.setHeaderText(null);
+        confirm.setContentText("¿Eliminar este animal?");
+
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            animalesEnLote.remove(animal);
+            animalesObservableList.remove(animal);
+            id_tableViewAnimales.refresh();
+        }
     }
 
     // Navegación

@@ -137,7 +137,7 @@
             <TableColumn fx:id="semanaColumn" prefWidth="57.0" text="Semana" />
             <TableColumn fx:id="pesoColumn" prefWidth="56.0" text="Peso" />
             <TableColumn fx:id="sexoColumn" prefWidth="63.0" text="Sexo" />
-            <TableColumn fx:id="eliminarColumn" prefWidth="52.0" text="Elminar" />
+            <TableColumn fx:id="eliminarColumn" prefWidth="52.0" text="Eliminar" />
          </columns>
       </TableView>
       <Pagination currentPageIndex="1" disable="true" layoutX="326.0" layoutY="268.0" maxPageIndicatorCount="5" pageCount="2" prefHeight="292.0" prefWidth="392.0" />
