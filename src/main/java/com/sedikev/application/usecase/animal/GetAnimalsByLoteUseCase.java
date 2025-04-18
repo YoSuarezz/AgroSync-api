@@ -4,6 +4,7 @@ import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.application.usecase.UseCaseWithReturn;
+import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +18,11 @@ public class GetAnimalsByLoteUseCase implements UseCaseWithReturn<Long, List<Ani
     private final AnimalRepository animalRepository;
     private final AnimalMapper animalMapper;
 
+
     @Override
     public List<AnimalDomain> ejecutar(Long idLote) {
-        // Obtener animales por lote
-        return animalRepository.findAll().stream()
-                .filter(animalEntity -> idLote.equals(animalEntity.getLote().getId()))
+        List<AnimalEntity> animales = animalRepository.findByLoteId(idLote);
+        return animales.stream()
                 .map(animalMapper::toDomain)
                 .collect(Collectors.toList());
     }

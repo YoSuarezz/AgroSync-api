@@ -10,6 +10,8 @@ import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
 import com.sedikev.domain.service.UsuarioService;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
+import com.sedikev.infrastructure.rest.advice.ParameterReceiver;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,11 +30,12 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-public class CreateLoteController {
+public class CreateLoteController implements ParameterReceiver {
 
     // Servicios inyectados
     @Autowired private NavigationService navigationService;
@@ -42,9 +45,10 @@ public class CreateLoteController {
     @Autowired private UsuarioMapper usuarioMapper;
 
     // Lista de animales del lote
-    private final List<AnimalDomain> animalesEnLote = new ArrayList<>();
+    private List<AnimalDomain> animalesEnLote = new ArrayList<>();
     private final ObservableList<AnimalDomain> animalesObservableList = FXCollections.observableArrayList();
     private int slotCounter = 1;
+    private Long loteId = null;
 
     // Controles de la vista
     @FXML private TextField id_contramarca;
@@ -68,6 +72,15 @@ public class CreateLoteController {
     @FXML
     public void initialize() {
         cargarProveedores();
+
+        // Verificar si estamos en modo edición (cuando se navega desde ViewLoteController)
+        Node node = id_registerLote; // O cualquier nodo de la escena
+        Map<String, Object> parameters = navigationService.getParameters(node);
+
+        if (parameters != null && parameters.containsKey("loteId")) {
+            Long loteId = (Long) parameters.get("loteId");
+            cargarDatosLote(loteId); // Método que carga los datos del lote y sus animales
+        }
 
         // Configurar columnas de tabla
         slotColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getNum_lote()).asObject());
@@ -99,7 +112,6 @@ public class CreateLoteController {
             }
         });
 
-
         comboSexo.setItems(FXCollections.observableArrayList("Macho", "Hembra"));
         id_tableViewAnimales.setItems(animalesObservableList);
 
@@ -108,6 +120,62 @@ public class CreateLoteController {
                 id_tableViewAnimales.refresh();
             }
         });
+        System.out.println("ANIMALES EN LOTE AL CREAR: " + animalesEnLote);
+
+    }
+
+    @Override
+    public void setParameters(Map<String, Object> parameters) {
+        if (parameters != null && parameters.containsKey("loteId")) {
+            loteId = (Long) parameters.get("loteId");
+            cargarDatosLote(loteId);
+        }
+    }
+
+    private void cargarDatosLote(Long loteId) {
+        if (loteId == null) return;
+
+        try {
+            // Cargar datos del lote desde la base de datos
+            LoteDomain lote = loteService.findById(loteId);
+            if (lote == null) {
+                mostrarAlerta("Error", "No se encontró el lote especificado", AlertType.ERROR);
+                return;
+            }
+
+            // Cargar campos del formulario
+            Platform.runLater(() -> {
+                id_contramarca.setText(String.valueOf(lote.getContramarca()));
+                id_precio_kilo.setText(lote.getPrecio_kilo().toString());
+
+                // Seleccionar proveedor en ComboBox
+                if (lote.getUsuario() != null) {
+                    UsuarioDTO usuarioDTO = usuarioMapper.toDTO(lote.getUsuario());
+                    comboProveedor.getSelectionModel().select(usuarioDTO);
+                }
+            });
+
+            // Cargar animales del lote
+            List<AnimalDomain> animales = animalService.findByLote(loteId);
+            Platform.runLater(() -> {
+                animalesEnLote.clear();
+                animalesObservableList.clear();
+
+                animalesEnLote.addAll(animales);
+                animalesObservableList.addAll(animales);
+
+                // Actualizar contador de slots
+                slotCounter = animales.stream()
+                        .mapToInt(AnimalDomain::getNum_lote)
+                        .max()
+                        .orElse(0) + 1;
+
+                id_tableViewAnimales.refresh();
+            });
+
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al cargar datos del lote: " + e.getMessage(), AlertType.ERROR);
+        }
     }
 
     private void cargarProveedores() {
@@ -137,11 +205,11 @@ public class CreateLoteController {
             validarCamposAnimal();
 
             AnimalDomain animal = new AnimalDomain();
+            animal.setIdLote(loteId);
             animal.setPeso(new BigDecimal(id_peso.getText()));
             animal.setSexo(comboSexo.getValue().toLowerCase());
             animal.setNum_lote(slotCounter++);
-
-            animalesEnLote.add(animal);
+;
             animalesObservableList.add(animal);
 
             mostrarAlerta("Éxito", "El Animal fue agregado exitosamente", AlertType.INFORMATION);
@@ -157,36 +225,51 @@ public class CreateLoteController {
         try {
             validarCampoLote();
 
-            // Crear el lote
-            LoteDomain lote = new LoteDomain();
-            lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
-            lote.setPrecio_kilo(new BigDecimal(id_precio_kilo.getText()));
+            if (loteId != null) {
+                // Modo edición
+                LoteDomain lote = loteService.findById(loteId);
+                lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
+                lote.setPrecio_kilo(new BigDecimal(id_precio_kilo.getText()));
+                lote.setUsuario(usuarioMapper.toDomain(comboProveedor.getValue()));
 
-            // Asignar la fecha actual al lote
-            lote.setFecha(LocalDate.now()); // Utilizamos el campo 'fecha' que ya existe
+                loteService.update(lote);
 
-            // Asignar el proveedor
-            UsuarioDTO selectedUsuarioDTO = comboProveedor.getValue();
-            UsuarioDomain usuarioDomain = usuarioMapper.toDomain(selectedUsuarioDTO);
-            lote.setUsuario(usuarioDomain);
+                // Actualizar animales
 
-            // Guardar el lote
-            LoteDomain loteSaved = loteService.save(lote);
 
-            // Guardar los animales en el lote
-            for (AnimalDomain animal : animalesEnLote) {
-                animal.setIdLote(loteSaved.getId()); // Asignar el ID del lote
-                animalService.save(animal); // Guardar cada animal
+                animalService.deleteByLote(loteId);
+                System.out.println("Animal: " + animalesEnLote);
+                for (AnimalDomain animal : animalesObservableList) {
+                    animal.setId(null);
+                    System.out.println(animal);
+                    animalService.save(animal);
+                }
+
+                mostrarAlerta("Éxito", "Lote actualizado correctamente", AlertType.INFORMATION);
+            } else {
+                // Modo creación
+                LoteDomain lote = new LoteDomain();
+                lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
+                lote.setPrecio_kilo(new BigDecimal(id_precio_kilo.getText()));
+                lote.setFecha(LocalDate.now());
+                lote.setUsuario(usuarioMapper.toDomain(comboProveedor.getValue()));
+
+                LoteDomain loteSaved = loteService.save(lote);
+
+                // Guardar animales
+                for (AnimalDomain animal : animalesObservableList) {
+                    animal.setIdLote(loteSaved.getId());
+                    animalService.save(animal);
+                }
+
+                mostrarAlerta("Éxito", "Lote creado correctamente", AlertType.INFORMATION);
             }
 
-            // Mostrar mensaje de éxito
-            mostrarAlerta("Éxito", "Lote creado correctamente", AlertType.INFORMATION);
             limpiarFormulario();
+            navigationService.navigateTo("/fxml/viewLote.fxml", (Node) event.getSource());
 
-        } catch (IllegalArgumentException | BusinessSedikevException e) {
-            mostrarAlerta("Error", e.getMessage(), AlertType.ERROR);
         } catch (Exception e) {
-            mostrarAlerta("Error", "Ocurrió un error inesperado: " + e.getMessage(), AlertType.ERROR);
+            mostrarAlerta("Error", "Ocurrió un error: " + e.getMessage(), AlertType.ERROR);
         }
     }
 
@@ -222,7 +305,7 @@ public class CreateLoteController {
             throw new IllegalArgumentException("El precio por kilo debe ser mayor que cero");
         }
 
-        if (animalesEnLote.isEmpty()) {
+        if (animalesObservableList.isEmpty()) {
             throw new IllegalArgumentException("Debes agregar al menos un animal al lote");
         }
     }
@@ -258,11 +341,14 @@ public class CreateLoteController {
 
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            animalesEnLote.remove(animal);
             animalesObservableList.remove(animal);
             id_tableViewAnimales.refresh();
         }
+
+        System.out.println("ANIMALES EN OBSERVABLELIST LOTE DESPUES DE ELIMINAR: " + animalesObservableList);
+        System.out.println("ANIMALES EN LOTE DESPUES DE ELIMINAR: " + animalesEnLote);
     }
+
 
     // Navegación
     @FXML void goRegisterLote(ActionEvent e) { navigationService.navigateTo("/fxml/loteRegister.fxml", (Node) e.getSource()); }

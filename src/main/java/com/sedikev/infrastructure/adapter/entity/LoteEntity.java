@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -36,7 +35,10 @@ public class LoteEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
 
-    @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "lote",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     @JsonIgnore
     private List<AnimalEntity> animales;
 
@@ -98,5 +100,16 @@ public class LoteEntity {
 
     public void setGastos(List<GastoEntity> gastos) {
         this.gastos = gastos;
+    }
+
+    @Override
+    public String toString() {
+        return "LoteEntity{" +
+                "id=" + id +
+                ", usuario=" + usuario +
+                ", contramarca=" + contramarca +
+                ", precio_kilo=" + precio_kilo +
+                ", fecha=" + fecha +
+                '}';
     }
 }

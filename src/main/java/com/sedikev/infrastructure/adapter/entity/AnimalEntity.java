@@ -19,7 +19,7 @@ public class AnimalEntity {
     private String id;
 
     @JoinColumn(name = "id_lote")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private LoteEntity lote;
 
     @Column(name = "peso")

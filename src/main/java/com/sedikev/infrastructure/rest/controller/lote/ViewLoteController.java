@@ -6,6 +6,8 @@ import com.sedikev.application.dto.UsuarioDTO;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.application.mapper.UsuarioMapper;
+import com.sedikev.domain.model.AnimalDomain;
+import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
 import com.sedikev.domain.service.UsuarioService;
@@ -25,7 +27,10 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -97,6 +102,8 @@ public class ViewLoteController {
     private TableColumn<AnimalDTO, BigDecimal> pesoColumn;
     @FXML
     private TableColumn<AnimalDTO, String> sexoColumn;
+    @FXML
+    private TableColumn<LoteDTO, Void> actualizarColumn;
 
     private ObservableList<LoteDTO> loteObservableList = FXCollections.observableArrayList();
 
@@ -133,20 +140,81 @@ public class ViewLoteController {
         });
         pesoColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getPeso()));
         sexoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSexo()));
+        actualizarColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button editBtn = new Button("Editar");
 
-        // Inicializar la tabla con todos los lotes
+            {
+                editBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;");
+                editBtn.setOnAction(event -> {
+                    LoteDTO lote = getTableView().getItems().get(getIndex());
+                    System.out.println("Intentando editar lote ID: " + lote.getId()); // Log para depuración
+                    editarLote(lote);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableView().getItems().isEmpty() || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null);
+                } else {
+                    LoteDTO lote = getTableView().getItems().get(getIndex());
+                    editBtn.setDisable(lote == null || lote.getId() == null);
+                    setGraphic(editBtn);
+                }
+            }
+        });
+
         cargarLotes();
+    }
+
+    private void editarLote(LoteDTO lote) {
+        try {
+            System.out.println("Preparando para editar lote ID: " + lote.getId());
+
+            // Verificar existencia del lote en la base de datos
+            LoteDomain loteDomain = loteService.findById(lote.getId());
+            if (loteDomain == null) {
+                mostrarAlerta("Error", "El lote con ID " + lote.getId() + " no existe", Alert.AlertType.ERROR);
+                return;
+            }
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("loteId", lote.getId());
+            parameters.put("modoEdicion", true);  // Añadir flag de edición
+
+            System.out.println("Navegando a loteRegister con parámetros: " + parameters);
+
+            navigationService.navigateWithParameters("/fxml/loteRegister.fxml",
+                    loteTableView.getScene().getRoot(), parameters);
+        } catch (Exception e) {
+            System.err.println("Error al editar lote:");
+            e.printStackTrace();
+            mostrarAlerta("Error de Sistema",
+                    "No se pudo iniciar la edición:\n" +
+                            e.getClass().getSimpleName() + ": " + e.getMessage(),
+                    Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
     private void cargarLotes() {
-        // Obtener todos los lotes
-        List<LoteDTO> lotes = loteService.findAll().stream()
-                .map(loteMapper::toDTO)
-                .collect(Collectors.toList());
+        try {
+            List<LoteDTO> lotes = loteService.findAll().stream()
+                    .map(loteMapper::toDTO)
+                    .peek(lote -> {
+                        // Verifica que los datos críticos no sean nulos
+                        if (lote.getUsuario() == null || lote.getUsuario().getNombre() == null) {
+                            System.err.println("Lote con ID " + lote.getId() + " tiene usuario nulo");
+                        }
+                    })
+                    .collect(Collectors.toList());
 
-        loteObservableList.setAll(lotes);
-        loteTableView.setItems(FXCollections.observableArrayList(lotes));
+            loteObservableList.setAll(lotes);
+            loteTableView.setItems(FXCollections.observableArrayList(lotes));
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al cargar lotes: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
@@ -254,6 +322,14 @@ public class ViewLoteController {
                 setText(empty || item == null ? null : item.getNombre());
             }
         });
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML

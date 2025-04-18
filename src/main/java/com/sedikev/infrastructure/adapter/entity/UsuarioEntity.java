@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -107,5 +106,15 @@ public class UsuarioEntity {
 
     public void setLista_gastoEntity(List<GastoEntity> lista_gastoEntity) {
         this.lista_gastoEntity = lista_gastoEntity;
+    }
+
+    @Override
+    public String toString() {
+        return "UsuarioEntity{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", tipo_usuario='" + tipo_usuario + '\'' +
+                '}';
     }
 }

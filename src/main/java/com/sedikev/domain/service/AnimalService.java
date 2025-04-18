@@ -17,4 +17,7 @@ public interface AnimalService {
     List<AnimalDomain> findAll();
 
     List<AnimalDomain> findByLote(Long idLote);
+
+    public void deleteByLote(Long idLote);
+
 }

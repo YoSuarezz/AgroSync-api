@@ -1,16 +1,20 @@
 package com.sedikev.application.service;
 
+import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.application.usecase.lote.*;
 import com.sedikev.domain.model.LoteDomain;
+import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.domain.service.LoteService;
+import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LoteFacadeImpl implements LoteService {
 
     private final CreateLoteUseCase createLoteUseCase;
@@ -19,17 +23,34 @@ public class LoteFacadeImpl implements LoteService {
     private final GetLoteByIdUseCase getLoteByIdUseCase;
     private final GetAllLotesUseCase getAllLotesUseCase;
 
+    @Autowired private LoteRepository loteRepository;
+    @Autowired private LoteMapper loteMapper;
+
     @Override
     public LoteDomain save(LoteDomain loteDomain) {
         return createLoteUseCase.ejecutar(loteDomain);
     }
 
     @Override
+    @Transactional
     public LoteDomain update(LoteDomain loteDomain) {
-        return updateLoteUseCase.ejecutar(loteDomain);
+        System.out.println("Lote domain: " + loteDomain);
+        // Primero verifica que el lote existe
+        LoteEntity entity = loteRepository.findById(loteDomain.getId())
+                .orElseThrow(() -> new RuntimeException("Lote no encontrado para actualizar"));
+
+        // Actualiza solo los campos modificables
+        entity.setContramarca(loteDomain.getContramarca());
+        entity.setPrecio_kilo(loteDomain.getPrecio_kilo());
+        entity.setFecha(loteDomain.getFecha());
+
+        System.out.println("Entity :" + entity);
+        // No actualices relaciones directamente aquí
+        return loteMapper.toDomain(loteRepository.save(entity));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public LoteDomain findById(Long id) {
         return getLoteByIdUseCase.ejecutar(id);
     }
