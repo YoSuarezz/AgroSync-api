@@ -198,7 +198,7 @@ public class ViewLoteController {
             BigDecimal precioTotal = kilajeTotal.multiply(selectedLote.getPrecio_kilo());
 
             // Actualizar los Label de Kilaje Total y Precio Total
-            kilajeTotalLabel.setText("Kilaje Total: $" + format.format(kilajeTotal));
+            kilajeTotalLabel.setText("Kilaje Total: " + format.format(kilajeTotal));
             precioTotalLabel.setText("Precio Total: $" + format.format(precioTotal));
 
             // Hacer visibles los Label de Proveedor, Precio por Kilo, Kilaje Total y Precio Total
