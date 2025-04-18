@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class AnimalDTO {
 
     private String id;
-    private Long idLote; // ID del lote, no el objeto completo
+    private Long idLote;
     private BigDecimal peso;
     private String sexo;
     private Integer num_lote;

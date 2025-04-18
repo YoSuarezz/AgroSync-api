@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +56,7 @@ public class CreateLoteController {
     @FXML private TableColumn<AnimalDomain, BigDecimal> pesoColumn;
     @FXML private TableColumn<AnimalDomain, String> sexoColumn;
     @FXML private TableColumn<AnimalDomain, Integer> contramarcaColumn;
+    @FXML private TableColumn<AnimalDomain, Integer> semanaColumn;
 
 
     // Navegación
@@ -68,6 +71,11 @@ public class CreateLoteController {
         slotColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getNum_lote()).asObject());
         pesoColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getPeso()));
         sexoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSexo()));
+        semanaColumn.setCellValueFactory(cell -> {
+            // Calculamos la semana del año en la que estamos
+            int semana = LocalDate.now().get(WeekFields.ISO.weekOfYear());
+            return new SimpleIntegerProperty(semana).asObject();  // Devolvemos la semana calculada
+        });
         contramarcaColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(
                 id_contramarca.getText().isEmpty() ? 0 : Integer.parseInt(id_contramarca.getText())
         ).asObject());
@@ -129,23 +137,30 @@ public class CreateLoteController {
     void createLote(ActionEvent event) {
         try {
             validarCampoLote();
+
+            // Crear el lote
             LoteDomain lote = new LoteDomain();
             lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
             lote.setPrecio_kilo(new BigDecimal(id_precio_kilo.getText()));
+
+            // Asignar la fecha actual al lote
+            lote.setFecha(LocalDate.now()); // Utilizamos el campo 'fecha' que ya existe
+
+            // Asignar el proveedor
             UsuarioDTO selectedUsuarioDTO = comboProveedor.getValue();
             UsuarioDomain usuarioDomain = usuarioMapper.toDomain(selectedUsuarioDTO);
             lote.setUsuario(usuarioDomain);
-            System.out.println(lote);
 
+            // Guardar el lote
             LoteDomain loteSaved = loteService.save(lote);
 
+            // Guardar los animales en el lote
             for (AnimalDomain animal : animalesEnLote) {
                 animal.setIdLote(loteSaved.getId()); // Asignar el ID del lote
                 animalService.save(animal); // Guardar cada animal
             }
 
-
-
+            // Mostrar mensaje de éxito
             mostrarAlerta("Éxito", "Lote creado correctamente", AlertType.INFORMATION);
             limpiarFormulario();
 
