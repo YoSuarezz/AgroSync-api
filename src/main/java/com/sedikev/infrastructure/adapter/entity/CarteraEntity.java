@@ -16,7 +16,7 @@ public class CarteraEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_cartera")
     private Long id;
 
     @JoinColumn(name = "id_usuario")

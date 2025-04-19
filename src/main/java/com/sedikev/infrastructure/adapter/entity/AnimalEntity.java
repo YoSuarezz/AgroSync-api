@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "animal")
 public class AnimalEntity {
-
+    @Column(name="id_animal")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -28,7 +28,7 @@ public class AnimalEntity {
     @Column(name = "sexo")
     private String sexo;
 
-    @Column(name = "num_lote")
+    @Column(name = "slot")
     private int num_lote;
 
     public String getId() {

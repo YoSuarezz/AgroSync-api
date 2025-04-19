@@ -18,7 +18,7 @@ public class GastoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_gasto")
     private Long id;
 
     @JoinColumn(name = "id_lote")
