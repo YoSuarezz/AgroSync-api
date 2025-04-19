@@ -18,138 +18,69 @@ import java.util.stream.Collectors;
 @Controller
 public class ViewUsuarioController {
 
-    @Autowired
-    private NavigationService navigationService;
+    @Autowired private NavigationService navigationService;
+    @Autowired private UsuarioFacadeImpl usuarioFacade;
+    @Autowired private UsuarioMapper usuarioMapper;
 
-    @Autowired
-    private UsuarioFacadeImpl usuarioFacade;
+    @FXML private TextField nombreField;
+    @FXML private TextField telefonoField;
+    @FXML private ChoiceBox<String> tipoChoiceBox;
+    @FXML private Button buscarButton;
 
-    @Autowired
-    private UsuarioMapper usuarioMapper;
-
-    @FXML
-    private Button id_registerLote1;
-
-    @FXML
-    private Button id_registerSale1;
-
-    @FXML
-    private Button id_registerUser1;
-
-    @FXML
-    private Button id_viewClient1;
-
-    @FXML
-    private Button id_viewLote1;
-
-    @FXML
-    private Button id_viewSale1;
-
-    @FXML
-    private Button id_viewSupplier1;
-
-    @FXML
-    private Button id_viewUser1;
-
-    @FXML
-    private TextField nombreField;
-    @FXML
-    private ChoiceBox<String> tipoChoiceBox;
-    @FXML
-    private TableView<UsuarioDTO> usuarioTableView;
-    @FXML
-    private TableColumn<UsuarioDTO, String> nombreColumn;
-    @FXML
-    private TableColumn<UsuarioDTO, String> tipoColumn;
-    @FXML
-    private TableColumn<UsuarioDTO, String> telefonoColumn;
-    @FXML
-    private TableColumn<UsuarioDTO, String> accionesColumn;
+    @FXML private TableView<UsuarioDTO> usuarioTableView;
+    @FXML private TableColumn<UsuarioDTO, String> nombreColumn;
+    @FXML private TableColumn<UsuarioDTO, String> tipoColumn;
+    @FXML private TableColumn<UsuarioDTO, String> telefonoColumn;
+    @FXML private TableColumn<UsuarioDTO, String> accionesColumn;
 
     @FXML
     private void initialize() {
-        // Configuración de las columnas
-        nombreColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombre()));
-        tipoColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipo_usuario()));
-        telefonoColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTelefono()));
+        // 1) Configuro columnas
+        nombreColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
+        tipoColumn.setCellValueFactory(c   -> new SimpleStringProperty(c.getValue().getTipo_usuario()));
+        telefonoColumn.setCellValueFactory(c-> new SimpleStringProperty(c.getValue().getTelefono()));
 
-        // Configurar ChoiceBox con los tipos de usuario
-        tipoChoiceBox.getItems().addAll("Proveedor", "Cliente", "Admin");
-        tipoChoiceBox.setValue("Proveedor"); // Puedes establecer un valor por defecto
+        // 2) ChoiceBox con “Todos” + roles
+        tipoChoiceBox.getItems().addAll("Todos", "Proveedor", "Cliente");
+        tipoChoiceBox.setValue("Todos");
 
-        // Cargar todos los usuarios al inicio
+        // 3) Cargo todos al inicio
         cargarUsuarios();
     }
 
     @FXML
     private void cargarUsuarios() {
-        // Obtener todos los usuarios del servicio
         List<UsuarioDTO> usuarios = usuarioFacade.findAll().stream()
-                // Usar el mapeador para convertir de UsuarioDomain a UsuarioDTO
                 .map(usuarioMapper::toDTO)
                 .collect(Collectors.toList());
-
-        // Asignar los usuarios a la tabla
         usuarioTableView.getItems().setAll(usuarios);
     }
 
-
     @FXML
-    private void buscarUsuarios() {
-        // Obtener el texto del campo de nombre y el valor del tipo seleccionado
-        String nombre = nombreField.getText().toLowerCase();
-        String tipo = tipoChoiceBox.getValue().toLowerCase();
+    private void buscarUsuarios(ActionEvent event) {
+        String nombreFiltro   = nombreField.getText().trim().toLowerCase();
+        String telefonoFiltro = telefonoField.getText().trim();
+        String tipoFiltro     = tipoChoiceBox.getValue().toLowerCase();
 
-        // Obtener todos los usuarios y filtrarlos por nombre y tipo
-        List<UsuarioDTO> usuarios = usuarioFacade.findAll().stream()
-                // Convertir de UsuarioDomain a UsuarioDTO
+        List<UsuarioDTO> filtrados = usuarioFacade.findAll().stream()
                 .map(usuarioMapper::toDTO)
-                .filter(usuario -> usuario.getNombre().toLowerCase().contains(nombre) && usuario.getTipo_usuario().toLowerCase().contains(tipo))
+                .filter(u -> u.getNombre().toLowerCase().contains(nombreFiltro))
+                .filter(u -> telefonoFiltro.isEmpty() ||
+                        u.getTelefono().contains(telefonoFiltro))
+                .filter(u -> tipoFiltro.equals("todos") ||
+                        u.getTipo_usuario().toLowerCase().equals(tipoFiltro))
                 .collect(Collectors.toList());
 
-        // Actualizar la tabla con los resultados filtrados
-        usuarioTableView.getItems().setAll(usuarios);
+        usuarioTableView.getItems().setAll(filtrados);
     }
 
-
-    @FXML
-    private void goRegisterLote(ActionEvent event) {
-        navigationService.navigateTo("/fxml/loteRegister.fxml", (Node) event.getSource());
-    }
-
-    @FXML
-    void goRegisterSale(ActionEvent event) {
-        navigationService.navigateTo("/fxml/ventaRegister.fxml", (Node) event.getSource());
-    }
-
-    @FXML
-    void goRegisterUser(ActionEvent event) {
-        navigationService.navigateTo("/fxml/usuarioRegister.fxml", (Node) event.getSource());
-    }
-
-    @FXML
-    void goViewClient(ActionEvent event) {
-        navigationService.navigateTo("/fxml/viewClienteCartera.fxml", (Node) event.getSource());
-    }
-
-    @FXML
-    void goViewLote(ActionEvent event) {
-        navigationService.navigateTo("/fxml/viewLote.fxml", (Node) event.getSource());
-    }
-
-    @FXML
-    void goViewSale(ActionEvent event) {
-        navigationService.navigateTo("/fxml/viewVenta.fxml", (Node) event.getSource());
-    }
-
-    @FXML
-    void goViewSupplier(ActionEvent event) {
-        navigationService.navigateTo("/fxml/viewProveedorCartera.fxml", (Node) event.getSource());
-    }
-
-    @FXML
-    void goViewUser(ActionEvent event) {
-        navigationService.navigateTo("/fxml/viewUsuario.fxml", (Node) event.getSource());
-    }
-
+    // ——— Métodos de navegación (igual que antes) ———
+    @FXML private void goRegisterLote(ActionEvent e) { navigationService.navigateTo("/fxml/loteRegister.fxml", (Node)e.getSource()); }
+    @FXML private void goViewLote   (ActionEvent e) { navigationService.navigateTo("/fxml/viewLote.fxml",   (Node)e.getSource()); }
+    @FXML private void goRegisterSale(ActionEvent e){ navigationService.navigateTo("/fxml/ventaRegister.fxml",(Node)e.getSource()); }
+    @FXML private void goViewSale   (ActionEvent e) { navigationService.navigateTo("/fxml/viewVenta.fxml", (Node)e.getSource()); }
+    @FXML private void goRegisterUser(ActionEvent e){ navigationService.navigateTo("/fxml/usuarioRegister.fxml",(Node)e.getSource()); }
+    @FXML private void goViewUser   (ActionEvent e) { navigationService.navigateTo("/fxml/viewUsuario.fxml",(Node)e.getSource()); }
+    @FXML private void goViewClient (ActionEvent e) { navigationService.navigateTo("/fxml/viewClienteCartera.fxml",(Node)e.getSource()); }
+    @FXML private void goViewSupplier(ActionEvent e){ navigationService.navigateTo("/fxml/viewProveedorCartera.fxml",(Node)e.getSource()); }
 }

@@ -65,7 +65,7 @@
 }
 
 .stackpane {
-    -fx-background-color: linear-gradient(from 120deg, #84fab0 0%, #8fd3f4 100%);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #84fab0, #8fd3f4);
     -fx-background-radius: 5px; /* opcional: bordes redondeados */
     -fx-padding: 10px; /* opcional: espacio interno */
 }

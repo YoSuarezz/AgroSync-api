@@ -115,20 +115,36 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Label layoutX="284.0" layoutY="119.0" prefHeight="17.0" prefWidth="101.0" text="Nombre" />
-      <TextField layoutX="284.0" layoutY="139.0" prefHeight="26.0" prefWidth="161.0" promptText="Ejemplo: Augusto" />
-      <TableView layoutX="288.0" layoutY="181.0" prefHeight="345.0" prefWidth="469.0">
+      <!-- Filtros de Búsqueda -->
+      <Label layoutX="284.0" layoutY="81.0" text="Buscar por:"/>
+      <Label layoutX="284.0" layoutY="109.0" text="Nombre"/>
+      <TextField fx:id="nombreField"
+                 layoutX="284.0" layoutY="129.0"
+                 prefWidth="160.0"
+                 promptText="Ej: Juan Pérez"/>
+
+      <Label layoutX="460.0" layoutY="109.0" text="Teléfono"/>
+      <TextField fx:id="telefonoField"
+                 layoutX="460.0" layoutY="129.0"
+                 prefWidth="160.0"
+                 promptText="Ej: 3123456789"/>
+
+      <Button fx:id="buscarButton"
+              layoutX="638.0" layoutY="128.0"
+              text="Buscar"
+              onAction="#buscarClientes"
+              style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+
+      <!-- Tabla de Cartera Clientes -->
+      <TableView fx:id="carteraTableView"
+                 layoutX="284.0" layoutY="181.0"
+                 prefWidth="500.0" prefHeight="345.0">
          <columns>
-            <TableColumn prefWidth="282.0" style="-fx-background-color: white;" text="Nombre" />
-            <TableColumn minWidth="5.0" prefWidth="113.0" style="-fx-background-color: white;" text="Saldo" />
-            <TableColumn minWidth="0.0" prefWidth="35.0" style="-fx-background-color: white;" text="Act" />
-            <TableColumn prefWidth="38.0" style="-fx-background-color: white;" text="Ver" />
+            <TableColumn fx:id="nombreColumn" text="Nombre" prefWidth="200.0"/>
+            <TableColumn fx:id="saldoColumn"  text="Saldo"    prefWidth="150.0"/>
+            <TableColumn fx:id="accionesColumn" text="Acciones" prefWidth="100.0"/>
          </columns>
       </TableView>
-      <Pagination layoutX="270.0" layoutY="167.0" prefHeight="406.0" prefWidth="500.0" />
-      <Label layoutX="284.0" layoutY="81.0" prefHeight="17.0" prefWidth="101.0" text="Buscar por:" />
-      <Label layoutX="498.0" layoutY="120.0" prefHeight="17.0" prefWidth="101.0" text="Tipo" />
-      <ComboBox fx:id="comboTipo" layoutX="498.0" layoutY="139.0" prefHeight="27.0" prefWidth="140.0" />
    </children>
    <stylesheets>
       <URL value="@../styles/verLoteStyles.css" />

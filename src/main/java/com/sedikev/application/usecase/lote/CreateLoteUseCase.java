@@ -1,9 +1,7 @@
 package com.sedikev.application.usecase.lote;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
-import com.sedikev.application.usecase.animal.CreateAnimalUseCase;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
-import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.application.mapper.LoteMapper;
@@ -19,7 +17,6 @@ public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
 
     private final LoteRepository loteRepository;
     private final LoteMapper loteMapper;
-    private final CreateAnimalUseCase createAnimalUseCase;
 
     @Override
     public LoteDomain ejecutar(LoteDomain loteDomain) {

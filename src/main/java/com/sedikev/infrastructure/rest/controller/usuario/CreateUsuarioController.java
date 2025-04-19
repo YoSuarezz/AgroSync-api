@@ -1,11 +1,13 @@
 package com.sedikev.infrastructure.rest.controller.usuario;
 
 import com.sedikev.application.service.UsuarioFacadeImpl;
+import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -62,33 +64,48 @@ public class CreateUsuarioController {
 
     @FXML
     private void registrarUsuario(ActionEvent event) {
-        // Obtener los valores del formulario
-        String nombre = nombreField.getText();
-        String telefono = telefonoField.getText();
+        String nombre     = nombreField.getText().trim();
+        String telefono   = telefonoField.getText().trim();
         String tipoUsuario = tipoComboBox.getValue();
 
-        // Validar que todos los campos estén llenos
         if (nombre.isEmpty() || telefono.isEmpty() || tipoUsuario == null) {
-            // Mostrar algún mensaje de error (por ejemplo, usando un Alert)
-            System.out.println("Todos los campos deben ser llenados.");
+            showAlert(Alert.AlertType.WARNING, "Datos incompletos",
+                    "Todos los campos deben ser llenados.");
             return;
         }
 
-        // Crear el objeto UsuarioDomain
-        UsuarioDomain nuevoUsuario = new UsuarioDomain();
-        nuevoUsuario.setNombre(nombre);
-        nuevoUsuario.setTelefono(telefono);
-        nuevoUsuario.setTipo_usuario(tipoUsuario);
+        UsuarioDomain nuevo = new UsuarioDomain();
+        nuevo.setNombre(nombre);
+        nuevo.setTelefono(telefono);
+        nuevo.setTipo_usuario(tipoUsuario);
 
-        // Llamar al service para registrar el usuario
         try {
-            UsuarioDomain usuarioRegistrado = usuarioFacade.save(nuevoUsuario);
-            // Si el usuario fue registrado exitosamente, redirigir a otra vista o mostrar un mensaje
-            System.out.println("Usuario registrado: " + usuarioRegistrado.getNombre());
-        } catch (Exception e) {
-            // Manejar errores (por ejemplo, si el usuario ya existe)
-            System.out.println("Error al registrar el usuario: " + e.getMessage());
+            UsuarioDomain registrado = usuarioFacade.save(nuevo);
+            showAlert(Alert.AlertType.INFORMATION, "Éxito",
+                    "Usuario registrado: " + registrado.getNombre());
+            clearForm();  // <— aquí limpio los campos tras un registro exitoso
         }
+        catch (BusinessSedikevException ex) {
+            showAlert(Alert.AlertType.ERROR, "Error de validación", ex.getMessage());
+        }
+        catch (Exception ex) {
+            showAlert(Alert.AlertType.ERROR, "Error",
+                    "No se pudo registrar el usuario: " + ex.getMessage());
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void clearForm() {
+        nombreField.clear();
+        telefonoField.clear();
+        tipoComboBox.getSelectionModel().clearSelection();
     }
 
     @FXML
