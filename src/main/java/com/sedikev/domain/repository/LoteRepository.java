@@ -15,4 +15,8 @@ public interface LoteRepository extends JpaRepository<LoteEntity, Long> {
     void deleteById(Long id);
 
     List<LoteEntity> findAll();
+
+    boolean existsByContramarca(int contramarca);
+
+    boolean existsByContramarcaAndIdNot(int contramarca, Long id);
 }

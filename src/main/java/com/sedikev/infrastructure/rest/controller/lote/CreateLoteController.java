@@ -79,7 +79,7 @@ public class CreateLoteController implements ParameterReceiver {
 
         if (parameters != null && parameters.containsKey("loteId")) {
             Long loteId = (Long) parameters.get("loteId");
-            cargarDatosLote(loteId); // Método que carga los datos del lote y sus animales
+            cargarDatosLote(loteId); // Méto-do que carga los datos del lote y sus animales
         }
 
         // Configurar columnas de tabla

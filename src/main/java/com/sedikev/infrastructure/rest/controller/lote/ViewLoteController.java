@@ -6,7 +6,6 @@ import com.sedikev.application.dto.UsuarioDTO;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.application.mapper.UsuarioMapper;
-import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
@@ -147,7 +146,7 @@ public class ViewLoteController {
                 editBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;");
                 editBtn.setOnAction(event -> {
                     LoteDTO lote = getTableView().getItems().get(getIndex());
-                    System.out.println("Intentando editar lote ID: " + lote.getId()); // Log para depuración
+                    System.out.println("Intentando editar lote ID: " + lote.getId());
                     editarLote(lote);
                 });
             }

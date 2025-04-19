@@ -34,6 +34,9 @@ public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
             throw new BusinessSedikevException("La contramarca debe ser mayor que cero");
         }
 
+        if (loteRepository.existsByContramarca(loteDomain.getContramarca()))
+            throw new BusinessSedikevException("Ya existe un lote con esa contramarca");
+        // guardar
         // Guardar en cascada
         LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
         LoteEntity loteSaved = loteRepository.save(loteEntity);

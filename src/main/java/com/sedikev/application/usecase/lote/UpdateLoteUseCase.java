@@ -30,11 +30,14 @@ public class UpdateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
             throw new BusinessSedikevException("El precio por kilo no puede ser negativo");
         }
         if (loteDomain.getUsuario() == null || loteDomain.getUsuario().getId() == null) {
-            throw new BusinessSedikevException("El lote debe estar asociado a un usuario");
+            throw new BusinessSedikevException("El lote debe estar asociado a un proveedor");
         }
         if (loteDomain.getContramarca() <= 0) {
             throw new BusinessSedikevException("El valor de contramarca no puede ser negativo");
         }
+
+        if (loteRepository.existsByContramarcaAndIdNot(loteDomain.getContramarca(), loteDomain.getId()))
+            throw new BusinessSedikevException("Ya existe otro lote con esa contramarca");
 
         // Mapear y actualizar el lote
         LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
