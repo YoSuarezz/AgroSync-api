@@ -18,7 +18,7 @@ public class PagoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_pago")
     private Long id;
 
     @JoinColumn(name = "id_venta")

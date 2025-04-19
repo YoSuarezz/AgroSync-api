@@ -20,7 +20,7 @@ public class VentaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_venta")
     private Long id;
 
     @JoinColumn(name = "id_animal")
@@ -34,7 +34,7 @@ public class VentaEntity {
     @Column(name = "estado")
     private String estado;
 
-    @Column(name = "precio_kilo")
+    @Column(name = "precio_kiloV")
     private BigDecimal precio_kilo;
 
     @Column(name = "fecha")
