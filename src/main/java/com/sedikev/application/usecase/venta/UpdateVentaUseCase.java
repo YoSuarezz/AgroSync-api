@@ -25,11 +25,6 @@ public class UpdateVentaUseCase implements UseCaseWithReturn<VentaDomain, VentaD
             throw new BusinessSedikevException("La venta no existe");
         }
 
-        // Validación de negocio: Verificar que la venta tenga un animal relacionado
-        if (ventaDomain.getAnimal() == null || ventaDomain.getAnimal().getId() == null) {
-            throw new BusinessSedikevException("La venta debe tener un animal relacionado");
-        }
-
         // Validación de negocio: Verificar que la venta tenga un usuario relacionado
         if (ventaDomain.getUsuario() == null || ventaDomain.getUsuario().getId() == null) {
             throw new BusinessSedikevException("La venta debe tener un usuario relacionado");
@@ -41,9 +36,9 @@ public class UpdateVentaUseCase implements UseCaseWithReturn<VentaDomain, VentaD
             throw new BusinessSedikevException("El estado debe ser 'pagado' o 'no pagado'");
         }
 
-        // Validación de negocio: Verificar que el precio por kilo sea mayor que 0
-        if (ventaDomain.getPrecio_kilo().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessSedikevException("El precio por kilo debe ser mayor que 0");
+        // Validación de negocio: Verificar que el precio de la venta sea mayor que 0
+        if (ventaDomain.getPrecioVenta() == null || ventaDomain.getPrecioVenta().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessSedikevException("El precio de venta debe ser mayor que 0");
         }
 
         // Mapear y actualizar la venta

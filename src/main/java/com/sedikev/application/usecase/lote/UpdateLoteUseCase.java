@@ -25,15 +25,15 @@ public class UpdateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
         if (!loteRepository.existsById(loteDomain.getId())) {
             throw new BusinessSedikevException("El lote no existe");
         }
-        // Validación de negocio: Verificar que el precio por kilo no sea negativo
-        if (loteDomain.getPrecio_kilo().compareTo(BigDecimal.ZERO) < 0) {
-            throw new BusinessSedikevException("El precio por kilo no puede ser negativo");
+        // Validación de negocio: Verificar que el precio total no sea negativo
+        if (loteDomain.getPrecioTotal() == null || loteDomain.getPrecioTotal().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessSedikevException("El precio total debe ser mayor que cero");
         }
         if (loteDomain.getUsuario() == null || loteDomain.getUsuario().getId() == null) {
             throw new BusinessSedikevException("El lote debe estar asociado a un proveedor");
         }
-        if (loteDomain.getContramarca() <= 0) {
-            throw new BusinessSedikevException("El valor de contramarca no puede ser negativo");
+        if (loteDomain.getContramarca() <= 0 || loteDomain.getContramarca() == null ) {
+            throw new BusinessSedikevException("La contramarca no puede ser 0 o nula");
         }
 
         if (loteRepository.existsByContramarcaAndIdNot(loteDomain.getContramarca(), loteDomain.getId()))

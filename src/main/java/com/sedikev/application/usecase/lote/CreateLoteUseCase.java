@@ -21,17 +21,16 @@ public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
     @Override
     public LoteDomain ejecutar(LoteDomain loteDomain) {
 
-        // Validación de lote
-        if (loteDomain.getPrecio_kilo().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessSedikevException("El precio por kilo no puede ser negativo");
-        }
-
         if (loteDomain.getUsuario() == null || loteDomain.getUsuario().getId() == null) {
             throw new BusinessSedikevException("El lote debe estar asociado a un usuario");
         }
 
-        if (loteDomain.getContramarca() <= 0) {
-            throw new BusinessSedikevException("La contramarca debe ser mayor que cero");
+        if (loteDomain.getPrecioTotal() == null || loteDomain.getPrecioTotal().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessSedikevException("El precio total debe ser mayor que cero");
+        }
+
+        if (loteDomain.getContramarca() <= 0 || loteDomain.getContramarca() == null ) {
+            throw new BusinessSedikevException("La contramarca no puede ser 0 o nula");
         }
 
         if (loteRepository.existsByContramarca(loteDomain.getContramarca()))

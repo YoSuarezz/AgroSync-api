@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,33 +15,31 @@ import java.util.List;
 @Entity
 @Table(name = "venta")
 public class VentaEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_venta")
     private Long id;
 
-    @JoinColumn(name = "id_animal")
-    @OneToOne
-    private AnimalEntity animal;
-
-    @JoinColumn(name = "id_usuario")
     @ManyToOne
+    @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
-    @Column(name = "estado")
+    @Column(name = "estado", length = 100)
     private String estado;
 
-    @Column(name = "precio_kiloV")
-    private BigDecimal precio_kilo;
+    @Column(name = "precio_venta")
+    private BigDecimal precioVenta;
 
     @Column(name = "fecha")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
+
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<AnimalEntity> animales;
 
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<PagoEntity> lista_pagoEntity;
+    private List<PagoEntity> listaPagos;
 
     public Long getId() {
         return id;
@@ -53,12 +49,12 @@ public class VentaEntity {
         this.id = id;
     }
 
-    public AnimalEntity getAnimal() {
-        return animal;
+    public List<PagoEntity> getListaPagos() {
+        return listaPagos;
     }
 
-    public void setAnimal(AnimalEntity animal) {
-        this.animal = animal;
+    public void setListaPagos(List<PagoEntity> listaPagos) {
+        this.listaPagos = listaPagos;
     }
 
     public UsuarioEntity getUsuario() {
@@ -77,12 +73,12 @@ public class VentaEntity {
         this.estado = estado;
     }
 
-    public BigDecimal getPrecio_kilo() {
-        return precio_kilo;
+    public BigDecimal getPrecioVenta() {
+        return precioVenta;
     }
 
-    public void setPrecio_kilo(BigDecimal precio_kilo) {
-        this.precio_kilo = precio_kilo;
+    public void setPrecioVenta(BigDecimal precioVenta) {
+        this.precioVenta = precioVenta;
     }
 
     public LocalDate getFecha() {
@@ -93,11 +89,11 @@ public class VentaEntity {
         this.fecha = fecha;
     }
 
-    public List<PagoEntity> getLista_pagoEntity() {
-        return lista_pagoEntity;
+    public List<AnimalEntity> getAnimales() {
+        return animales;
     }
 
-    public void setLista_pagoEntity(List<PagoEntity> lista_pagoEntity) {
-        this.lista_pagoEntity = lista_pagoEntity;
+    public void setAnimales(List<AnimalEntity> animales) {
+        this.animales = animales;
     }
 }

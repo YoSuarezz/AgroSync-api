@@ -4,21 +4,22 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Data
-@Getter
-@Setter
+@Getter @Setter
 public class AnimalDTO {
-
-    private String id;
+    private Long id;
     private Long idLote;
+    private Long idVenta;
     private BigDecimal peso;
     private String sexo;
-    private Integer num_lote;
+    private Integer slot;
+    private BigDecimal precioKiloCompra;
+    private BigDecimal precioKiloVenta;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -28,6 +29,14 @@ public class AnimalDTO {
 
     public void setIdLote(Long idLote) {
         this.idLote = idLote;
+    }
+
+    public Long getIdVenta() {
+        return idVenta;
+    }
+
+    public void setIdVenta(Long idVenta) {
+        this.idVenta = idVenta;
     }
 
     public BigDecimal getPeso() {
@@ -46,11 +55,27 @@ public class AnimalDTO {
         this.sexo = sexo;
     }
 
-    public Integer getNum_lote() {
-        return num_lote;
+    public Integer getSlot() {
+        return slot;
     }
 
-    public void setNum_lote(Integer num_lote) {
-        this.num_lote = num_lote;
+    public void setSlot(Integer slot) {
+        this.slot = slot;
+    }
+
+    public BigDecimal getPrecioKiloCompra() {
+        return precioKiloCompra;
+    }
+
+    public void setPrecioKiloCompra(BigDecimal precioKiloCompra) {
+        this.precioKiloCompra = precioKiloCompra;
+    }
+
+    public BigDecimal getPrecioKiloVenta() {
+        return precioKiloVenta;
+    }
+
+    public void setPrecioKiloVenta(BigDecimal precioKiloVenta) {
+        this.precioKiloVenta = precioKiloVenta;
     }
 }

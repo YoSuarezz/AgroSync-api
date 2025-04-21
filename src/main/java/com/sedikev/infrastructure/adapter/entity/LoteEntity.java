@@ -5,20 +5,19 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "lote")
 public class LoteEntity {
-    @Column(name="id_lote")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_lote")
     private Long id;
 
     @ManyToOne
@@ -26,19 +25,15 @@ public class LoteEntity {
     private UsuarioEntity usuario;
 
     @Column(name = "contramarca")
-    private int contramarca;
+    private Integer contramarca;
 
-    @Column(name = "precio_kilo")
-    private BigDecimal precio_kilo;
+    @Column(name = "precio_total")
+    private BigDecimal precioTotal;
 
     @Column(name = "fecha")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
 
-    @OneToMany(mappedBy = "lote",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<AnimalEntity> animales;
 
@@ -54,36 +49,12 @@ public class LoteEntity {
         this.id = id;
     }
 
-    public UsuarioEntity getUsuario() {
-        return usuario;
+    public List<GastoEntity> getGastos() {
+        return gastos;
     }
 
-    public void setUsuario(UsuarioEntity usuario) {
-        this.usuario = usuario;
-    }
-
-    public int getContramarca() {
-        return contramarca;
-    }
-
-    public void setContramarca(int contramarca) {
-        this.contramarca = contramarca;
-    }
-
-    public BigDecimal getPrecio_kilo() {
-        return precio_kilo;
-    }
-
-    public void setPrecio_kilo(BigDecimal precio_kilo) {
-        this.precio_kilo = precio_kilo;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setGastos(List<GastoEntity> gastos) {
+        this.gastos = gastos;
     }
 
     public List<AnimalEntity> getAnimales() {
@@ -94,12 +65,36 @@ public class LoteEntity {
         this.animales = animales;
     }
 
-    public List<GastoEntity> getGastos() {
-        return gastos;
+    public LocalDate getFecha() {
+        return fecha;
     }
 
-    public void setGastos(List<GastoEntity> gastos) {
-        this.gastos = gastos;
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public BigDecimal getPrecioTotal() {
+        return precioTotal;
+    }
+
+    public void setPrecioTotal(BigDecimal precioTotal) {
+        this.precioTotal = precioTotal;
+    }
+
+    public Integer getContramarca() {
+        return contramarca;
+    }
+
+    public void setContramarca(Integer contramarca) {
+        this.contramarca = contramarca;
+    }
+
+    public UsuarioEntity getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
     }
 
     @Override
@@ -108,7 +103,7 @@ public class LoteEntity {
                 "id=" + id +
                 ", usuario=" + usuario +
                 ", contramarca=" + contramarca +
-                ", precio_kilo=" + precio_kilo +
+                ", precio_total=" + precioTotal +
                 ", fecha=" + fecha +
                 '}';
     }

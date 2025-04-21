@@ -2,10 +2,8 @@ package com.sedikev.infrastructure.rest.controller.lote;
 
 import com.sedikev.application.dto.UsuarioDTO;
 import com.sedikev.application.mapper.UsuarioMapper;
-import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.model.LoteDomain;
-import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
 import com.sedikev.domain.service.UsuarioService;
@@ -209,7 +207,6 @@ public class CreateLoteController implements ParameterReceiver {
             animal.setPeso(new BigDecimal(id_peso.getText()));
             animal.setSexo(comboSexo.getValue().toLowerCase());
             animal.setNum_lote(slotCounter++);
-;
             animalesObservableList.add(animal);
 
             mostrarAlerta("Éxito", "El Animal fue agregado exitosamente", AlertType.INFORMATION);

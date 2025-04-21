@@ -1,20 +1,30 @@
 package com.sedikev.application.mapper;
 
-import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.application.dto.VentaDTO;
+import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.infrastructure.adapter.entity.VentaEntity;
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {AnimalMapper.class, UsuarioMapper.class}
+)
 public interface VentaMapper {
 
-    @Mapping(source = "id", target = "id")
-    VentaDTO toDTO(VentaDomain ventaDomain);
-    @Mapping(source = "id", target = "id")
-    VentaDomain toDomain(VentaDTO ventaDTO);
-    @Mapping(source = "id", target = "id")
-    VentaEntity toEntity(VentaDomain ventaDomain);
-    @Mapping(source = "id", target = "id")
-    VentaDomain toDomain(VentaEntity ventaEntity);
+    // DOMAIN -> ENTITY
+    @Mapping(source = "precioVenta", target = "precioVenta")
+    @Mapping(source = "animales",    target = "animales")
+    VentaEntity toEntity(VentaDomain domain);
+
+    // ENTITY -> DOMAIN
+    @Mapping(source = "precioVenta", target = "precioVenta")
+    @Mapping(source = "animales",    target = "animales")
+    VentaDomain toDomain(VentaEntity entity);
+
+    // DOMAIN -> DTO
+    VentaDTO toDTO(VentaDomain domain);
+
+    // DTO -> DOMAIN
+    VentaDomain toDomain(VentaDTO dto);
 }

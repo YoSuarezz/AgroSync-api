@@ -7,14 +7,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
+@Getter @Setter
 public class LoteDTO {
-
     private Long id;
     private UsuarioDTO usuario;
     private Integer contramarca;
-    private BigDecimal precio_kilo;
+    private BigDecimal precioTotal;
     private LocalDate fecha;
     private List<AnimalDTO> animales;
 
@@ -42,12 +40,12 @@ public class LoteDTO {
         this.contramarca = contramarca;
     }
 
-    public BigDecimal getPrecio_kilo() {
-        return precio_kilo;
+    public BigDecimal getPrecioTotal() {
+        return precioTotal;
     }
 
-    public void setPrecio_kilo(BigDecimal precio_kilo) {
-        this.precio_kilo = precio_kilo;
+    public void setPrecioTotal(BigDecimal precioTotal) {
+        this.precioTotal = precioTotal;
     }
 
     public LocalDate getFecha() {

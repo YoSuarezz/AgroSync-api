@@ -3,18 +3,16 @@ package com.sedikev.application.mapper;
 import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.application.dto.UsuarioDTO;
 import com.sedikev.infrastructure.adapter.entity.UsuarioEntity;
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
 
-    @Mapping(source = "id", target = "id")
-    UsuarioDTO toDTO(UsuarioDomain usuarioDomain);
-    @Mapping(source = "id", target = "id")
-    UsuarioDomain toDomain(UsuarioDTO usuarioDTO);
-    @Mapping(source = "id", target = "id")
-    UsuarioEntity toEntity(UsuarioDomain usuarioDomain);
-    @Mapping(source = "id", target = "id")
-    UsuarioDomain toDomain(UsuarioEntity usuarioEntity);
+    UsuarioDTO toDTO(UsuarioDomain domain);
+
+    UsuarioDomain toDomain(UsuarioDTO dto);
+
+    UsuarioEntity toEntity(UsuarioDomain domain);
+
+    UsuarioDomain toDomain(UsuarioEntity entity);
 }
