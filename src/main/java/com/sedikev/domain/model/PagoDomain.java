@@ -13,7 +13,6 @@ public class PagoDomain {
 
     private Long id;
     private VentaDomain venta;
-    private UsuarioDomain usuario;
     private String tipo_pago;
     private BigDecimal cantidad;
     private String descripcion;
@@ -33,14 +32,6 @@ public class PagoDomain {
 
     public void setVenta(VentaDomain venta) {
         this.venta = venta;
-    }
-
-    public UsuarioDomain getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioDomain usuario) {
-        this.usuario = usuario;
     }
 
     public String getTipo_pago() {

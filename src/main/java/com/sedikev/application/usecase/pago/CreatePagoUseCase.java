@@ -31,9 +31,6 @@ public class CreatePagoUseCase implements UseCaseWithReturn<PagoDomain, PagoDoma
         if (pagoDomain.getVenta() == null || pagoDomain.getVenta().getId() == null) {
             throw new BusinessSedikevException("El pago debe estar asociado a un venta");
         }
-        if (pagoDomain.getUsuario() == null || pagoDomain.getUsuario().getId() == null) {
-            throw new BusinessSedikevException("El pago debe estar asociado a un usuario");
-        }
         if (!(Objects.equals(pagoDomain.getTipo_pago(), "venta") || Objects.equals(pagoDomain.getTipo_pago(), "abono")
                 || Objects.equals(pagoDomain.getTipo_pago(), "credito"))) {
             throw new BusinessSedikevException("El tipo de pago debe ser venta, abono o credito");

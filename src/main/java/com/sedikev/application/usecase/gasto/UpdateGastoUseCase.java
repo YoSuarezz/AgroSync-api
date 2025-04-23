@@ -31,9 +31,6 @@ public class UpdateGastoUseCase implements UseCaseWithReturn<GastoDomain, GastoD
         if (gastoDomain.getLote() == null || gastoDomain.getLote().getId() == null) {
             throw new BusinessSedikevException("El gasto debe estar asociado a un lote");
         }
-        if (gastoDomain.getUsuario() == null || gastoDomain.getUsuario().getId() == null) {
-            throw new BusinessSedikevException("El gasto debe estar asociado a un usuario");
-        }
 
 
         // Mapear y actualizar el gasto

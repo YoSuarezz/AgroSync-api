@@ -3,9 +3,8 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -14,7 +13,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.ChoiceBox?>
 <AnchorPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.usuario.ViewUsuarioController">
    <children>
       <!-- Barra Lateral -->
@@ -121,36 +119,24 @@
       </Label>
 
       <!-- Filtros de Búsqueda -->
-      <Label layoutX="284.0" layoutY="119.0" text="Nombre"/>
-      <TextField fx:id="nombreField"
-                 layoutX="284.0" layoutY="139.0"
-                 promptText="Ejemplo: Augusto"/>
+      <Label layoutX="284.0" layoutY="119.0" text="Nombre" />
+      <TextField fx:id="nombreField" layoutX="284.0" layoutY="139.0" promptText="Ejemplo: Augusto" />
 
-      <Label layoutX="460.0" layoutY="119.0" text="Teléfono"/>
-      <TextField fx:id="telefonoField"
-                 layoutX="460.0" layoutY="139.0"
-                 promptText="Ejemplo: 3123456789"/>
+      <Label layoutX="460.0" layoutY="119.0" text="Teléfono" />
+      <TextField fx:id="telefonoField" layoutX="460.0" layoutY="139.0" promptText="Ejemplo: 3123456789" />
 
-      <Label layoutX="636.0" layoutY="119.0" text="Tipo"/>
-      <ChoiceBox fx:id="tipoChoiceBox"
-                 layoutX="636.0" layoutY="139.0"/>
+      <Label layoutX="636.0" layoutY="119.0" text="Tipo" />
+      <ChoiceBox fx:id="tipoChoiceBox" layoutX="636.0" layoutY="139.0" prefHeight="27.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #a0a0a0 transparent;" />
 
-      <Button fx:id="buscarButton"
-              layoutX="740.0" layoutY="138.0"
-              text="Buscar"
-              onAction="#buscarUsuarios"
-              style="-fx-background-color: #27ae60;"
-              textFill="WHITE"/>
+      <Button fx:id="buscarButton" layoutX="720.0" layoutY="140.0" onAction="#buscarUsuarios" style="-fx-background-color: #27ae60;" text="Buscar" textFill="WHITE" />
 
       <!-- Tabla de Usuarios -->
-      <TableView fx:id="usuarioTableView"
-                 layoutX="284.0" layoutY="181.0"
-                 prefWidth="500.0" prefHeight="345.0">
+      <TableView fx:id="usuarioTableView" layoutX="338.0" layoutY="181.0" prefHeight="345.0" prefWidth="382.0">
          <columns>
-            <TableColumn fx:id="nombreColumn"  text="Nombre"/>
-            <TableColumn fx:id="tipoColumn"    text="Tipo"/>
-            <TableColumn fx:id="telefonoColumn" text="Teléfono"/>
-            <TableColumn fx:id="accionesColumn" text="Acciones"/>
+            <TableColumn fx:id="nombreColumn" prefWidth="160.0" text="Nombre" />
+            <TableColumn fx:id="tipoColumn" minWidth="0.0" prefWidth="84.0" text="Tipo" />
+            <TableColumn fx:id="telefonoColumn" text="Teléfono" />
+            <TableColumn fx:id="editarColumn" prefWidth="57.0" text="Editar" />
          </columns>
       </TableView>
    </children>

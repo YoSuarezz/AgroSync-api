@@ -116,13 +116,13 @@
       <Label layoutX="348.0" layoutY="103.0" prefHeight="17.0" prefWidth="122.0" text="Tipo de Usuario" />
 
       <!-- ComboBox para seleccionar el tipo de usuario -->
-      <ComboBox fx:id="tipoComboBox" layoutX="348.0" layoutY="131.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-color: transparent transparent #a0a0a0 transparent;" />
+      <ComboBox fx:id="id_tipo" layoutX="348.0" layoutY="131.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-color: transparent transparent #a0a0a0 transparent;" />
 
       <Label layoutX="552.0" layoutY="103.0" prefHeight="17.0" prefWidth="154.0" text="Nombre" />
-      <TextField fx:id="nombreField" layoutX="552.0" layoutY="131.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: Augusto" />
+      <TextField fx:id="id_nombre" layoutX="552.0" layoutY="131.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: Augusto" />
 
       <Label layoutX="348.0" layoutY="220.0" prefHeight="17.0" prefWidth="122.0" text="Telefono" />
-      <TextField fx:id="telefonoField" layoutX="349.0" layoutY="248.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: 205" />
+      <TextField fx:id="id_telefono" layoutX="349.0" layoutY="248.0" prefHeight="26.0" prefWidth="154.0" promptText="Ejemplo: 205" />
 
       <!-- Botón para registrar -->
       <Button layoutX="473.0" layoutY="490.0" mnemonicParsing="false" onAction="#registrarUsuario" style="-fx-background-color: #27ae60;" text="Registrar Usuario" textFill="WHITE" />

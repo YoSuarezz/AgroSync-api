@@ -36,14 +36,6 @@ public class UsuarioEntity {
     @JsonIgnore
     private List<VentaEntity> lista_ventaEntity;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<PagoEntity> lista_pagoEntity;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<GastoEntity> lista_gastoEntity;
-
     public Long getId() {
         return id;
     }
@@ -90,22 +82,6 @@ public class UsuarioEntity {
 
     public void setLista_ventaEntity(List<VentaEntity> lista_ventaEntity) {
         this.lista_ventaEntity = lista_ventaEntity;
-    }
-
-    public List<PagoEntity> getLista_pagoEntity() {
-        return lista_pagoEntity;
-    }
-
-    public void setLista_pagoEntity(List<PagoEntity> lista_pagoEntity) {
-        this.lista_pagoEntity = lista_pagoEntity;
-    }
-
-    public List<GastoEntity> getLista_gastoEntity() {
-        return lista_gastoEntity;
-    }
-
-    public void setLista_gastoEntity(List<GastoEntity> lista_gastoEntity) {
-        this.lista_gastoEntity = lista_gastoEntity;
     }
 
     @Override

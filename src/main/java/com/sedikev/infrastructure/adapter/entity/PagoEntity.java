@@ -25,10 +25,6 @@ public class PagoEntity {
     @ManyToOne
     private VentaEntity venta;
 
-    @JoinColumn(name = "id_usuario")
-    @ManyToOne
-    private UsuarioEntity usuario;
-
     @Column(name = "tipo_pago")
     private String tipo_pago;
 
@@ -57,14 +53,6 @@ public class PagoEntity {
 
     public void setVenta(VentaEntity venta) {
         this.venta = venta;
-    }
-
-    public UsuarioEntity getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioEntity usuario) {
-        this.usuario = usuario;
     }
 
     public String getTipo_pago() {

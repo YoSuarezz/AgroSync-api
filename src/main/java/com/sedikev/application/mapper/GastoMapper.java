@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring",
-        uses = {UsuarioMapper.class, LoteMapper.class})
+        uses = {LoteMapper.class})
 public interface GastoMapper {
 
     GastoDTO toDTO(GastoDomain domain);
@@ -15,10 +15,8 @@ public interface GastoMapper {
     GastoDomain toDomain(GastoDTO dto);
 
     @Mapping(source = "lote.id",    target = "lote.id")
-    @Mapping(source = "usuario.id", target = "usuario.id")
     GastoEntity toEntity(GastoDomain domain);
 
     @Mapping(source = "lote.id",    target = "lote.id")
-    @Mapping(source = "usuario.id", target = "usuario.id")
     GastoDomain toDomain(GastoEntity entity);
 }

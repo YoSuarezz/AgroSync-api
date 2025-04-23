@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring",
-        uses = {UsuarioMapper.class, VentaMapper.class})
+        uses = {VentaMapper.class})
 public interface PagoMapper {
 
     PagoDTO toDTO(PagoDomain domain);
@@ -15,10 +15,8 @@ public interface PagoMapper {
     PagoDomain toDomain(PagoDTO dto);
 
     @Mapping(source = "venta.id",   target = "venta.id")
-    @Mapping(source = "usuario.id", target = "usuario.id")
     PagoEntity toEntity(PagoDomain domain);
 
     @Mapping(source = "venta.id",   target = "venta.id")
-    @Mapping(source = "usuario.id", target = "usuario.id")
     PagoDomain toDomain(PagoEntity entity);
 }

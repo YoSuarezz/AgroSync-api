@@ -13,7 +13,6 @@ public class GastoDomain {
 
     private Long id;
     private LoteDomain lote;
-    private UsuarioDomain usuario;
     private BigDecimal cantidad;
     private String descripcion;
     private LocalDate fecha;
@@ -32,14 +31,6 @@ public class GastoDomain {
 
     public void setLote(LoteDomain lote) {
         this.lote = lote;
-    }
-
-    public UsuarioDomain getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioDomain usuario) {
-        this.usuario = usuario;
     }
 
     public BigDecimal getCantidad() {
