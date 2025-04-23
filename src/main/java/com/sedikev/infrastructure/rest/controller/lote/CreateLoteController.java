@@ -81,7 +81,6 @@ public class CreateLoteController implements ParameterReceiver {
         }
 
         // Configurar columnas de tabla
-        slotColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getNum_lote()).asObject());
         pesoColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getPeso()));
         sexoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSexo()));
         semanaColumn.setCellValueFactory(cell -> {
@@ -144,7 +143,6 @@ public class CreateLoteController implements ParameterReceiver {
             // Cargar campos del formulario
             Platform.runLater(() -> {
                 id_contramarca.setText(String.valueOf(lote.getContramarca()));
-                id_precio_kilo.setText(lote.getPrecio_kilo().toString());
 
                 // Seleccionar proveedor en ComboBox
                 if (lote.getUsuario() != null) {
@@ -164,7 +162,7 @@ public class CreateLoteController implements ParameterReceiver {
 
                 // Actualizar contador de slots
                 slotCounter = animales.stream()
-                        .mapToInt(AnimalDomain::getNum_lote)
+                        .mapToInt(AnimalDomain::getSlot)
                         .max()
                         .orElse(0) + 1;
 
@@ -206,7 +204,7 @@ public class CreateLoteController implements ParameterReceiver {
             animal.setIdLote(loteId);
             animal.setPeso(new BigDecimal(id_peso.getText()));
             animal.setSexo(comboSexo.getValue().toLowerCase());
-            animal.setNum_lote(slotCounter++);
+            animal.setSlot(slotCounter++);
             animalesObservableList.add(animal);
 
             mostrarAlerta("Éxito", "El Animal fue agregado exitosamente", AlertType.INFORMATION);
@@ -226,7 +224,6 @@ public class CreateLoteController implements ParameterReceiver {
                 // Modo edición
                 LoteDomain lote = loteService.findById(loteId);
                 lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
-                lote.setPrecio_kilo(new BigDecimal(id_precio_kilo.getText()));
                 lote.setUsuario(usuarioMapper.toDomain(comboProveedor.getValue()));
 
                 loteService.update(lote);
@@ -247,7 +244,6 @@ public class CreateLoteController implements ParameterReceiver {
                 // Modo creación
                 LoteDomain lote = new LoteDomain();
                 lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
-                lote.setPrecio_kilo(new BigDecimal(id_precio_kilo.getText()));
                 lote.setFecha(LocalDate.now());
                 lote.setUsuario(usuarioMapper.toDomain(comboProveedor.getValue()));
 

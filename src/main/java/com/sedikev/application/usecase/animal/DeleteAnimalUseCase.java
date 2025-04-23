@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class DeleteAnimalUseCase implements UseCaseWithoutReturn<String> {
+public class DeleteAnimalUseCase implements UseCaseWithoutReturn<Long> {
 
     private final AnimalRepository animalRepository;
 
     @Override
-    public void ejecutar(String id) {
+    public void ejecutar(Long id) {
         // Validar que el animal exista
         if (!animalRepository.existsById(id)) {
             throw new BusinessSedikevException("El animal no existe");

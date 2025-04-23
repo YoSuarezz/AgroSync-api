@@ -41,7 +41,6 @@ public class LoteFacadeImpl implements LoteService {
 
         // Actualiza solo los campos modificables
         entity.setContramarca(loteDomain.getContramarca());
-        entity.setPrecio_kilo(loteDomain.getPrecio_kilo());
         entity.setFecha(loteDomain.getFecha());
 
         System.out.println("Entity :" + entity);

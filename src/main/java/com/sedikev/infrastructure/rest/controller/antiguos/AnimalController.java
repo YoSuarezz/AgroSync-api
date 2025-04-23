@@ -37,12 +37,12 @@ public class AnimalController {
     }
 
     @DeleteMapping(path = "animal/{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable Long id) {
         animalService.deleteById(id);
     }
 
     @GetMapping(path = "animal/{id}")
-    public ResponseEntity<AnimalDTO> findById(@PathVariable String id) {
+    public ResponseEntity<AnimalDTO> findById(@PathVariable Long id) {
         AnimalDomain animalDomain = animalService.findById(id);
         if (animalDomain == null) {
             return ResponseEntity.notFound().build();

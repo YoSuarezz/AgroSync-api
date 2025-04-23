@@ -39,12 +39,12 @@ public class AnimalFacadeImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDomain findById(String id) {
+    public AnimalDomain findById(Long id) {
         return getAnimalByIdUseCase.ejecutar(id);
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         deleteAnimalUseCase.ejecutar(id);
     }
 

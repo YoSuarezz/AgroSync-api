@@ -12,13 +12,13 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class GetAnimalByIdUseCase implements UseCaseWithReturn<String, AnimalDomain> {
+public class GetAnimalByIdUseCase implements UseCaseWithReturn<Long, AnimalDomain> {
 
     private final AnimalRepository animalRepository;
     private final AnimalMapper animalMapper;
 
     @Override
-    public AnimalDomain ejecutar(String id) {
+    public AnimalDomain ejecutar(Long id) {
 
         // Mapear la entidad al dominio
         return animalRepository.findById(id)

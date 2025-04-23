@@ -120,7 +120,6 @@ public class ViewLoteController {
         // Configurar columnas de la tabla de lotes
         proveedorColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getUsuario().getNombre()));
         contramarcaColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getContramarca()));
-        precioColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getPrecio_kilo()).asString());
         fechaColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getFecha()));
         // Configurar las columnas de la tabla de Animales
         animalPosColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(animalesTableView.getItems().indexOf(cell.getValue()) + 1));
@@ -255,18 +254,15 @@ public class ViewLoteController {
 
             // Mostrar la información fija del lote
             proveedorLabel.setText("Proveedor: " + selectedLote.getUsuario().getNombre());
-            precioKiloLabel.setText("Precio por Kilo: $" + format.format(selectedLote.getPrecio_kilo()));
 
             // Calcular el kilaje total y el precio total
             BigDecimal kilajeTotal = animales.stream()
                     .map(AnimalDTO::getPeso)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            BigDecimal precioTotal = kilajeTotal.multiply(selectedLote.getPrecio_kilo());
 
             // Actualizar los Label de Kilaje Total y Precio Total
             kilajeTotalLabel.setText("Kilaje Total: " + format.format(kilajeTotal));
-            precioTotalLabel.setText("Precio Total: $" + format.format(precioTotal));
 
             // Hacer visibles los Label de Proveedor, Precio por Kilo, Kilaje Total y Precio Total
             proveedorLabel.setVisible(true);

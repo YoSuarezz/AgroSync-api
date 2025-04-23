@@ -10,9 +10,9 @@ public interface AnimalService {
 
     AnimalDomain update(AnimalDomain animalDomain);
 
-    AnimalDomain findById(String id);
+    AnimalDomain findById(Long id);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 
     List<AnimalDomain> findAll();
 

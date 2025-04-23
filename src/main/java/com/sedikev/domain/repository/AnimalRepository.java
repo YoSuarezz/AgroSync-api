@@ -9,9 +9,9 @@ public interface AnimalRepository extends JpaRepository<AnimalEntity, Long> {
 
     AnimalEntity save(AnimalEntity animalEntity);
 
-    Optional<AnimalEntity> findById(String id);
+    Optional<AnimalEntity> findById(Long id);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 
     void deleteByLoteId(Long loteId);
 
