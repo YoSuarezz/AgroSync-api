@@ -118,29 +118,27 @@
       <ComboBox fx:id="comboProveedor" layoutX="284.0" layoutY="116.0" prefHeight="26.0" prefWidth="134.0" />
       <Label layoutX="453.0" layoutY="88.0" prefHeight="17.0" prefWidth="101.0" text="Contramarca" />
       <TextField fx:id="id_contramarca" layoutX="453.0" layoutY="116.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: 205" />
-      <Label layoutX="620.0" layoutY="89.0" prefHeight="17.0" prefWidth="101.0" text="Precio por kilo" />
-      <TextField fx:id="id_precio_kilo" layoutX="620.0" layoutY="117.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: 7900" />
-      <Label layoutX="284.0" layoutY="163.0" prefHeight="27.0" prefWidth="177.0" text="Agregar un Animal" textFill="#27ae60">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
+      <Label layoutX="284.0" layoutY="155.0" prefHeight="27.0" prefWidth="177.0" text="Agregar un Animal" textFill="#27ae60"><font><Font size="18.0" /></font></Label>
+      <Label layoutX="620.0" layoutY="205.0" prefHeight="17.0" prefWidth="140.0" text="Precio por Kilo Animal" />
+      <TextField fx:id="id_precio_kilo_animal" layoutX="620.0" layoutY="233.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: 15000" />
       <Label layoutX="284.0" layoutY="205.0" prefHeight="17.0" prefWidth="101.0" text="Peso" />
       <TextField fx:id="id_peso" layoutX="284.0" layoutY="233.0" prefHeight="26.0" prefWidth="134.0" promptText="Ejemplo: 336" />
       <Label layoutX="454.0" layoutY="204.0" prefHeight="17.0" prefWidth="101.0" text="Sexo" />
       <ComboBox fx:id="comboSexo" layoutX="454.0" layoutY="232.0" prefHeight="26.0" prefWidth="134.0" />
-      <Button fx:id="id_addAnimal" layoutX="642.0" layoutY="234.0" mnemonicParsing="false" onAction="#addAnimal" style="-fx-background-color: #27ae60;" text="Añadir Animal" textFill="WHITE" />
-      <TableView fx:id="id_tableViewAnimales" layoutX="341.0" layoutY="284.0" prefHeight="230.0" prefWidth="350.0">
+      <Button fx:id="id_addAnimal" layoutX="620.0" layoutY="163.0" mnemonicParsing="false" onAction="#addAnimal" style="-fx-background-color: #27ae60;" text="Añadir Animal" textFill="WHITE" />
+      <TableView fx:id="id_tableViewAnimales" layoutX="300.0" layoutY="284.0" prefHeight="230.0" prefWidth="440.0">
          <columns>
             <TableColumn fx:id="slotColumn" prefWidth="38.0" text="Num" />
             <TableColumn fx:id="contramarcaColumn" prefWidth="82.0" text="Contramarca" />
             <TableColumn fx:id="semanaColumn" prefWidth="57.0" text="Semana" />
             <TableColumn fx:id="pesoColumn" prefWidth="56.0" text="Peso" />
+            <TableColumn fx:id="precioKiloColumn" prefWidth="90.0" text="Precio por Kilo" />
             <TableColumn fx:id="sexoColumn" prefWidth="63.0" text="Sexo" />
             <TableColumn fx:id="eliminarColumn" prefWidth="52.0" text="Eliminar" />
          </columns>
       </TableView>
-      <Pagination currentPageIndex="1" disable="true" layoutX="326.0" layoutY="268.0" maxPageIndicatorCount="5" pageCount="2" prefHeight="292.0" prefWidth="392.0" />
+      <Label layoutX="620.0" layoutY="550.0" prefHeight="17.0" prefWidth="150.0" text="Valor Total del Lote" />
+      <Label fx:id="precioTotalLabel" layoutX="620.0" layoutY="570.0" prefHeight="17.0" prefWidth="150.0" text="0" />
       <Button fx:id="id_createLote" layoutX="483.0" layoutY="560.0" mnemonicParsing="false" onAction="#createLote" style="-fx-background-color: #27ae60;" text="Añadir Lote" textFill="WHITE" />
    </children>
 </AnchorPane>

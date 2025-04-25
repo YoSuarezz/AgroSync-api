@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class CreateLoteController implements ParameterReceiver {
 
     // Servicios inyectados
     @Autowired private NavigationService navigationService;
-    @Autowired private LoteService loteService; // Se inyecta la fachada LoteFacadeImpl
+    @Autowired private LoteService loteService;
     @Autowired private AnimalService animalService;
     @Autowired private UsuarioService usuarioService;
     @Autowired private UsuarioMapper usuarioMapper;
@@ -51,7 +52,7 @@ public class CreateLoteController implements ParameterReceiver {
     // Controles de la vista
     @FXML private TextField id_contramarca;
     @FXML private TextField id_peso;
-    @FXML private TextField id_precio_kilo;
+    @FXML private TextField id_precio_kilo_animal;
     @FXML private ComboBox<UsuarioDTO> comboProveedor;
     @FXML private ComboBox<String> comboSexo;
     @FXML private TableView<AnimalDomain> id_tableViewAnimales;
@@ -61,6 +62,13 @@ public class CreateLoteController implements ParameterReceiver {
     @FXML private TableColumn<AnimalDomain, Integer> contramarcaColumn;
     @FXML private TableColumn<AnimalDomain, Integer> semanaColumn;
     @FXML private TableColumn<AnimalDomain, Void> eliminarColumn;
+    @FXML private TableColumn<AnimalDomain, BigDecimal> precioKiloColumn;
+
+    @FXML private Label precioTotalLabel;  // Mostrar precio total del lote
+
+    private BigDecimal precioTotal = BigDecimal.ZERO;
+
+    DecimalFormat formato = new DecimalFormat("#,##0");// Variable para almacenar el precio total
 
 
     // Navegación
@@ -81,8 +89,10 @@ public class CreateLoteController implements ParameterReceiver {
         }
 
         // Configurar columnas de tabla
+        slotColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getSlot()).asObject());
         pesoColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getPeso()));
         sexoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSexo()));
+        precioKiloColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getPrecioKiloCompra()));
         semanaColumn.setCellValueFactory(cell -> {
             // Calculamos la semana del año en la que estamos
             int semana = LocalDate.now().get(WeekFields.ISO.weekOfYear());
@@ -117,8 +127,6 @@ public class CreateLoteController implements ParameterReceiver {
                 id_tableViewAnimales.refresh();
             }
         });
-        System.out.println("ANIMALES EN LOTE AL CREAR: " + animalesEnLote);
-
     }
 
     @Override
@@ -133,7 +141,6 @@ public class CreateLoteController implements ParameterReceiver {
         if (loteId == null) return;
 
         try {
-            // Cargar datos del lote desde la base de datos
             LoteDomain lote = loteService.findById(loteId);
             if (lote == null) {
                 mostrarAlerta("Error", "No se encontró el lote especificado", AlertType.ERROR);
@@ -196,7 +203,7 @@ public class CreateLoteController implements ParameterReceiver {
     }
 
     @FXML
-    void addAnimal(ActionEvent event) {
+    private void addAnimal(ActionEvent event) {
         try {
             validarCamposAnimal();
 
@@ -205,7 +212,13 @@ public class CreateLoteController implements ParameterReceiver {
             animal.setPeso(new BigDecimal(id_peso.getText()));
             animal.setSexo(comboSexo.getValue().toLowerCase());
             animal.setSlot(slotCounter++);
+            animal.setPrecioKiloCompra(new BigDecimal(id_precio_kilo_animal.getText())); // Precio por kilo del animal
+
+            // Agregar animal a la lista
             animalesObservableList.add(animal);
+
+            // Recalcular precio total del lote
+            recalcularPrecioTotalLote();
 
             mostrarAlerta("Éxito", "El Animal fue agregado exitosamente", AlertType.INFORMATION);
             limpiarCamposAnimal();
@@ -229,13 +242,9 @@ public class CreateLoteController implements ParameterReceiver {
                 loteService.update(lote);
 
                 // Actualizar animales
-
-
                 animalService.deleteByLote(loteId);
-                System.out.println("Animal: " + animalesEnLote);
                 for (AnimalDomain animal : animalesObservableList) {
-                    animal.setId(null);
-                    System.out.println(animal);
+                    animal.setId(null);  // El ID se genera automáticamente
                     animalService.save(animal);
                 }
 
@@ -246,8 +255,9 @@ public class CreateLoteController implements ParameterReceiver {
                 lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
                 lote.setFecha(LocalDate.now());
                 lote.setUsuario(usuarioMapper.toDomain(comboProveedor.getValue()));
+                lote.setPrecioTotal(precioTotal);  // Asignamos el precio total calculado
 
-                LoteDomain loteSaved = loteService.save(lote);
+                LoteDomain loteSaved = loteService.save(lote); // Guarda el lote con el precio total
 
                 // Guardar animales
                 for (AnimalDomain animal : animalesObservableList) {
@@ -267,8 +277,8 @@ public class CreateLoteController implements ParameterReceiver {
     }
 
     private void validarCamposAnimal() {
-        if (id_peso.getText().isEmpty() || comboSexo.getValue() == null) {
-            throw new IllegalArgumentException("Peso y sexo del animal son obligatorios");
+        if (id_peso.getText().isEmpty() || comboSexo.getValue() == null || id_precio_kilo_animal.getText().isEmpty()) {
+            throw new IllegalArgumentException("Peso, precio por kilo y sexo del animal son obligatorios");
         }
 
         BigDecimal peso = new BigDecimal(id_peso.getText());
@@ -283,19 +293,13 @@ public class CreateLoteController implements ParameterReceiver {
     }
 
     private void validarCampoLote() {
-        if (id_contramarca.getText().isEmpty() || id_precio_kilo.getText().isEmpty() || comboProveedor.getValue() == null) {
-            throw new IllegalArgumentException("Contramarca, precio por kilo y proveedor son obligatorios");
+        if (id_contramarca.getText().isEmpty() || comboProveedor.getValue() == null) {
+            throw new IllegalArgumentException("Contramarca y proveedor son obligatorios");
         }
 
         int contramarca = Integer.parseInt(id_contramarca.getText());
-        BigDecimal precioKilo = new BigDecimal(id_precio_kilo.getText());
-
         if (contramarca <= 0) {
             throw new IllegalArgumentException("La contramarca debe ser mayor que cero");
-        }
-
-        if (precioKilo.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("El precio por kilo debe ser mayor que cero");
         }
 
         if (animalesObservableList.isEmpty()) {
@@ -306,6 +310,7 @@ public class CreateLoteController implements ParameterReceiver {
     private void limpiarCamposAnimal() {
         id_peso.clear();
         comboSexo.setValue(null);
+        id_precio_kilo_animal.clear();  // Limpiar el campo de precio por kilo
     }
 
     private void limpiarFormulario() {
@@ -313,7 +318,6 @@ public class CreateLoteController implements ParameterReceiver {
         animalesObservableList.clear();
         slotCounter = 1;
         id_contramarca.clear();
-        id_precio_kilo.clear();
         comboProveedor.setValue(null);
         limpiarCamposAnimal();
     }
@@ -330,18 +334,39 @@ public class CreateLoteController implements ParameterReceiver {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmar");
         confirm.setHeaderText(null);
-        confirm.setContentText("¿Eliminar este animal?");
+        confirm.setContentText("¿Estás seguro de eliminar este animal?");
 
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Eliminar el animal de la lista
             animalesObservableList.remove(animal);
+
+            // Recalcular el precio total después de la eliminación
+            recalcularPrecioTotalLote();
+
+            // Refrescar la tabla para reflejar el cambio
             id_tableViewAnimales.refresh();
         }
-
-        System.out.println("ANIMALES EN OBSERVABLELIST LOTE DESPUES DE ELIMINAR: " + animalesObservableList);
-        System.out.println("ANIMALES EN LOTE DESPUES DE ELIMINAR: " + animalesEnLote);
     }
 
+    private void recalcularPrecioTotalLote() {
+        // Reiniciar el precio total
+        precioTotal = BigDecimal.ZERO;
+
+        // Recalcular el precio total sumando el precio de todos los animales
+        for (AnimalDomain animal : animalesObservableList) {
+            BigDecimal precioAnimal = animal.getPeso().multiply(animal.getPrecioKiloCompra());
+            precioTotal = precioTotal.add(precioAnimal);
+        }
+
+        // Asegurarse de que el precio total no sea negativo
+        if (precioTotal.compareTo(BigDecimal.ZERO) < 0) {
+            precioTotal = BigDecimal.ZERO;
+        }
+
+        // Actualizar el precio total en el label
+        precioTotalLabel.setText(formato.format(precioTotal));  // Usando el formato para mostrar el precio
+    }
 
     // Navegación
     @FXML void goRegisterLote(ActionEvent e) { navigationService.navigateTo("/fxml/loteRegister.fxml", (Node) e.getSource()); }
