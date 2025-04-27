@@ -214,6 +214,9 @@ public class CreateLoteController implements ParameterReceiver {
             animal.setSlot(slotCounter++);
             animal.setPrecioKiloCompra(new BigDecimal(id_precio_kilo_animal.getText())); // Precio por kilo del animal
 
+            // Desvinculamos la venta para evitar el error de "unsaved transient instance"
+            animal.setIdVenta(null);  // Desvincula la venta
+
             // Agregar animal a la lista
             animalesObservableList.add(animal);
 
