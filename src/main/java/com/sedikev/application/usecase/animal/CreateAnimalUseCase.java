@@ -42,15 +42,20 @@ public class CreateAnimalUseCase implements UseCaseWithReturn<AnimalDomain, Anim
             throw new BusinessSedikevException("El slot debe estar entre 1 y 25");
         }
 
+        // Asegúrate de que el campo 'idVenta' esté en null si no existe
+        if (animalDomain.getIdVenta() == null) {
+            animalDomain.setIdVenta(null); // Esto asegura que no haya venta asociada
+        }
+
         if (animalRepository.existsByLoteIdAndSlot(animalDomain.getIdLote(), animalDomain.getSlot())) {
             throw new BusinessSedikevException(
                     String.format("Ya existe un animal en el lote %d con slot %d", animalDomain.getIdLote(), animalDomain.getSlot())
             );
         }
 
+        // Convertimos el dominio a entidad y la guardamos
         AnimalEntity animalEntity = animalMapper.toEntity(animalDomain);
         AnimalEntity animalSaved = animalRepository.save(animalEntity);
         return animalMapper.toDomain(animalSaved);
     }
-
 }

@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +17,7 @@ public class PagoFacadeImpl implements PagoService {
     private final DeletePagoUseCase deletePagoUseCase;
     private final GetPagoByIdUseCase getPagoByIdUseCase;
     private final GetAllPagosUseCase getAllPagosUseCase;
+    private final GetPagoByUserIdUseCase getPagoByUserIdUseCase;  // Inyectamos el nuevo caso de uso
 
     @Override
     public PagoDomain save(PagoDomain pagoDomain) {
@@ -42,5 +42,10 @@ public class PagoFacadeImpl implements PagoService {
     @Override
     public List<PagoDomain> findAll() {
         return getAllPagosUseCase.ejecutar(null);
+    }
+
+    public List<PagoDomain> findByUsuarioId(Long usuarioId) {
+        // Llamamos al nuevo caso de uso que obtiene los pagos por usuarioId
+        return getPagoByUserIdUseCase.ejecutar(usuarioId);
     }
 }

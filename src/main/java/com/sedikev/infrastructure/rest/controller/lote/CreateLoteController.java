@@ -212,12 +212,12 @@ public class CreateLoteController implements ParameterReceiver {
             animal.setPeso(new BigDecimal(id_peso.getText()));
             animal.setSexo(comboSexo.getValue().toLowerCase());
             animal.setSlot(slotCounter++);
-            animal.setPrecioKiloCompra(new BigDecimal(id_precio_kilo_animal.getText())); // Precio por kilo del animal
+            animal.setPrecioKiloCompra(new BigDecimal(id_precio_kilo_animal.getText()));
 
-            // Desvinculamos la venta para evitar el error de "unsaved transient instance"
-            animal.setIdVenta(null);  // Desvincula la venta
+            // Importante: Asegúrate de que el animal NO tenga una venta asociada.
+            animal.setIdVenta(null); // Aquí la venta está en null (lo importante).
 
-            // Agregar animal a la lista
+            // Agregar el animal a la lista
             animalesObservableList.add(animal);
 
             // Recalcular precio total del lote
@@ -236,11 +236,20 @@ public class CreateLoteController implements ParameterReceiver {
         try {
             validarCampoLote();
 
+            if (animalesObservableList.isEmpty()) {
+                mostrarAlerta("Error", "Debe agregar al menos un animal al lote", AlertType.ERROR);
+                return;  // No se crea el lote si no hay animales
+            }
+
+            // Si hay animales, calculamos el precio total antes de crear el lote
+            recalcularPrecioTotalLote();  // Esto recalcula el precio total
+
             if (loteId != null) {
                 // Modo edición
                 LoteDomain lote = loteService.findById(loteId);
                 lote.setContramarca(Integer.parseInt(id_contramarca.getText()));
                 lote.setUsuario(usuarioMapper.toDomain(comboProveedor.getValue()));
+                lote.setPrecioTotal(precioTotal);  // Aseguramos que se guarda el precio total calculado
 
                 loteService.update(lote);
 
@@ -260,11 +269,13 @@ public class CreateLoteController implements ParameterReceiver {
                 lote.setUsuario(usuarioMapper.toDomain(comboProveedor.getValue()));
                 lote.setPrecioTotal(precioTotal);  // Asignamos el precio total calculado
 
-                LoteDomain loteSaved = loteService.save(lote); // Guarda el lote con el precio total
+                // Guarda el lote primero
+                LoteDomain loteSaved = loteService.save(lote);  // Lote guardado con éxito
 
-                // Guardar animales
+                // Ahora guarda los animales sin la venta asociada
                 for (AnimalDomain animal : animalesObservableList) {
-                    animal.setIdLote(loteSaved.getId());
+                    animal.setIdLote(loteSaved.getId());  // Asociar al lote guardado
+                    animal.setIdVenta(null);  // Asegúrate de que la venta sea null si no estás asociando ninguna venta
                     animalService.save(animal);
                 }
 

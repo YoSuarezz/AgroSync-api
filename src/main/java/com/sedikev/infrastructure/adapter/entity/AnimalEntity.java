@@ -22,8 +22,8 @@ public class AnimalEntity {
     @JoinColumn(name = "id_lote")
     private LoteEntity lote;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "venta_id_venta")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "venta_id_venta", nullable = true)  // Permite null
     private VentaEntity venta;
 
     @Column(name = "peso")

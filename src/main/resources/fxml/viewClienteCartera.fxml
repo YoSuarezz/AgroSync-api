@@ -3,9 +3,7 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -14,6 +12,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.collections.FXCollections?>
 <AnchorPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sedikev.infrastructure.rest.controller.cartera.viewClienteController">
    <children>
       <StackPane prefHeight="598.0" prefWidth="244.0" styleClass="panel" />
@@ -110,44 +111,89 @@
             </TitledPane>
          </panes>
       </Accordion>
-      <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Cartera de Clientes" textAlignment="CENTER" textFill="#27ae60" wrapText="true">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
-      <!-- Filtros de Búsqueda -->
-      <Label layoutX="284.0" layoutY="81.0" text="Buscar por:"/>
-      <Label layoutX="284.0" layoutY="109.0" text="Nombre"/>
-      <TextField fx:id="nombreField"
-                 layoutX="284.0" layoutY="129.0"
-                 prefWidth="160.0"
-                 promptText="Ej: Juan Pérez"/>
+         <!-- Título de Cartera de Clientes -->
+         <Label alignment="CENTER" layoutX="244.0" layoutY="10.0" prefHeight="62.0" prefWidth="550.0" text="Cartera de Clientes" textAlignment="CENTER" textFill="#27ae60" wrapText="true">
+            <font>
+               <Font size="36.0" />
+            </font>
+         </Label>
 
-      <Label layoutX="460.0" layoutY="109.0" text="Teléfono"/>
-      <TextField fx:id="telefonoField"
-                 layoutX="460.0" layoutY="129.0"
-                 prefWidth="160.0"
-                 promptText="Ej: 3123456789"/>
+         <!-- Filtros de Búsqueda -->
+         <Label layoutX="284.0" layoutY="81.0" text="Buscar por:"/>
+         <Label layoutX="284.0" layoutY="109.0" text="Nombre"/>
+         <TextField fx:id="nombreField"
+                    layoutX="284.0" layoutY="129.0"
+                    prefWidth="160.0"
+                    promptText="Ej: Juan Pérez"/>
 
-      <Button fx:id="buscarButton"
-              layoutX="638.0" layoutY="128.0"
-              text="Buscar"
-              onAction="#buscarClientes"
-              style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+         <Label layoutX="460.0" layoutY="109.0" text="Teléfono"/>
+         <TextField fx:id="telefonoField"
+                    layoutX="460.0" layoutY="129.0"
+                    prefWidth="160.0"
+                    promptText="Ej: 3123456789"/>
 
-      <!-- Tabla de Cartera Clientes -->
+         <Button fx:id="buscarButton"
+                 layoutX="638.0" layoutY="128.0"
+                 text="Buscar"
+                 onAction="#buscarClientes"
+                 style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+
       <TableView fx:id="carteraTableView"
                  layoutX="284.0" layoutY="181.0"
-                 prefWidth="500.0" prefHeight="345.0">
+                 prefWidth="450.0" prefHeight="340.0"
+                 onMouseClicked="#mostrarHistorialDeCliente">
          <columns>
             <TableColumn fx:id="nombreColumn" text="Nombre" prefWidth="200.0"/>
-            <TableColumn fx:id="saldoColumn"  text="Saldo"    prefWidth="150.0"/>
+            <TableColumn fx:id="saldoColumn" text="Saldo" prefWidth="150.0"/>
             <TableColumn fx:id="accionesColumn" text="Acciones" prefWidth="100.0"/>
          </columns>
       </TableView>
+
    </children>
-   <stylesheets>
-      <URL value="@../styles/verLoteStyles.css" />
-      <URL value="@../styles/LoteRegisterStyles.css" />
-   </stylesheets>
-</AnchorPane>
+   <!-- Tab de Historial (inicialmente deshabilitado) -->
+   <TabPane fx:id="tabPane" visible="false">
+      <Tab fx:id="historialVentasTab" text="Historial de Ventas">
+         <content>
+            <TableView fx:id="historialVentasTableView" prefWidth="450.0" prefHeight="200.0">
+               <columns>
+                  <TableColumn text="Contramarca" prefWidth="100.0"/>
+                  <TableColumn text="Número de Animales" prefWidth="150.0"/>
+                  <TableColumn text="Valor" prefWidth="100.0"/>
+               </columns>
+            </TableView>
+         </content>
+      </Tab>
+      <Tab fx:id="historialPagosTab" text="Historial de Pagos">
+         <content>
+            <TableView fx:id="historialPagosTableView" prefWidth="450.0" prefHeight="200.0">
+               <items>
+                   <FXCollections fx:factory="observableArrayList"/>
+               </items>
+               <columns>
+                  <TableColumn text="Fecha" prefWidth="100.0"/>
+                  <TableColumn text="Cantidad" prefWidth="100.0"/>
+                  <TableColumn text="Tipo de Pago" prefWidth="150.0"/>
+               </columns>
+            </TableView>
+         </content>
+      </Tab>
+   </TabPane>
+
+
+   <!-- Campo para Pago -->
+   <TextField fx:id="montoPagoField" layoutX="284.0" layoutY="570.0" prefWidth="160.0" promptText="Ej: 1000" visible="false"/>
+   <Button fx:id="botonPago" layoutX="460.0" layoutY="570.0" text="Realizar Pago" onAction="#realizarPago" visible="false"/>
+
+   <!-- Botón de Regreso (visible solo cuando un cliente es seleccionado) -->
+         <Button fx:id="regresarButton"
+                 layoutX="600.0" layoutY="570.0"
+                 text="Regresar"
+                 onAction="#regresarAClientes"
+                 style="-fx-background-color: #ff4444; -fx-text-fill: white;"
+                 visible="false"/>
+
+         <stylesheets>
+            <URL value="@../styles/verLoteStyles.css" />
+            <URL value="@../styles/LoteRegisterStyles.css" />
+         </stylesheets>
+      </AnchorPane>

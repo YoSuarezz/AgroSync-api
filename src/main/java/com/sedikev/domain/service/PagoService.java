@@ -1,7 +1,6 @@
 package com.sedikev.domain.service;
 
 import com.sedikev.domain.model.PagoDomain;
-
 import java.util.List;
 
 public interface PagoService {
@@ -15,4 +14,5 @@ public interface PagoService {
     void deleteById(Long id);
 
     List<PagoDomain> findAll();
+
 }
