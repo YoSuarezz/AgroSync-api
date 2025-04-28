@@ -23,7 +23,7 @@ public class AnimalEntity {
     private LoteEntity lote;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "venta_id_venta", nullable = true)  // Permite null
+    @JoinColumn(name = "venta_id_venta")  // Permite null
     private VentaEntity venta;
 
     @Column(name = "peso")

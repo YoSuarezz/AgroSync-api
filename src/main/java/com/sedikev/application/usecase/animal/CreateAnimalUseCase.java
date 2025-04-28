@@ -1,23 +1,30 @@
 package com.sedikev.application.usecase.animal;
 
 import com.sedikev.application.mapper.AnimalMapper;
+import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.domain.model.AnimalDomain;
+import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.repository.AnimalRepository;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
+import com.sedikev.domain.repository.LoteRepository;
 import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
+import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class CreateAnimalUseCase implements UseCaseWithReturn<AnimalDomain, AnimalDomain> {
 
     private final AnimalRepository animalRepository;
+    private final LoteRepository loteRepository;
     private final AnimalMapper animalMapper;
+    private final LoteMapper loteMapper;
 
     @Override
     public AnimalDomain ejecutar(AnimalDomain animalDomain) {
@@ -42,11 +49,6 @@ public class CreateAnimalUseCase implements UseCaseWithReturn<AnimalDomain, Anim
             throw new BusinessSedikevException("El slot debe estar entre 1 y 25");
         }
 
-        // Asegúrate de que el campo 'idVenta' esté en null si no existe
-        if (animalDomain.getIdVenta() == null) {
-            animalDomain.setIdVenta(null); // Esto asegura que no haya venta asociada
-        }
-
         if (animalRepository.existsByLoteIdAndSlot(animalDomain.getIdLote(), animalDomain.getSlot())) {
             throw new BusinessSedikevException(
                     String.format("Ya existe un animal en el lote %d con slot %d", animalDomain.getIdLote(), animalDomain.getSlot())
@@ -54,7 +56,28 @@ public class CreateAnimalUseCase implements UseCaseWithReturn<AnimalDomain, Anim
         }
 
         // Convertimos el dominio a entidad y la guardamos
-        AnimalEntity animalEntity = animalMapper.toEntity(animalDomain);
+        AnimalEntity animalEntity = new AnimalEntity();
+
+        Optional<LoteEntity> optionalLote = loteRepository.findById(animalDomain.getIdLote());
+        if (optionalLote.isPresent()) {
+            LoteEntity lote = optionalLote.get();
+            animalEntity.setLote(lote);
+            // Ya puedes usar lote aquí
+        } else {
+            // El lote no existe
+            throw new RuntimeException("No se encontró el lote con id " + animalDomain.getIdLote());
+        }
+
+
+
+        animalEntity.setId(animalDomain.getId());
+        animalEntity.setVenta(null);
+        animalEntity.setPeso(animalDomain.getPeso());
+        animalEntity.setSexo(animalDomain.getSexo());
+        animalEntity.setSlot(animalDomain.getSlot());
+        animalEntity.setPrecioKiloCompra(animalDomain.getPrecioKiloCompra());
+        animalEntity.setPrecioKiloVenta(animalDomain.getPrecioKiloVenta());
+
         AnimalEntity animalSaved = animalRepository.save(animalEntity);
         return animalMapper.toDomain(animalSaved);
     }

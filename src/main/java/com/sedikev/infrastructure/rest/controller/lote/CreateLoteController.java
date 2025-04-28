@@ -275,7 +275,7 @@ public class CreateLoteController implements ParameterReceiver {
                 // Ahora guarda los animales sin la venta asociada
                 for (AnimalDomain animal : animalesObservableList) {
                     animal.setIdLote(loteSaved.getId());  // Asociar al lote guardado
-                    animal.setIdVenta(null);  // Asegúrate de que la venta sea null si no estás asociando ninguna venta
+                    System.out.println(animal.toString());
                     animalService.save(animal);
                 }
 
