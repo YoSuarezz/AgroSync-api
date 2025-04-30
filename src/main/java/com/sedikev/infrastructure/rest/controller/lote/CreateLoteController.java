@@ -74,6 +74,7 @@ public class CreateLoteController implements ParameterReceiver {
     // Navegación
     @FXML private Button id_registerLote, id_registerSale, id_registerUser;
     @FXML private Button id_viewClient, id_viewLote, id_viewSale, id_viewSupplier, id_viewUser;
+    @FXML private Button id_regresarLote;
 
     @FXML
     public void initialize() {
@@ -141,6 +142,8 @@ public class CreateLoteController implements ParameterReceiver {
         if (loteId == null) return;
 
         try {
+            id_regresarLote.setVisible(true);
+
             LoteDomain lote = loteService.findById(loteId);
             if (lote == null) {
                 mostrarAlerta("Error", "No se encontró el lote especificado", AlertType.ERROR);
