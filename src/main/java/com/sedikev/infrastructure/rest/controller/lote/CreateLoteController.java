@@ -63,6 +63,7 @@ public class CreateLoteController implements ParameterReceiver {
     @FXML private TableColumn<AnimalDomain, Integer> semanaColumn;
     @FXML private TableColumn<AnimalDomain, Void> eliminarColumn;
     @FXML private TableColumn<AnimalDomain, BigDecimal> precioKiloColumn;
+    @FXML private Button id_regresarLote;
 
     @FXML private Label precioTotalLabel;  // Mostrar precio total del lote
 
@@ -74,7 +75,7 @@ public class CreateLoteController implements ParameterReceiver {
     // Navegación
     @FXML private Button id_registerLote, id_registerSale, id_registerUser;
     @FXML private Button id_viewClient, id_viewLote, id_viewSale, id_viewSupplier, id_viewUser;
-    @FXML private Button id_regresarLote;
+
 
     @FXML
     public void initialize() {
@@ -83,6 +84,11 @@ public class CreateLoteController implements ParameterReceiver {
         // Verificar si estamos en modo edición (cuando se navega desde ViewLoteController)
         Node node = id_registerLote; // O cualquier nodo de la escena
         Map<String, Object> parameters = navigationService.getParameters(node);
+
+        animalesEnLote.clear();
+        animalesObservableList.clear();
+        slotCounter = 1;
+        loteId = null;
 
         if (parameters != null && parameters.containsKey("loteId")) {
             Long loteId = (Long) parameters.get("loteId");
@@ -143,7 +149,6 @@ public class CreateLoteController implements ParameterReceiver {
 
         try {
             id_regresarLote.setVisible(true);
-
             LoteDomain lote = loteService.findById(loteId);
             if (lote == null) {
                 mostrarAlerta("Error", "No se encontró el lote especificado", AlertType.ERROR);
