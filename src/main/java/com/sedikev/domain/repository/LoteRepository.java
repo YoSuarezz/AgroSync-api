@@ -19,4 +19,7 @@ public interface LoteRepository extends JpaRepository<LoteEntity, Long> {
     boolean existsByContramarca(int contramarca);
 
     boolean existsByContramarcaAndIdNot(int contramarca, Long id);
+
+    List<LoteEntity> findByUsuarioId(Long usuarioId);
+
 }

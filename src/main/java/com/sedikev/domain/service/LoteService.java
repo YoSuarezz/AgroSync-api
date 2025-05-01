@@ -15,4 +15,6 @@ public interface LoteService {
     void deleteById(Long id);
 
     List<LoteDomain> findAll();
+
+    List<LoteDomain> findByProveedorId(Long proveedorId);
 }

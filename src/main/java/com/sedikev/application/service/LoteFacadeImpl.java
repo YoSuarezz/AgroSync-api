@@ -22,6 +22,8 @@ public class LoteFacadeImpl implements LoteService {
     private final DeleteLoteUseCase deleteLoteUseCase;
     private final GetLoteByIdUseCase getLoteByIdUseCase;
     private final GetAllLotesUseCase getAllLotesUseCase;
+    private final GetLotesByProveedorIdUseCase getLotesByProveedorIdUseCase;
+
 
     @Autowired private LoteRepository loteRepository;
     @Autowired private LoteMapper loteMapper;
@@ -62,5 +64,10 @@ public class LoteFacadeImpl implements LoteService {
     @Override
     public List<LoteDomain> findAll() {
         return getAllLotesUseCase.ejecutar(null);
+    }
+
+    @Override
+    public List<LoteDomain> findByProveedorId(Long proveedorId) {
+        return getLotesByProveedorIdUseCase.ejecutar(proveedorId);
     }
 }

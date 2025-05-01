@@ -17,6 +17,7 @@ public class VentaFacadeImpl implements VentaService {
     private final DeleteVentaUseCase deleteVentaUseCase;
     private final GetVentaByIdUseCase getVentaByIdUseCase;
     private final GetAllVentasUseCase getAllVentasUseCase;
+    private final GetVentasByClienteIdUseCase getVentasByClienteIdUseCase;
 
     @Override
     public VentaDomain save(VentaDomain ventaDomain) {
@@ -41,5 +42,10 @@ public class VentaFacadeImpl implements VentaService {
     @Override
     public List<VentaDomain> findAll() {
         return getAllVentasUseCase.ejecutar(null);
+    }
+
+    @Override
+    public List<VentaDomain> findByClienteId(Long clienteId) {
+        return getVentasByClienteIdUseCase.ejecutar(clienteId);
     }
 }
