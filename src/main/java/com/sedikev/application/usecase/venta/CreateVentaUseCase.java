@@ -2,9 +2,12 @@ package com.sedikev.application.usecase.venta;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
+import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.model.VentaDomain;
+import com.sedikev.domain.repository.CarteraRepository;
 import com.sedikev.domain.repository.VentaRepository;
 import com.sedikev.application.mapper.VentaMapper;
+import com.sedikev.domain.service.CarteraService;
 import com.sedikev.infrastructure.adapter.entity.VentaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,6 +20,7 @@ public class CreateVentaUseCase implements UseCaseWithReturn<VentaDomain, VentaD
 
     private final VentaRepository ventaRepository;
     private final VentaMapper ventaMapper;
+    private final CarteraService carteraService;
 
     @Override
     public VentaDomain ejecutar(VentaDomain ventaDomain) {
@@ -40,6 +44,11 @@ public class CreateVentaUseCase implements UseCaseWithReturn<VentaDomain, VentaD
         if (ventaDomain.getPrecioVenta() == null || ventaDomain.getPrecioVenta().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessSedikevException("El precio de venta debe ser mayor que 0");
         }
+
+        CarteraDomain cartera = carteraService.findByUserId(ventaDomain.getUsuario().getId());
+        BigDecimal saldo = cartera.getSaldo().subtract(ventaDomain.getPrecioVenta());
+        cartera.setSaldo(saldo);
+        carteraService.update(cartera);
 
         // Mapear y guardar la venta
         VentaEntity ventaEntity = ventaMapper.toEntity(ventaDomain);

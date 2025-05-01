@@ -15,4 +15,6 @@ public interface CarteraService {
     void deleteById(Long id);
 
     List<CarteraDomain> findAll();
+
+    public CarteraDomain findByUserId(Long id);
 }

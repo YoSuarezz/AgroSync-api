@@ -2,12 +2,16 @@ package com.sedikev.application.usecase.usuario;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
+import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.domain.repository.UsuarioRepository;
 import com.sedikev.application.mapper.UsuarioMapper;
+import com.sedikev.domain.service.CarteraService;
 import com.sedikev.infrastructure.adapter.entity.UsuarioEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor
@@ -15,6 +19,7 @@ public class CreateUsuarioUseCase implements UseCaseWithReturn<UsuarioDomain, Us
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final CarteraService carteraService;
 
     @Override
     public UsuarioDomain ejecutar(UsuarioDomain usuarioDomain) {
@@ -43,9 +48,19 @@ public class CreateUsuarioUseCase implements UseCaseWithReturn<UsuarioDomain, Us
             throw new BusinessSedikevException("El tipo de usuario debe ser 'proveedor' o 'cliente'");
         }
 
+        System.out.println("usuario : " + usuarioDomain);
         // 6) Mapear y guardar
         UsuarioEntity usuarioEntity = usuarioMapper.toEntity(usuarioDomain);
         UsuarioEntity usuarioSaved   = usuarioRepository.save(usuarioEntity);
+
+        UsuarioDomain usuarioCartera = usuarioMapper.toDomain(usuarioSaved);
+        System.out.println(usuarioCartera);
+        CarteraDomain cartera = new CarteraDomain();
+        cartera.setUsuario(usuarioCartera);
+        cartera.setSaldo(BigDecimal.ZERO);
+        CarteraDomain carteraSaved = carteraService.save(cartera);
+        System.out.println("Creando cartera : " + carteraSaved);
+
         return usuarioMapper.toDomain(usuarioSaved);
     }
 }

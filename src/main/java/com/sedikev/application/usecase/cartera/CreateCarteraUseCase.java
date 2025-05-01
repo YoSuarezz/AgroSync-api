@@ -21,11 +21,6 @@ public class CreateCarteraUseCase implements UseCaseWithReturn<CarteraDomain, Ca
     @Override
     public CarteraDomain ejecutar(CarteraDomain carteraDomain) {
 
-        if (carteraRepository.existsById(carteraDomain.getId())) {
-            throw new BusinessSedikevException("La cartera ya existe");
-        }
-
-
         // Mapear y guardar la cartera
         CarteraEntity carteraEntity = carteraMapper.toEntity(carteraDomain);
         CarteraEntity carteraSaved = carteraRepository.save(carteraEntity);
