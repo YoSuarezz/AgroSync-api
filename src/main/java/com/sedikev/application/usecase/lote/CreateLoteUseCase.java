@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.temporal.WeekFields;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -33,10 +35,12 @@ public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
             throw new BusinessSedikevException("La contramarca no puede ser 0 o nula");
         }
 
-        if (loteRepository.existsByContramarca(loteDomain.getContramarca()))
-            throw new BusinessSedikevException("Ya existe un lote con esa contramarca");
-        // guardar
-        // Guardar en cascada
+        Optional<LoteEntity> lote = loteRepository.findByContramarcaAndSemana(loteDomain.getContramarca(), loteDomain.getFecha().get(WeekFields.SUNDAY_START.weekOfWeekBasedYear()));
+        if(lote.isPresent()) {
+            throw new BusinessSedikevException("Ya existe un lote con esa contramarca en esta semana");
+        }
+
+        // Guardar
         LoteEntity loteEntity = loteMapper.toEntity(loteDomain);
         LoteEntity loteSaved = loteRepository.save(loteEntity);
 

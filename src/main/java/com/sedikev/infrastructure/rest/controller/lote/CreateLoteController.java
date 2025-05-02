@@ -53,6 +53,8 @@ public class CreateLoteController implements ParameterReceiver {
     @FXML private TextField id_contramarca;
     @FXML private TextField id_peso;
     @FXML private TextField id_precio_kilo_animal;
+    @FXML private TextField id_slot;
+
     @FXML private ComboBox<UsuarioDTO> comboProveedor;
     @FXML private ComboBox<String> comboSexo;
     @FXML private TableView<AnimalDomain> id_tableViewAnimales;
@@ -94,6 +96,8 @@ public class CreateLoteController implements ParameterReceiver {
             Long loteId = (Long) parameters.get("loteId");
             cargarDatosLote(loteId); // Méto-do que carga los datos del lote y sus animales
         }
+
+        id_slot.setText(String.valueOf(slotCounter));
 
         // Configurar columnas de tabla
         slotColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getSlot()).asObject());
@@ -223,7 +227,7 @@ public class CreateLoteController implements ParameterReceiver {
             animal.setIdLote(loteId);
             animal.setPeso(new BigDecimal(id_peso.getText()));
             animal.setSexo(comboSexo.getValue().toLowerCase());
-            animal.setSlot(slotCounter++);
+            animal.setSlot(Integer.valueOf(id_slot.getText()));
             animal.setPrecioKiloCompra(new BigDecimal(id_precio_kilo_animal.getText()));
 
             // Importante: Asegúrate de que el animal NO tenga una venta asociada.
@@ -234,6 +238,7 @@ public class CreateLoteController implements ParameterReceiver {
 
             // Recalcular precio total del lote
             recalcularPrecioTotalLote();
+            slotCounter++;
 
             mostrarAlerta("Éxito", "El Animal fue agregado exitosamente", AlertType.INFORMATION);
             limpiarCamposAnimal();
@@ -303,8 +308,8 @@ public class CreateLoteController implements ParameterReceiver {
     }
 
     private void validarCamposAnimal() {
-        if (id_peso.getText().isEmpty() || comboSexo.getValue() == null || id_precio_kilo_animal.getText().isEmpty()) {
-            throw new IllegalArgumentException("Peso, precio por kilo y sexo del animal son obligatorios");
+        if (id_peso.getText().isEmpty() || comboSexo.getValue() == null || id_precio_kilo_animal.getText().isEmpty() || id_slot.getText().isEmpty()) {
+            throw new IllegalArgumentException("Slot, peso, precio por kilo y sexo del animal son obligatorios");
         }
 
         BigDecimal peso = new BigDecimal(id_peso.getText());
@@ -315,6 +320,20 @@ public class CreateLoteController implements ParameterReceiver {
         String sexo = comboSexo.getValue();
         if (!sexo.equalsIgnoreCase("macho") && !sexo.equalsIgnoreCase("hembra")) {
             throw new IllegalArgumentException("El sexo debe ser 'Macho' o 'Hembra'");
+        }
+
+        // Validación del slot (nueva)
+        int slot = Integer.parseInt(id_slot.getText());
+        if (slot <= 0) {
+            throw new IllegalArgumentException("El slot debe ser mayor que cero");
+        }
+
+        // Verificar si el slot ya existe en la lista
+        boolean slotExiste = animalesObservableList.stream()
+                .anyMatch(animal -> animal.getSlot() == slot);
+
+        if (slotExiste) {
+            throw new IllegalArgumentException("El slot " + slot + " ya está en uso por otro animal");
         }
     }
 
@@ -337,6 +356,7 @@ public class CreateLoteController implements ParameterReceiver {
         id_peso.clear();
         comboSexo.setValue(null);
         id_precio_kilo_animal.clear();  // Limpiar el campo de precio por kilo
+        id_slot.setText(String.valueOf(slotCounter));
     }
 
     private void limpiarFormulario() {

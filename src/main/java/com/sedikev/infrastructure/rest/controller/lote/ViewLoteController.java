@@ -6,6 +6,7 @@ import com.sedikev.application.dto.UsuarioDTO;
 import com.sedikev.application.mapper.AnimalMapper;
 import com.sedikev.application.mapper.LoteMapper;
 import com.sedikev.application.mapper.UsuarioMapper;
+import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
@@ -73,13 +74,11 @@ public class ViewLoteController {
     private TableView<LoteDTO> loteTableView;
 
     @FXML
-    private Label precioKiloLabel;
-    @FXML
     private TableColumn<LoteDTO, String> proveedorColumn;
     @FXML
     private TableColumn<LoteDTO, Integer> contramarcaColumn;
     @FXML
-    private TableColumn<LoteDTO, String> precioColumn;
+    private TableColumn<LoteDTO, Integer> semanaLoteColumn;
     @FXML
     private TableColumn<LoteDTO, LocalDate> fechaColumn;
     @FXML
@@ -120,7 +119,9 @@ public class ViewLoteController {
         // Configurar columnas de la tabla de lotes
         proveedorColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getUsuario().getNombre()));
         contramarcaColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getContramarca()));
+        semanaLoteColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getFecha().get(WeekFields.ISO.weekOfYear())));
         fechaColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getFecha()));
+
         // Configurar las columnas de la tabla de Animales
         animalPosColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(animalesTableView.getItems().indexOf(cell.getValue()) + 1));
         contramarcaAnimalColumn.setCellValueFactory(cell -> {
@@ -210,6 +211,7 @@ public class ViewLoteController {
 
             loteObservableList.setAll(lotes);
             loteTableView.setItems(FXCollections.observableArrayList(lotes));
+            BigDecimal precioTotal = BigDecimal.ZERO;
         } catch (Exception e) {
             mostrarAlerta("Error", "Error al cargar lotes: " + e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -249,6 +251,13 @@ public class ViewLoteController {
                     .map(animalMapper::toDTO)
                     .collect(Collectors.toList());
 
+            precioTotalLabel.setText("0");
+            BigDecimal precioTotal = BigDecimal.ZERO;
+            for (AnimalDTO animal: animales) {
+                precioTotal = precioTotal.add(animal.getPeso().multiply(animal.getPrecioKiloCompra()));
+            }
+            precioTotalLabel.setText(precioTotal.toString());
+
             // Mostrar los animales en la tabla
             animalesTableView.setItems(FXCollections.observableArrayList(animales));
 
@@ -266,7 +275,6 @@ public class ViewLoteController {
 
             // Hacer visibles los Label de Proveedor, Precio por Kilo, Kilaje Total y Precio Total
             proveedorLabel.setVisible(true);
-            precioKiloLabel.setVisible(true);
             kilajeTotalLabel.setVisible(true);
             precioTotalLabel.setVisible(true);
 
@@ -288,7 +296,6 @@ public class ViewLoteController {
 
         // Ocultar los detalles del lote
         proveedorLabel.setVisible(false);  // Ocultar el Label del Proveedor
-        precioKiloLabel.setVisible(false); // Ocultar el Label del Precio por Kilo
         kilajeTotalLabel.setVisible(false); // Ocultar el Label del Kilaje Total
         precioTotalLabel.setVisible(false); // Ocultar el Label del Precio Total
 
