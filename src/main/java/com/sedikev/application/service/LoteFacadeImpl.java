@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -63,4 +64,9 @@ public class LoteFacadeImpl implements LoteService {
     public List<LoteDomain> findAll() {
         return getAllLotesUseCase.ejecutar(null);
     }
+
+    @Override
+    public Optional<LoteEntity> findByContramarcaAndSemana(Integer contramarca, Integer semana) {
+        return loteRepository.findByContramarcaAndSemana(contramarca, semana);
+    };
 }

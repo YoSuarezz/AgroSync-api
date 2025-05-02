@@ -24,10 +24,6 @@ public class CreateVentaUseCase implements UseCaseWithReturn<VentaDomain, VentaD
 
     @Override
     public VentaDomain ejecutar(VentaDomain ventaDomain) {
-        // Validación de negocio: Verificar si la venta ya existe en la base de datos
-        if (ventaDomain.getId() != null && ventaRepository.existsById(ventaDomain.getId())) {
-            throw new BusinessSedikevException("La venta ya existe en la base de datos");
-        }
 
         // Validación de negocio: Verificar que la venta tenga un usuario relacionado
         if (ventaDomain.getUsuario() == null || ventaDomain.getUsuario().getId() == null) {
