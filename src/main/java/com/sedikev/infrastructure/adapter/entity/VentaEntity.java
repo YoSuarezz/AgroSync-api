@@ -33,7 +33,7 @@ public class VentaEntity {
     @Column(name = "fecha")
     private LocalDate fecha;
 
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<AnimalEntity> animales;
 

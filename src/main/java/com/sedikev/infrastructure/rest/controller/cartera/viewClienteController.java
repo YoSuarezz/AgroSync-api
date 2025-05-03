@@ -10,6 +10,7 @@ import com.sedikev.application.service.CarteraFacadeImpl;
 import com.sedikev.application.service.UsuarioFacadeImpl;
 import com.sedikev.application.service.VentaFacadeImpl;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,6 +53,8 @@ public class viewClienteController {
     @FXML private TableColumn<VentaDTO, BigDecimal> ventaTotalColumn;
 
     private List<CarteraDTO> allClientes;  // cache de clientes
+    DecimalFormat formato = new DecimalFormat("#,##0");// Variable para almacenar el precio total
+
 
     @FXML
     private void initialize() {
@@ -76,7 +80,7 @@ public class viewClienteController {
         // Columnas ventas
         ventaIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         ventaFechaColumn.setCellValueFactory(new PropertyValueFactory<>("fecha"));  // asumir String o formateado
-        ventaTotalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
+        ventaTotalColumn.setCellValueFactory(new PropertyValueFactory<>("precioVenta"));  // asumir String o formateado
 
         // Vista inicial
         ventasTableView.setVisible(false);
