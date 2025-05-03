@@ -45,7 +45,7 @@ public class CreateLoteController implements ParameterReceiver {
 
     // Lista de animales del lote
     private List<AnimalDomain> animalesEnLote = new ArrayList<>();
-    private final ObservableList<AnimalDomain> animalesObservableList = FXCollections.observableArrayList();
+    private ObservableList<AnimalDomain> animalesObservableList = FXCollections.observableArrayList();
     private int slotCounter = 1;
     private Long loteId = null;
 
@@ -95,9 +95,9 @@ public class CreateLoteController implements ParameterReceiver {
         if (parameters != null && parameters.containsKey("loteId")) {
             Long loteId = (Long) parameters.get("loteId");
             cargarDatosLote(loteId); // Méto-do que carga los datos del lote y sus animales
+        } else {
+            id_slot.setText(String.valueOf(slotCounter));
         }
-
-        id_slot.setText(String.valueOf(slotCounter));
 
         // Configurar columnas de tabla
         slotColumn.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getSlot()).asObject());
@@ -183,12 +183,16 @@ public class CreateLoteController implements ParameterReceiver {
                 animalesEnLote.addAll(animales);
                 animalesObservableList.addAll(animales);
 
+                recalcularPrecioTotalLote();
+                precioTotalLabel.setText(String.valueOf(precioTotal));
+
+
                 // Actualizar contador de slots
                 slotCounter = animales.stream()
                         .mapToInt(AnimalDomain::getSlot)
                         .max()
                         .orElse(0) + 1;
-
+                id_slot.setText(String.valueOf(slotCounter));
                 id_tableViewAnimales.refresh();
             });
 
@@ -399,6 +403,7 @@ public class CreateLoteController implements ParameterReceiver {
         // Reiniciar el precio total
         precioTotal = BigDecimal.ZERO;
 
+        System.out.println(animalesObservableList);
         // Recalcular el precio total sumando el precio de todos los animales
         for (AnimalDomain animal : animalesObservableList) {
             BigDecimal precioAnimal = animal.getPeso().multiply(animal.getPrecioKiloCompra());
@@ -409,7 +414,7 @@ public class CreateLoteController implements ParameterReceiver {
         if (precioTotal.compareTo(BigDecimal.ZERO) < 0) {
             precioTotal = BigDecimal.ZERO;
         }
-
+        System.out.println(precioTotal);
         // Actualizar el precio total en el label
         precioTotalLabel.setText(formato.format(precioTotal));  // Usando el formato para mostrar el precio
     }
