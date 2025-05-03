@@ -20,4 +20,6 @@ public interface AnimalService {
 
     public void deleteByLote(Long idLote);
 
+    public List<AnimalDomain> findByVenta(Long idVenta);
+
 }

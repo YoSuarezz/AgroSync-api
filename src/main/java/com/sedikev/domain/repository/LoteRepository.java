@@ -2,6 +2,8 @@ package com.sedikev.domain.repository;
 
 import com.sedikev.infrastructure.adapter.entity.LoteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,9 @@ public interface LoteRepository extends JpaRepository<LoteEntity, Long> {
 
     boolean existsByContramarcaAndIdNot(int contramarca, Long id);
 
+    @Query(value = "SELECT * FROM lote WHERE contramarca = :contramarca AND WEEK(fecha, 3) = :semana", nativeQuery = true)
+    Optional<LoteEntity> findByContramarcaAndSemana(@Param("contramarca") Integer contramarca,
+                                                    @Param("semana") Integer semana);
+  
     List<LoteEntity> findByUsuarioId(Long usuarioId);
-
 }

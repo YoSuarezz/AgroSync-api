@@ -154,7 +154,6 @@
 
       <!-- Fijos: Proveedor, Precio por Kilo, Kilaje Total y Precio Total -->
       <Label fx:id="proveedorLabel" layoutX="290.0" layoutY="550.0" text="Proveedor: " visible="false" />
-      <Label fx:id="precioKiloLabel" layoutX="290.0" layoutY="570.0" text="Precio por Kilo: " visible="false" />
       <Label fx:id="kilajeTotalLabel" layoutX="500.0" layoutY="550.0" text="Kilaje Total: " visible="false" />
       <Label fx:id="precioTotalLabel" layoutX="500.0" layoutY="570.0" text="Precio Total: " visible="false" />
 
@@ -164,7 +163,7 @@
          <columns>
             <TableColumn fx:id="proveedorColumn" prefWidth="135.0" text="Proveedor" />
             <TableColumn fx:id="contramarcaColumn" minWidth="5.0" prefWidth="80.0" text="Contramarca" />
-            <TableColumn fx:id="precioColumn" minWidth="0.0" prefWidth="90.0" text="Precio por kilo" />
+            <TableColumn fx:id="semanaLoteColumn" minWidth="0.0" prefWidth="90.0" text="Semana" />
             <TableColumn fx:id="fechaColumn" minWidth="0.0" prefWidth="95.0" text="Fecha" />
             <TableColumn fx:id="actualizarColumn" prefWidth="72.0" text="Actualizar" />
          </columns>

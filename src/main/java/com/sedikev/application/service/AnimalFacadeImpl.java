@@ -25,6 +25,8 @@ public class AnimalFacadeImpl implements AnimalService {
     private final GetAllAnimalsUseCase getAllAnimalsUseCase;
     private final GetAnimalsByLoteUseCase getAnimalsByLoteUseCase;
 
+    private final AnimalMapper animalMapper;
+
     @Autowired
     private AnimalRepository animalRepository;
 
@@ -72,6 +74,14 @@ public class AnimalFacadeImpl implements AnimalService {
         animales.forEach(animalRepository::delete);
 
         System.out.println("DEBUG: Eliminación completada para lote ID: " + idLote);
+    }
+
+    @Override
+    public List<AnimalDomain> findByVenta(Long idVenta) {
+        return animalRepository.findAll().stream()
+                .map(animalMapper::toDomain)
+                .filter(animalDomain -> animalDomain.getIdVenta().equals(idVenta))
+                .collect(Collectors.toList());
     }
 
 }
