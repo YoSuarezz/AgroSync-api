@@ -15,4 +15,6 @@ public interface VentaRepository extends JpaRepository<VentaEntity, Long> {
     void deleteById(Long id);
 
     List<VentaEntity> findAll();
+
+    List<VentaEntity> findByUsuarioId(Long usuarioId);
 }

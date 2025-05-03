@@ -115,23 +115,56 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Label layoutX="284.0" layoutY="119.0" prefHeight="17.0" prefWidth="101.0" text="Nombre" />
-      <TextField layoutX="284.0" layoutY="139.0" prefHeight="26.0" prefWidth="161.0" promptText="Ejemplo: Augusto" />
-      <TableView layoutX="288.0" layoutY="181.0" prefHeight="345.0" prefWidth="469.0">
+      <Label layoutX="284" layoutY="81" text="Buscar por:"/>
+      <Label layoutX="284" layoutY="109" text="Nombre"/>
+      <TextField fx:id="nombreField"
+                 layoutX="284" layoutY="129"
+                 prefWidth="160"
+                 promptText="Ej: Juan Pérez"/>
+      <Label layoutX="460" layoutY="109" text="Teléfono"/>
+      <TextField fx:id="telefonoField"
+                 layoutX="460" layoutY="129"
+                 prefWidth="160"
+                 promptText="Ej: 3123456789"/>
+      <Button fx:id="buscarButton"
+              layoutX="638" layoutY="128"
+              text="Buscar"
+              onAction="#buscarProveedores"
+              style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+
+      <!-- Botón Regresar -->
+      <Button fx:id="regresarButton"
+              layoutX="284" layoutY="140"
+              text="Regresar"
+              onAction="#regresar"
+              visible="false"
+              style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+
+      <!-- Tabla Proveedores -->
+      <TableView fx:id="proveedoresTableView"
+                 layoutX="284" layoutY="180"
+                 prefWidth="480" prefHeight="340">
          <columns>
-            <TableColumn prefWidth="282.0" style="-fx-background-color: white;" text="Nombre" />
-            <TableColumn minWidth="5.0" prefWidth="113.0" style="-fx-background-color: white;" text="Saldo" />
-            <TableColumn minWidth="0.0" prefWidth="35.0" style="-fx-background-color: white;" text="Act" />
-            <TableColumn prefWidth="38.0" style="-fx-background-color: white;" text="Ver" />
+            <TableColumn fx:id="provNombreColumn" text="Nombre"    prefWidth="300"/>
+            <TableColumn fx:id="provSaldoColumn"  text="Saldo"     prefWidth="180"/>
          </columns>
       </TableView>
-      <Pagination layoutX="270.0" layoutY="167.0" prefHeight="406.0" prefWidth="500.0" />
-      <Label layoutX="284.0" layoutY="81.0" prefHeight="17.0" prefWidth="101.0" text="Buscar por:" />
-      <Label layoutX="498.0" layoutY="120.0" prefHeight="17.0" prefWidth="101.0" text="Tipo" />
-      <ComboBox fx:id="comboTipo" layoutX="498.0" layoutY="140.0" prefHeight="27.0" prefWidth="140.0" />
+
+      <!-- Tabla Lotes (oculta inicialmente) -->
+      <TableView fx:id="lotesTableView"
+                 layoutX="284" layoutY="180"
+                 prefWidth="480" prefHeight="340"
+                 visible="false">
+         <columns>
+            <TableColumn fx:id="loteIdColumn"    text="ID"           prefWidth="100"/>
+            <TableColumn fx:id="loteValorColumn" text="Valor Total" prefWidth="190"/>
+            <TableColumn fx:id="loteFechaColumn" text="Fecha"        prefWidth="190"/>
+         </columns>
+      </TableView>
    </children>
+
    <stylesheets>
-      <URL value="@../styles/verLoteStyles.css" />
-      <URL value="@../styles/LoteRegisterStyles.css" />
+      <URL value="@../styles/verLoteStyles.css"/>
+      <URL value="@../styles/LoteRegisterStyles.css"/>
    </stylesheets>
 </AnchorPane>

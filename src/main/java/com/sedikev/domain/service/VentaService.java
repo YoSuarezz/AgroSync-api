@@ -15,4 +15,6 @@ public interface VentaService {
     void deleteById(Long id);
 
     List<VentaDomain> findAll();
+
+    List<VentaDomain> findByClienteId(Long clienteId);
 }

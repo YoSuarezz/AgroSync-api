@@ -23,6 +23,8 @@ public class LoteFacadeImpl implements LoteService {
     private final DeleteLoteUseCase deleteLoteUseCase;
     private final GetLoteByIdUseCase getLoteByIdUseCase;
     private final GetAllLotesUseCase getAllLotesUseCase;
+    private final GetLotesByProveedorIdUseCase getLotesByProveedorIdUseCase;
+
 
     @Autowired private LoteRepository loteRepository;
     @Autowired private LoteMapper loteMapper;
@@ -64,9 +66,14 @@ public class LoteFacadeImpl implements LoteService {
     public List<LoteDomain> findAll() {
         return getAllLotesUseCase.ejecutar(null);
     }
-
+  
     @Override
     public Optional<LoteEntity> findByContramarcaAndSemana(Integer contramarca, Integer semana) {
         return loteRepository.findByContramarcaAndSemana(contramarca, semana);
-    };
+    }
+    
+    @Override
+    public List<LoteDomain> findByProveedorId(Long proveedorId) {
+        return getLotesByProveedorIdUseCase.ejecutar(proveedorId);
+    }
 }

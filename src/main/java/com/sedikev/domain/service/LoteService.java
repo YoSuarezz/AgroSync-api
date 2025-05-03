@@ -19,4 +19,6 @@ public interface LoteService {
     List<LoteDomain> findAll();
 
     Optional<LoteEntity> findByContramarcaAndSemana(Integer contramarca, Integer semana);
+  
+    List<LoteDomain> findByProveedorId(Long proveedorId);
 }
