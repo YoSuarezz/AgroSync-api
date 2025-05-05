@@ -10,6 +10,7 @@ import com.sedikev.application.service.LoteFacadeImpl;
 import com.sedikev.application.service.UsuarioFacadeImpl;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -19,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -50,32 +54,69 @@ public class viewProveedorController {
 
     private List<CarteraDTO> allProveedores;
 
+    // Formato de moneda COP
+    private static final NumberFormat COP_FORMAT =
+            NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
+
+    // Formato de fecha dd/MM/yyyy
+    private static final DateTimeFormatter DATE_FORMAT =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     @FXML
     private void initialize() {
         // Columnas proveedores
-        provNombreColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUsuario().getNombre()));
-        provSaldoColumn.setCellValueFactory(c -> new javafx.beans.property.SimpleObjectProperty<>(c.getValue().getSaldo()));
+        provNombreColumn.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getUsuario().getNombre())
+        );
+
+        // Formatear saldo como COP
+        provSaldoColumn.setCellValueFactory(c ->
+                new javafx.beans.property.SimpleObjectProperty<>(c.getValue().getSaldo())
+        );
         provSaldoColumn.setCellFactory(col -> new TableCell<>() {
             @Override protected void updateItem(BigDecimal item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText(null); setStyle("");
+                    setText(null);
                 } else {
-                    setText(item.toString());
-                    // saldo negativo (les debemos) en rojo, positivo (ellos nos deben) verde
-                    if (item.compareTo(BigDecimal.ZERO) < 0) setStyle("-fx-text-fill: red;");
-                    else if (item.compareTo(BigDecimal.ZERO) > 0) setStyle("-fx-text-fill: #27ae60;");
-                    else setStyle("");
+                    setText(COP_FORMAT.format(item));
+                    // saldo negativo en rojo, positivo en verde
+                    if (item.compareTo(BigDecimal.ZERO) < 0) {
+                        setStyle("-fx-text-fill: red;");
+                    } else if (item.compareTo(BigDecimal.ZERO) > 0) {
+                        setStyle("-fx-text-fill: #27ae60;");
+                    } else {
+                        setStyle("");
+                    }
                 }
             }
         });
+
         buscarButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
         regresarButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
 
         // Columnas lotes
         loteIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        loteValorColumn.setCellValueFactory(new PropertyValueFactory<>("precioTotal"));
-        loteFechaColumn.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+
+        // Formatear valor total del lote como COP
+        loteValorColumn.setCellValueFactory(c ->
+                new javafx.beans.property.SimpleObjectProperty<>(c.getValue().getPrecioTotal())
+        );
+        loteValorColumn.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(BigDecimal item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(COP_FORMAT.format(item));
+                }
+            }
+        });
+
+        // Formatear fecha
+        loteFechaColumn.setCellValueFactory(c ->
+                new SimpleStringProperty(c.getValue().getFecha().format(DATE_FORMAT))
+        );
 
         // Vista inicial
         lotesTableView.setVisible(false);
@@ -113,28 +154,26 @@ public class viewProveedorController {
                 })
                 .collect(Collectors.toList());
 
-        proveedoresTableView.getItems().setAll(allProveedores);
+        proveedoresTableView.setItems(FXCollections.observableArrayList(allProveedores));
     }
 
     @FXML
     private void buscarProveedores(ActionEvent e) {
         String nombreFiltro   = nombreField.getText().trim().toLowerCase();
-               String telefonoFiltro = telefonoField.getText().trim();
+        String telefonoFiltro = telefonoField.getText().trim();
         List<CarteraDTO> filtrados = allProveedores.stream()
-                .filter(c -> c.getUsuario().getNombre()
-                        .toLowerCase()
-                        .contains(nombreFiltro))
-                           .filter(c -> telefonoFiltro.isEmpty()
-                                       || c.getUsuario().getTelefono().contains(telefonoFiltro))
+                .filter(c -> c.getUsuario().getNombre().toLowerCase().contains(nombreFiltro))
+                .filter(c -> telefonoFiltro.isEmpty()
+                        || c.getUsuario().getTelefono().contains(telefonoFiltro))
                 .collect(Collectors.toList());
-        proveedoresTableView.getItems().setAll(filtrados);
+        proveedoresTableView.setItems(FXCollections.observableArrayList(filtrados));
     }
 
     private void mostrarLotes(CarteraDTO proveedor) {
         List<LoteDTO> lotes = loteFacade.findByProveedorId(proveedor.getUsuario().getId()).stream()
                 .map(loteMapper::toDTO)
                 .collect(Collectors.toList());
-        lotesTableView.getItems().setAll(lotes);
+        lotesTableView.setItems(FXCollections.observableArrayList(lotes));
 
         // ocultar proveedores
         proveedoresTableView.setVisible(false);
@@ -149,7 +188,6 @@ public class viewProveedorController {
 
     @FXML
     private void regresar(ActionEvent e) {
-        // restaurar vista proveedores
         proveedoresTableView.setVisible(true);
         nombreField.setVisible(true);
         buscarButton.setVisible(true);
@@ -160,12 +198,28 @@ public class viewProveedorController {
     }
 
     // navegación lateral...
-    @FXML private void goRegisterLote(ActionEvent e){ navigationService.navigateTo("/fxml/loteRegister.fxml", (Node)e.getSource()); }
-    @FXML private void goViewLote   (ActionEvent e){ navigationService.navigateTo("/fxml/viewLote.fxml",   (Node)e.getSource()); }
-    @FXML private void goRegisterSale(ActionEvent e){ navigationService.navigateTo("/fxml/ventaRegister.fxml",(Node)e.getSource()); }
-    @FXML private void goViewSale   (ActionEvent e){ navigationService.navigateTo("/fxml/viewVenta.fxml", (Node)e.getSource()); }
-    @FXML private void goRegisterUser(ActionEvent e){ navigationService.navigateTo("/fxml/usuarioRegister.fxml",(Node)e.getSource()); }
-    @FXML private void goViewUser   (ActionEvent e){ navigationService.navigateTo("/fxml/viewUsuario.fxml",(Node)e.getSource()); }
-    @FXML private void goViewClient (ActionEvent e){ navigationService.navigateTo("/fxml/viewClienteCartera.fxml",(Node)e.getSource()); }
-    @FXML private void goViewSupplier(ActionEvent e){ navigationService.navigateTo("/fxml/viewProveedorCartera.fxml",(Node)e.getSource()); }
+    @FXML private void goRegisterLote(ActionEvent e){
+        navigationService.navigateTo("/fxml/loteRegister.fxml", (Node)e.getSource());
+    }
+    @FXML private void goViewLote(ActionEvent e){
+        navigationService.navigateTo("/fxml/viewLote.fxml", (Node)e.getSource());
+    }
+    @FXML private void goRegisterSale(ActionEvent e){
+        navigationService.navigateTo("/fxml/ventaRegister.fxml", (Node)e.getSource());
+    }
+    @FXML private void goViewSale(ActionEvent e){
+        navigationService.navigateTo("/fxml/viewVenta.fxml", (Node)e.getSource());
+    }
+    @FXML private void goRegisterUser(ActionEvent e){
+        navigationService.navigateTo("/fxml/usuarioRegister.fxml", (Node)e.getSource());
+    }
+    @FXML private void goViewUser(ActionEvent e){
+        navigationService.navigateTo("/fxml/viewUsuario.fxml", (Node)e.getSource());
+    }
+    @FXML private void goViewClient(ActionEvent e){
+        navigationService.navigateTo("/fxml/viewClienteCartera.fxml", (Node)e.getSource());
+    }
+    @FXML private void goViewSupplier(ActionEvent e){
+        navigationService.navigateTo("/fxml/viewProveedorCartera.fxml", (Node)e.getSource());
+    }
 }

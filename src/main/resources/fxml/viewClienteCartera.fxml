@@ -134,12 +134,11 @@
 
       <!-- Tabla de Clientes -->
       <TableView fx:id="carteraTableView"
-                 layoutX="287" layoutY="181"
-                 prefWidth="451" prefHeight="345">
+                 layoutX="284" layoutY="180"
+                 prefWidth="480" prefHeight="340">
          <columns>
-            <TableColumn fx:id="nombreColumn"  text="Nombre" prefWidth="200"/>
-            <TableColumn fx:id="saldoColumn"   text="Saldo"   prefWidth="150"/>
-            <TableColumn fx:id="accionesColumn" text="Acciones" prefWidth="100"/>
+            <TableColumn fx:id="nombreColumn" text="Nombre"    prefWidth="300"/>
+            <TableColumn fx:id="saldoColumn"  text="Saldo"     prefWidth="180"/>
          </columns>
       </TableView>
 

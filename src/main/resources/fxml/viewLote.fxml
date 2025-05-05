@@ -159,7 +159,7 @@
 
 
       <!-- Tabla de Lotes -->
-      <TableView fx:id="loteTableView" layoutX="290.0" layoutY="215.0" onMouseClicked="#onLoteClicked" prefHeight="324.0" prefWidth="473.0">
+      <TableView fx:id="loteTableView" layoutX="285.0" layoutY="215.0" onMouseClicked="#onLoteClicked" prefHeight="324.0" prefWidth="490.0">
          <columns>
             <TableColumn fx:id="proveedorColumn" prefWidth="135.0" text="Proveedor" />
             <TableColumn fx:id="contramarcaColumn" minWidth="5.0" prefWidth="80.0" text="Contramarca" />
