@@ -1,9 +1,9 @@
 package com.sedikev.infrastructure.rest.controller.usuario;
 
-import com.sedikev.application.primaryports.dto.UsuarioDTO;
+import com.sedikev.application.primaryports.dto.usuarios.UsuarioDTO;
 import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import com.sedikev.application.primaryports.service.UsuarioFacadeImpl;
-import com.sedikev.domain.model.UsuarioDomain;
+import com.sedikev.domain.usuarios.UsuarioDomain;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -40,7 +40,7 @@ public class ViewUsuarioController {
     private void initialize() {
         // 1) Configuro columnas
         nombreColumn.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNombre()));
-        tipoColumn.setCellValueFactory(c   -> new SimpleStringProperty(c.getValue().getTipo_usuario()));
+        //tipoColumn.setCellValueFactory(c   -> new SimpleStringProperty(c.getValue().getTipo_usuario()));
         telefonoColumn.setCellValueFactory(c-> new SimpleStringProperty(c.getValue().getTelefono()));
         editarColumn.setCellFactory(param -> new TableCell<>() {
             private final Button editBtn = new Button("Editar");
@@ -112,23 +112,23 @@ public class ViewUsuarioController {
         usuarioTableView.getItems().setAll(usuarios);
     }
 
-    @FXML
-    private void buscarUsuarios(ActionEvent event) {
-        String nombreFiltro   = nombreField.getText().trim().toLowerCase();
-        String telefonoFiltro = telefonoField.getText().trim();
-        String tipoFiltro     = tipoChoiceBox.getValue().toLowerCase();
-
-        List<UsuarioDTO> filtrados = usuarioFacade.findAll().stream()
-                .map(usuarioMapper::toDTO)
-                .filter(u -> u.getNombre().toLowerCase().contains(nombreFiltro))
-                .filter(u -> telefonoFiltro.isEmpty() ||
-                        u.getTelefono().contains(telefonoFiltro))
-                .filter(u -> tipoFiltro.equals("todos") ||
-                        u.getTipo_usuario().toLowerCase().equals(tipoFiltro))
-                .collect(Collectors.toList());
-
-        usuarioTableView.getItems().setAll(filtrados);
-    }
+//    @FXML
+//    private void buscarUsuarios(ActionEvent event) {
+//        String nombreFiltro   = nombreField.getText().trim().toLowerCase();
+//        String telefonoFiltro = telefonoField.getText().trim();
+//        String tipoFiltro     = tipoChoiceBox.getValue().toLowerCase();
+//
+//        List<UsuarioDTO> filtrados = usuarioFacade.findAll().stream()
+//                .map(usuarioMapper::toDTO)
+//                .filter(u -> u.getNombre().toLowerCase().contains(nombreFiltro))
+//                .filter(u -> telefonoFiltro.isEmpty() ||
+//                        u.getTelefono().contains(telefonoFiltro))
+//                .filter(u -> tipoFiltro.equals("todos") ||
+//                        u.getTipo_usuario().toLowerCase().equals(tipoFiltro))
+//                .collect(Collectors.toList());
+//
+//        usuarioTableView.getItems().setAll(filtrados);
+//    }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);

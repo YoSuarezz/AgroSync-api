@@ -2,7 +2,7 @@ package com.sedikev.infrastructure.rest.controller.lote;
 
 import com.sedikev.application.primaryports.dto.AnimalDTO;
 import com.sedikev.application.primaryports.dto.LoteDTO;
-import com.sedikev.application.primaryports.dto.UsuarioDTO;
+import com.sedikev.application.primaryports.dto.usuarios.UsuarioDTO;
 import com.sedikev.application.primaryports.mapper.AnimalMapper;
 import com.sedikev.application.primaryports.mapper.LoteMapper;
 import com.sedikev.application.primaryports.mapper.UsuarioMapper;
@@ -108,7 +108,7 @@ public class ViewLoteController {
 
     @FXML
     public void initialize() {
-        cargarProveedores();
+        //cargarProveedores();
 
         UsuarioDTO ninguno = new UsuarioDTO();
         ninguno.setNombre("Ninguno");
@@ -303,26 +303,26 @@ public class ViewLoteController {
     }
 
 
-    private void cargarProveedores() {
-        List<UsuarioDTO> proveedores = usuarioService.findAll().stream()
-                .map(usuarioMapper::toDTO)
-                .filter(u -> "proveedor".equalsIgnoreCase(u.getTipo_usuario()))
-                .collect(Collectors.toList());
-
-        comboProveedor.setItems(FXCollections.observableArrayList(proveedores));
-        comboProveedor.setCellFactory(lv -> new ListCell<>() {
-            @Override protected void updateItem(UsuarioDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre());
-            }
-        });
-        comboProveedor.setButtonCell(new ListCell<>() {
-            @Override protected void updateItem(UsuarioDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre());
-            }
-        });
-    }
+//    private void cargarProveedores() {
+//        List<UsuarioDTO> proveedores = usuarioService.findAll().stream()
+//                .map(usuarioMapper::toDTO)
+//                .filter(u -> "proveedor".equalsIgnoreCase(u.getTipo_usuario()))
+//                .collect(Collectors.toList());
+//
+//        comboProveedor.setItems(FXCollections.observableArrayList(proveedores));
+//        comboProveedor.setCellFactory(lv -> new ListCell<>() {
+//            @Override protected void updateItem(UsuarioDTO item, boolean empty) {
+//                super.updateItem(item, empty);
+//                setText(empty || item == null ? null : item.getNombre());
+//            }
+//        });
+//        comboProveedor.setButtonCell(new ListCell<>() {
+//            @Override protected void updateItem(UsuarioDTO item, boolean empty) {
+//                super.updateItem(item, empty);
+//                setText(empty || item == null ? null : item.getNombre());
+//            }
+//        });
+//    }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);

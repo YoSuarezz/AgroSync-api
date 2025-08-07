@@ -1,6 +1,6 @@
 package com.sedikev.application.secondaryports.repository;
 
-import com.sedikev.application.secondaryports.entity.UsuarioEntity;
+import com.sedikev.application.secondaryports.entity.usuarios.UsuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,13 +1,13 @@
-package com.sedikev.application.usecase.usuario;
+package com.sedikev.application.usecase.usuarios;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.CarteraDomain;
-import com.sedikev.domain.model.UsuarioDomain;
+import com.sedikev.domain.usuarios.UsuarioDomain;
 import com.sedikev.application.secondaryports.repository.UsuarioRepository;
 import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import com.sedikev.domain.service.CarteraService;
-import com.sedikev.application.secondaryports.entity.UsuarioEntity;
+import com.sedikev.application.secondaryports.entity.usuarios.UsuarioEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -40,12 +40,6 @@ public class CreateUsuarioUseCase implements UseCaseWithReturn<UsuarioDomain, Us
         // 4) Validación de negocio: El teléfono debe tener exactamente 10 caracteres
         if (usuarioDomain.getTelefono().length() != 10) {
             throw new BusinessSedikevException("El teléfono debe tener exactamente 10 caracteres");
-        }
-
-        // 5) Validación de negocio: El tipo de usuario debe ser "proveedor" o "cliente"
-        if (!usuarioDomain.getTipo_usuario().equalsIgnoreCase("proveedor") &&
-                !usuarioDomain.getTipo_usuario().equalsIgnoreCase("cliente")) {
-            throw new BusinessSedikevException("El tipo de usuario debe ser 'proveedor' o 'cliente'");
         }
 
         System.out.println("usuario : " + usuarioDomain);

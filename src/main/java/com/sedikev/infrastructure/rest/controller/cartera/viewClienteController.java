@@ -84,8 +84,8 @@ public class viewClienteController {
         ventasTableView.setVisible(false);
         regresarButton.setVisible(false);
 
-        cargarClientes();
-
+//        cargarClientes();
+//
         // Click en fila de cliente
         carteraTableView.setRowFactory(tv -> {
             TableRow<CarteraDTO> row = new TableRow<>();
@@ -98,26 +98,26 @@ public class viewClienteController {
         });
     }
 
-    private void cargarClientes() {
-        Map<Long, CarteraDTO> carteraMap = carteraFacade.findAll().stream()
-                .map(carteraMapper::toDTO)
-                .collect(Collectors.toMap(c -> c.getUsuario().getId(), c -> c));
-
-        allClientes = usuarioFacade.findAll().stream()
-                .filter(u -> u.getTipo_usuario().equalsIgnoreCase("cliente"))
-                .map(u -> {
-                    CarteraDTO dto = carteraMap.get(u.getId());
-                    if (dto == null) {
-                        dto = new CarteraDTO();
-                        dto.setUsuario(usuarioMapper.toDTO(u));
-                        dto.setSaldo(BigDecimal.ZERO);
-                    }
-                    return dto;
-                })
-                .collect(Collectors.toList());
-
-        carteraTableView.getItems().setAll(allClientes);
-    }
+//    private void cargarClientes() {
+//        Map<Long, CarteraDTO> carteraMap = carteraFacade.findAll().stream()
+//                .map(carteraMapper::toDTO)
+//                .collect(Collectors.toMap(c -> c.getUsuario().getId(), c -> c));
+//
+//        allClientes = usuarioFacade.findAll().stream()
+//                .filter(u -> u.getTipo_usuario().equalsIgnoreCase("cliente"))
+//                .map(u -> {
+//                    CarteraDTO dto = carteraMap.get(u.getId());
+//                    if (dto == null) {
+//                        dto = new CarteraDTO();
+//                        dto.setUsuario(usuarioMapper.toDTO(u));
+//                        dto.setSaldo(BigDecimal.ZERO);
+//                    }
+//                    return dto;
+//                })
+//                .collect(Collectors.toList());
+//
+//        carteraTableView.getItems().setAll(allClientes);
+//    }
 
     @FXML
     private void buscarClientes(ActionEvent event) {

@@ -122,7 +122,7 @@ public class viewProveedorController {
         lotesTableView.setVisible(false);
         regresarButton.setVisible(false);
 
-        cargarProveedores();
+        //cargarProveedores();
 
         // click fila proveedor → mostrar lotes
         proveedoresTableView.setRowFactory(tv -> {
@@ -136,26 +136,26 @@ public class viewProveedorController {
         });
     }
 
-    private void cargarProveedores() {
-        Map<Long, CarteraDTO> map = carteraFacade.findAll().stream()
-                .map(carteraMapper::toDTO)
-                .collect(Collectors.toMap(c -> c.getUsuario().getId(), c -> c));
-
-        allProveedores = usuarioFacade.findAll().stream()
-                .filter(u -> u.getTipo_usuario().equalsIgnoreCase("proveedor"))
-                .map(u -> {
-                    CarteraDTO dto = map.get(u.getId());
-                    if (dto == null) {
-                        dto = new CarteraDTO();
-                        dto.setUsuario(usuarioMapper.toDTO(u));
-                        dto.setSaldo(BigDecimal.ZERO);
-                    }
-                    return dto;
-                })
-                .collect(Collectors.toList());
-
-        proveedoresTableView.setItems(FXCollections.observableArrayList(allProveedores));
-    }
+//    private void cargarProveedores() {
+//        Map<Long, CarteraDTO> map = carteraFacade.findAll().stream()
+//                .map(carteraMapper::toDTO)
+//                .collect(Collectors.toMap(c -> c.getUsuario().getId(), c -> c));
+//
+//        allProveedores = usuarioFacade.findAll().stream()
+//                .filter(u -> u.getTipo_usuario().equalsIgnoreCase("proveedor"))
+//                .map(u -> {
+//                    CarteraDTO dto = map.get(u.getId());
+//                    if (dto == null) {
+//                        dto = new CarteraDTO();
+//                        dto.setUsuario(usuarioMapper.toDTO(u));
+//                        dto.setSaldo(BigDecimal.ZERO);
+//                    }
+//                    return dto;
+//                })
+//                .collect(Collectors.toList());
+//
+//        proveedoresTableView.setItems(FXCollections.observableArrayList(allProveedores));
+//    }
 
     @FXML
     private void buscarProveedores(ActionEvent e) {

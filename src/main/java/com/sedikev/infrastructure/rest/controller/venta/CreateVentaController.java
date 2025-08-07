@@ -1,7 +1,7 @@
 package com.sedikev.infrastructure.rest.controller.venta;
 
 import com.sedikev.application.primaryports.dto.AnimalDTO;
-import com.sedikev.application.primaryports.dto.UsuarioDTO;
+import com.sedikev.application.primaryports.dto.usuarios.UsuarioDTO;
 import com.sedikev.application.primaryports.mapper.AnimalMapper;
 import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import com.sedikev.domain.model.AnimalDomain;
@@ -133,7 +133,7 @@ public class CreateVentaController implements ParameterReceiver {
 
     @FXML
     public void initialize() {
-        cargarClientes();
+        //cargarClientes();
 
         // Agregar listeners a los campos de filtro
         id_contramarca.textProperty().addListener((obs, oldVal, newVal) -> actualizarAnimalesDisponibles());
@@ -192,26 +192,26 @@ public class CreateVentaController implements ParameterReceiver {
 
     }
 
-    private void cargarClientes() {
-        List<UsuarioDTO> clientes = usuarioService.findAll().stream()
-                .map(usuarioMapper::toDTO)
-                .filter(u -> "cliente".equalsIgnoreCase(u.getTipo_usuario()))
-                .collect(Collectors.toList());
-
-        comboCliente.setItems(FXCollections.observableArrayList(clientes));
-        comboCliente.setCellFactory(lv -> new ListCell<>() {
-            @Override protected void updateItem(UsuarioDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre());
-            }
-        });
-        comboCliente.setButtonCell(new ListCell<>() {
-            @Override protected void updateItem(UsuarioDTO item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre());
-            }
-        });
-    }
+    //private void cargarClientes() {
+//        List<UsuarioDTO> clientes = usuarioService.findAll().stream()
+//                .map(usuarioMapper::toDTO)
+//                .filter(u -> "cliente".equalsIgnoreCase(u.getTipo_usuario()))
+//                .collect(Collectors.toList());
+//
+//        comboCliente.setItems(FXCollections.observableArrayList(clientes));
+//        comboCliente.setCellFactory(lv -> new ListCell<>() {
+//            @Override protected void updateItem(UsuarioDTO item, boolean empty) {
+//                super.updateItem(item, empty);
+//                setText(empty || item == null ? null : item.getNombre());
+//            }
+//        });
+//        comboCliente.setButtonCell(new ListCell<>() {
+//            @Override protected void updateItem(UsuarioDTO item, boolean empty) {
+//                super.updateItem(item, empty);
+//                setText(empty || item == null ? null : item.getNombre());
+//            }
+//        });
+//    }
 
     private void actualizarAnimalesDisponibles() {
         try {

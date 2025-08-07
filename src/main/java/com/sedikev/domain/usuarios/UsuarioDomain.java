@@ -1,16 +1,18 @@
-package com.sedikev.application.primaryports.dto;
+package com.sedikev.domain.usuarios;
 
-import lombok.*;
-
-@Data
-@Getter
-@Setter
-public class UsuarioDTO {
+public class UsuarioDomain {
 
     private Long id;
     private String nombre;
     private String telefono;
-    private String tipo_usuario;
+    private TipoUsuarioDomain tipo_usuario;
+
+    public UsuarioDomain(Long id, String nombre, String telefono, TipoUsuarioDomain tipo_usuario) {
+        setId(id);
+        setNombre(nombre);
+        setTelefono(telefono);
+        setTipo_usuario(tipo_usuario);
+    }
 
     public Long getId() {
         return id;
@@ -36,11 +38,11 @@ public class UsuarioDTO {
         this.telefono = telefono;
     }
 
-    public String getTipo_usuario() {
+    public TipoUsuarioDomain getTipo_usuario() {
         return tipo_usuario;
     }
 
-    public void setTipo_usuario(String tipo_usuario) {
+    public void setTipo_usuario(TipoUsuarioDomain tipo_usuario) {
         this.tipo_usuario = tipo_usuario;
     }
 }

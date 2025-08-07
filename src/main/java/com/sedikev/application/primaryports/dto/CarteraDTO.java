@@ -1,5 +1,6 @@
 package com.sedikev.application.primaryports.dto;
 
+import com.sedikev.application.primaryports.dto.usuarios.UsuarioDTO;
 import lombok.*;
 
 import java.math.BigDecimal;

@@ -1,7 +1,7 @@
 package com.sedikev.infrastructure.rest.controller.usuario;
 
 import com.sedikev.application.primaryports.service.UsuarioFacadeImpl;
-import com.sedikev.domain.model.UsuarioDomain;
+import com.sedikev.domain.usuarios.UsuarioDomain;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import com.sedikev.infrastructure.rest.advice.ParameterReceiver;
 import javafx.application.Platform;
@@ -86,19 +86,19 @@ public class CreateUsuarioController implements ParameterReceiver {
                 UsuarioDomain usuario = usuarioFacade.findById(usuarioId);
                 usuario.setNombre(id_nombre.getText());
                 usuario.setTelefono(id_telefono.getText());
-                usuario.setTipo_usuario(id_tipo.getValue());
+                //usuario.setTipo_usuario(id_tipo.getValue());
 
                 usuarioFacade.update(usuario);
 
                 mostrarAlerta("Éxito", "Usuario actualizado correctamente", Alert.AlertType.INFORMATION);
             } else {
                 // Modo creación
-                UsuarioDomain usuario = new UsuarioDomain();
-                usuario.setNombre(id_nombre.getText());
-                usuario.setTelefono(id_telefono.getText());
-                usuario.setTipo_usuario(id_tipo.getValue());
+                //UsuarioDomain usuario = new UsuarioDomain();
+                //usuario.setNombre(id_nombre.getText());
+                //usuario.setTelefono(id_telefono.getText());
+                //usuario.setTipo_usuario(id_tipo.getValue());
 
-                UsuarioDomain usuarioDomain = usuarioFacade.save(usuario);
+                //UsuarioDomain usuarioDomain = usuarioFacade.save(usuario);
 
                 mostrarAlerta("Éxito", "Usuario creado correctamente", Alert.AlertType.INFORMATION);
             }
@@ -140,7 +140,7 @@ public class CreateUsuarioController implements ParameterReceiver {
             Platform.runLater(() -> {
                 id_nombre.setText(String.valueOf(usuario.getNombre()));
                 id_telefono.setText(String.valueOf(usuario.getTelefono()));
-                id_tipo.getSelectionModel().select(usuario.getTipo_usuario());
+                //id_tipo.getSelectionModel().select(usuario.getTipo_usuario());
             });
 
         } catch (Exception e) {

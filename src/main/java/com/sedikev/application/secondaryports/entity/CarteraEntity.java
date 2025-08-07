@@ -1,5 +1,6 @@
 package com.sedikev.application.secondaryports.entity;
 
+import com.sedikev.application.secondaryports.entity.usuarios.UsuarioEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

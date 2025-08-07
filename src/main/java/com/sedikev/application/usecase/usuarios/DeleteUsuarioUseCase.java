@@ -1,4 +1,4 @@
-package com.sedikev.application.usecase.usuario;
+package com.sedikev.application.usecase.usuarios;
 
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.application.secondaryports.repository.UsuarioRepository;

@@ -1,8 +1,8 @@
-package com.sedikev.application.usecase.usuario;
+package com.sedikev.application.usecase.usuarios;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
-import com.sedikev.domain.model.UsuarioDomain;
+import com.sedikev.domain.usuarios.UsuarioDomain;
 import com.sedikev.application.secondaryports.repository.UsuarioRepository;
 import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import lombok.RequiredArgsConstructor;

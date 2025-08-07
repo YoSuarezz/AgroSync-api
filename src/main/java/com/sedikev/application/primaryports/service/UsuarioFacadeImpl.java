@@ -1,13 +1,12 @@
 package com.sedikev.application.primaryports.service;
 
-import com.sedikev.application.usecase.usuario.*;
-import com.sedikev.domain.model.UsuarioDomain;
+import com.sedikev.application.usecase.usuarios.*;
+import com.sedikev.domain.usuarios.UsuarioDomain;
 import com.sedikev.domain.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

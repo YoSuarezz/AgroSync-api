@@ -1,8 +1,8 @@
 package com.sedikev.application.primaryports.mapper;
 
-import com.sedikev.domain.model.UsuarioDomain;
-import com.sedikev.application.primaryports.dto.UsuarioDTO;
-import com.sedikev.application.secondaryports.entity.UsuarioEntity;
+import com.sedikev.domain.usuarios.UsuarioDomain;
+import com.sedikev.application.primaryports.dto.usuarios.UsuarioDTO;
+import com.sedikev.application.secondaryports.entity.usuarios.UsuarioEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

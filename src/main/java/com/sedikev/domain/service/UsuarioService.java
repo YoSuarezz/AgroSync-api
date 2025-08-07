@@ -1,6 +1,6 @@
 package com.sedikev.domain.service;
 
-import com.sedikev.domain.model.UsuarioDomain;
+import com.sedikev.domain.usuarios.UsuarioDomain;
 
 import java.util.List;
 
