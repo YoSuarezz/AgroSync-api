@@ -1,7 +1,7 @@
 package com.sedikev.infrastructure.rest.controller.antiguos;
 
-import com.sedikev.application.dto.VentaDTO;
-import com.sedikev.application.mapper.VentaMapper;
+import com.sedikev.application.primaryports.dto.VentaDTO;
+import com.sedikev.application.primaryports.mapper.VentaMapper;
 import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.domain.service.VentaService;
 import lombok.RequiredArgsConstructor;

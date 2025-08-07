@@ -2,8 +2,8 @@ package com.sedikev.application.usecase.cartera;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.domain.model.CarteraDomain;
-import com.sedikev.domain.repository.CarteraRepository;
-import com.sedikev.application.mapper.CarteraMapper;
+import com.sedikev.application.secondaryports.repository.CarteraRepository;
+import com.sedikev.application.primaryports.mapper.CarteraMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

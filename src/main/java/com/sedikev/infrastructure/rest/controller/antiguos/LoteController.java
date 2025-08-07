@@ -1,7 +1,7 @@
 package com.sedikev.infrastructure.rest.controller.antiguos;
 
-import com.sedikev.application.dto.LoteDTO;
-import com.sedikev.application.mapper.LoteMapper;
+import com.sedikev.application.primaryports.dto.LoteDTO;
+import com.sedikev.application.primaryports.mapper.LoteMapper;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.LoteService;
 import lombok.RequiredArgsConstructor;

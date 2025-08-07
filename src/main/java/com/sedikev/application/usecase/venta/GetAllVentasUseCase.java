@@ -2,8 +2,8 @@ package com.sedikev.application.usecase.venta;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.domain.model.VentaDomain;
-import com.sedikev.domain.repository.VentaRepository;
-import com.sedikev.application.mapper.VentaMapper;
+import com.sedikev.application.secondaryports.repository.VentaRepository;
+import com.sedikev.application.primaryports.mapper.VentaMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

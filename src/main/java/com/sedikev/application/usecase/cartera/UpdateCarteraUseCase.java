@@ -3,13 +3,11 @@ package com.sedikev.application.usecase.cartera;
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.CarteraDomain;
-import com.sedikev.domain.repository.CarteraRepository;
-import com.sedikev.application.mapper.CarteraMapper;
-import com.sedikev.infrastructure.adapter.entity.CarteraEntity;
+import com.sedikev.application.secondaryports.repository.CarteraRepository;
+import com.sedikev.application.primaryports.mapper.CarteraMapper;
+import com.sedikev.application.secondaryports.entity.CarteraEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor

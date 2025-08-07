@@ -3,9 +3,9 @@ package com.sedikev.application.usecase.gasto;
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.GastoDomain;
-import com.sedikev.domain.repository.GastoRepository;
-import com.sedikev.application.mapper.GastoMapper;
-import com.sedikev.infrastructure.adapter.entity.GastoEntity;
+import com.sedikev.application.secondaryports.repository.GastoRepository;
+import com.sedikev.application.primaryports.mapper.GastoMapper;
+import com.sedikev.application.secondaryports.entity.GastoEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

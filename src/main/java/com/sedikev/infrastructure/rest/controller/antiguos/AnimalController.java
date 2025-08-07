@@ -1,8 +1,8 @@
 package com.sedikev.infrastructure.rest.controller.antiguos;
 
-import com.sedikev.application.dto.AnimalDTO;
+import com.sedikev.application.primaryports.dto.AnimalDTO;
 import com.sedikev.domain.model.AnimalDomain;
-import com.sedikev.application.mapper.AnimalMapper;
+import com.sedikev.application.primaryports.mapper.AnimalMapper;
 import com.sedikev.domain.service.AnimalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

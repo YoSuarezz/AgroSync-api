@@ -3,8 +3,8 @@ package com.sedikev.application.usecase.pago;
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.PagoDomain;
-import com.sedikev.domain.repository.PagoRepository;
-import com.sedikev.application.mapper.PagoMapper;
+import com.sedikev.application.secondaryports.repository.PagoRepository;
+import com.sedikev.application.primaryports.mapper.PagoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

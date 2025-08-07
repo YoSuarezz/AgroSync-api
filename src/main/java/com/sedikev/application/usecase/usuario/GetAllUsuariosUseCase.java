@@ -2,8 +2,8 @@ package com.sedikev.application.usecase.usuario;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.domain.model.UsuarioDomain;
-import com.sedikev.domain.repository.UsuarioRepository;
-import com.sedikev.application.mapper.UsuarioMapper;
+import com.sedikev.application.secondaryports.repository.UsuarioRepository;
+import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.sedikev.domain.service;
 
 import com.sedikev.domain.model.LoteDomain;
-import com.sedikev.infrastructure.adapter.entity.LoteEntity;
+import com.sedikev.application.secondaryports.entity.LoteEntity;
 
 import java.util.List;
 import java.util.Optional;

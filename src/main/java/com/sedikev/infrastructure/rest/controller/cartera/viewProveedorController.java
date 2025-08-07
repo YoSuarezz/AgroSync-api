@@ -1,13 +1,13 @@
 package com.sedikev.infrastructure.rest.controller.cartera;
 
-import com.sedikev.application.dto.CarteraDTO;
-import com.sedikev.application.dto.LoteDTO;
-import com.sedikev.application.mapper.CarteraMapper;
-import com.sedikev.application.mapper.LoteMapper;
-import com.sedikev.application.mapper.UsuarioMapper;
-import com.sedikev.application.service.CarteraFacadeImpl;
-import com.sedikev.application.service.LoteFacadeImpl;
-import com.sedikev.application.service.UsuarioFacadeImpl;
+import com.sedikev.application.primaryports.dto.CarteraDTO;
+import com.sedikev.application.primaryports.dto.LoteDTO;
+import com.sedikev.application.primaryports.mapper.CarteraMapper;
+import com.sedikev.application.primaryports.mapper.LoteMapper;
+import com.sedikev.application.primaryports.mapper.UsuarioMapper;
+import com.sedikev.application.primaryports.service.CarteraFacadeImpl;
+import com.sedikev.application.primaryports.service.LoteFacadeImpl;
+import com.sedikev.application.primaryports.service.UsuarioFacadeImpl;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

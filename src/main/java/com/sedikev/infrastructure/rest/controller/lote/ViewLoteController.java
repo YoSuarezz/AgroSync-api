@@ -1,12 +1,11 @@
 package com.sedikev.infrastructure.rest.controller.lote;
 
-import com.sedikev.application.dto.AnimalDTO;
-import com.sedikev.application.dto.LoteDTO;
-import com.sedikev.application.dto.UsuarioDTO;
-import com.sedikev.application.mapper.AnimalMapper;
-import com.sedikev.application.mapper.LoteMapper;
-import com.sedikev.application.mapper.UsuarioMapper;
-import com.sedikev.domain.model.AnimalDomain;
+import com.sedikev.application.primaryports.dto.AnimalDTO;
+import com.sedikev.application.primaryports.dto.LoteDTO;
+import com.sedikev.application.primaryports.dto.UsuarioDTO;
+import com.sedikev.application.primaryports.mapper.AnimalMapper;
+import com.sedikev.application.primaryports.mapper.LoteMapper;
+import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
@@ -30,7 +29,6 @@ import java.time.temporal.WeekFields;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller

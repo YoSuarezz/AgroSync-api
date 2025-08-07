@@ -1,7 +1,7 @@
 package com.sedikev.infrastructure.rest.controller.antiguos;
 
-import com.sedikev.application.dto.CarteraDTO;
-import com.sedikev.application.mapper.CarteraMapper;
+import com.sedikev.application.primaryports.dto.CarteraDTO;
+import com.sedikev.application.primaryports.mapper.CarteraMapper;
 import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.service.CarteraService;
 import lombok.RequiredArgsConstructor;

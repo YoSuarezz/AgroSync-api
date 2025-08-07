@@ -2,8 +2,8 @@ package com.sedikev.application.usecase.lote;
 
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.domain.model.LoteDomain;
-import com.sedikev.domain.repository.LoteRepository;
-import com.sedikev.application.mapper.LoteMapper;
+import com.sedikev.application.secondaryports.repository.LoteRepository;
+import com.sedikev.application.primaryports.mapper.LoteMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

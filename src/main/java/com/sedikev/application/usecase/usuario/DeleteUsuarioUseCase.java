@@ -1,7 +1,7 @@
 package com.sedikev.application.usecase.usuario;
 
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
-import com.sedikev.domain.repository.UsuarioRepository;
+import com.sedikev.application.secondaryports.repository.UsuarioRepository;
 import com.sedikev.application.usecase.UseCaseWithoutReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

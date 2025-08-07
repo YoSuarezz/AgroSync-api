@@ -1,7 +1,7 @@
 package com.sedikev.application.usecase.animal;
 
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
-import com.sedikev.domain.repository.AnimalRepository;
+import com.sedikev.application.secondaryports.repository.AnimalRepository;
 import com.sedikev.application.usecase.UseCaseWithoutReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

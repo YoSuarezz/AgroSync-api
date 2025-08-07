@@ -1,7 +1,7 @@
 package com.sedikev.infrastructure.rest.controller.antiguos;
 
-import com.sedikev.application.dto.PagoDTO;
-import com.sedikev.application.mapper.PagoMapper;
+import com.sedikev.application.primaryports.dto.PagoDTO;
+import com.sedikev.application.primaryports.mapper.PagoMapper;
 import com.sedikev.domain.model.PagoDomain;
 import com.sedikev.domain.service.PagoService;
 import lombok.RequiredArgsConstructor;

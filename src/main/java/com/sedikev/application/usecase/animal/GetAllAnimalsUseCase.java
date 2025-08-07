@@ -1,8 +1,8 @@
 package com.sedikev.application.usecase.animal;
 
-import com.sedikev.application.mapper.AnimalMapper;
+import com.sedikev.application.primaryports.mapper.AnimalMapper;
 import com.sedikev.domain.model.AnimalDomain;
-import com.sedikev.domain.repository.AnimalRepository;
+import com.sedikev.application.secondaryports.repository.AnimalRepository;
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,15 +1,14 @@
 package com.sedikev.application.usecase.animal;
 
-import com.sedikev.application.mapper.AnimalMapper;
-import com.sedikev.application.mapper.LoteMapper;
+import com.sedikev.application.primaryports.mapper.AnimalMapper;
+import com.sedikev.application.primaryports.mapper.LoteMapper;
 import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.domain.model.AnimalDomain;
-import com.sedikev.domain.model.LoteDomain;
-import com.sedikev.domain.repository.AnimalRepository;
+import com.sedikev.application.secondaryports.repository.AnimalRepository;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
-import com.sedikev.domain.repository.LoteRepository;
-import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
-import com.sedikev.infrastructure.adapter.entity.LoteEntity;
+import com.sedikev.application.secondaryports.repository.LoteRepository;
+import com.sedikev.application.secondaryports.entity.AnimalEntity;
+import com.sedikev.application.secondaryports.entity.LoteEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

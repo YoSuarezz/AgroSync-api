@@ -1,10 +1,6 @@
 package com.sedikev.infrastructure.rest.controller.usuario;
 
-import com.sedikev.application.dto.UsuarioDTO;
-import com.sedikev.application.service.UsuarioFacadeImpl;
-import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
-import com.sedikev.domain.model.AnimalDomain;
-import com.sedikev.domain.model.LoteDomain;
+import com.sedikev.application.primaryports.service.UsuarioFacadeImpl;
 import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import com.sedikev.infrastructure.rest.advice.ParameterReceiver;
@@ -19,9 +15,6 @@ import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 @Controller

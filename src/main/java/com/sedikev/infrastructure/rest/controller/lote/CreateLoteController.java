@@ -1,7 +1,7 @@
 package com.sedikev.infrastructure.rest.controller.lote;
 
-import com.sedikev.application.dto.UsuarioDTO;
-import com.sedikev.application.mapper.UsuarioMapper;
+import com.sedikev.application.primaryports.dto.UsuarioDTO;
+import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.service.AnimalService;

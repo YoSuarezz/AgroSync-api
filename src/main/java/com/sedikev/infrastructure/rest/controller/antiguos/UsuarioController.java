@@ -1,7 +1,7 @@
 package com.sedikev.infrastructure.rest.controller.antiguos;
 
-import com.sedikev.application.dto.UsuarioDTO;
-import com.sedikev.application.mapper.UsuarioMapper;
+import com.sedikev.application.primaryports.dto.UsuarioDTO;
+import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.domain.service.UsuarioService;
 import lombok.RequiredArgsConstructor;

@@ -4,10 +4,10 @@ import com.sedikev.application.usecase.UseCaseWithReturn;
 import com.sedikev.crosscutting.exception.custom.BusinessSedikevException;
 import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.domain.model.LoteDomain;
-import com.sedikev.domain.repository.LoteRepository;
-import com.sedikev.application.mapper.LoteMapper;
+import com.sedikev.application.secondaryports.repository.LoteRepository;
+import com.sedikev.application.primaryports.mapper.LoteMapper;
 import com.sedikev.domain.service.CarteraService;
-import com.sedikev.infrastructure.adapter.entity.LoteEntity;
+import com.sedikev.application.secondaryports.entity.LoteEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

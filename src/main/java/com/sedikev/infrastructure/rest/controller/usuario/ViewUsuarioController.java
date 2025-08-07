@@ -1,10 +1,8 @@
 package com.sedikev.infrastructure.rest.controller.usuario;
 
-import com.sedikev.application.dto.LoteDTO;
-import com.sedikev.application.dto.UsuarioDTO;
-import com.sedikev.application.mapper.UsuarioMapper;
-import com.sedikev.application.service.UsuarioFacadeImpl;
-import com.sedikev.domain.model.LoteDomain;
+import com.sedikev.application.primaryports.dto.UsuarioDTO;
+import com.sedikev.application.primaryports.mapper.UsuarioMapper;
+import com.sedikev.application.primaryports.service.UsuarioFacadeImpl;
 import com.sedikev.domain.model.UsuarioDomain;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import javafx.beans.property.SimpleStringProperty;

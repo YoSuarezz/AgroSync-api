@@ -1,17 +1,16 @@
 package com.sedikev.infrastructure.rest.controller.venta;
 
-import com.sedikev.application.dto.AnimalDTO;
-import com.sedikev.application.dto.UsuarioDTO;
-import com.sedikev.application.mapper.AnimalMapper;
-import com.sedikev.application.mapper.UsuarioMapper;
+import com.sedikev.application.primaryports.dto.AnimalDTO;
+import com.sedikev.application.primaryports.dto.UsuarioDTO;
+import com.sedikev.application.primaryports.mapper.AnimalMapper;
+import com.sedikev.application.primaryports.mapper.UsuarioMapper;
 import com.sedikev.domain.model.AnimalDomain;
-import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.domain.model.VentaDomain;
 import com.sedikev.domain.service.AnimalService;
 import com.sedikev.domain.service.LoteService;
 import com.sedikev.domain.service.UsuarioService;
 import com.sedikev.domain.service.VentaService;
-import com.sedikev.infrastructure.adapter.entity.LoteEntity;
+import com.sedikev.application.secondaryports.entity.LoteEntity;
 import com.sedikev.infrastructure.rest.advice.NavigationService;
 import com.sedikev.infrastructure.rest.advice.ParameterReceiver;
 import javafx.application.Platform;
