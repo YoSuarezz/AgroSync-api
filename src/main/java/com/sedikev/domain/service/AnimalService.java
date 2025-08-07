@@ -6,13 +6,20 @@ import java.util.List;
 
 public interface AnimalService {
 
-    AnimalDomain save(AnimalDomain animalDomain); // Guardar un animal (recibe y retorna un dominio)
+    AnimalDomain save(AnimalDomain animalDomain);
 
-    AnimalDomain findById(String id); // Buscar un animal por ID (retorna un dominio)
+    AnimalDomain update(AnimalDomain animalDomain);
 
-    void deleteById(String id); // Eliminar un animal por ID
+    AnimalDomain findById(Long id);
 
-    List<AnimalDomain> findAll(); // Obtener todos los animales (retorna una lista de dominios)
+    void deleteById(Long id);
 
-    List<AnimalDomain> findByLote(Long idLote); // Buscar animales por ID de lote (retorna una lista de dominios)
+    List<AnimalDomain> findAll();
+
+    List<AnimalDomain> findByLote(Long idLote);
+
+    public void deleteByLote(Long idLote);
+
+    public List<AnimalDomain> findByVenta(Long idVenta);
+
 }

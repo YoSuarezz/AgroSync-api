@@ -1,0 +1,85 @@
+/* Elimina bordes y fondo del Accordion */
+.accordion {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Estilo para los TitledPane */
+.titled-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0 0 5 0; /* Ajusta según necesidad */
+}
+
+/* Estilo para el área del título */
+.titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.panel {
+    -fx-background-color: #27ae60;
+}
+
+/* Estilo para el contenido cuando está expandido */
+.titled-pane > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Estilo para la flecha del TitledPane */
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: black; /* Color de la flecha */
+}
+
+/* Opcional: quitar la flecha completamente */
+.titled-pane > .title > .arrow-button {
+    -fx-opacity: 0;
+}
+
+.button {
+    -fx-background-color: transparent;
+}
+
+.titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-cursor: hand; /* Cambia el cursor al pasar sobre el texto */
+}
+
+.titled-pane > .title:hover .text {
+    -fx-text-fill: #0066cc; /* Color al pasar el mouse */
+}
+
+.titled-pane {
+    -fx-pref-height: -1; /* USE_COMPUTED_SIZE */
+    -fx-min-height: -1;  /* USE_COMPUTED_SIZE */
+    -fx-max-height: -1;  /* USE_PREF_SIZE */
+}
+
+.titled-pane > .content {
+    -fx-padding: 5px; /* Ajusta según necesites */
+}
+
+.stackpane {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #84fab0, #8fd3f4);
+    -fx-background-radius: 5px; /* opcional: bordes redondeados */
+    -fx-padding: 10px; /* opcional: espacio interno */
+}
+
+.label {
+    -fx-font-weight: bold;
+}
+
+#title {
+    -fx-text-fill: white; /* Color del texto */
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #1abc9c, 1, 1, 0, 0);
+}
+
+.button {
+    -fx-cursor: hand; /* Cambia el cursor al pasar sobre el texto */
+}

@@ -8,6 +8,8 @@ public interface UsuarioService {
 
     UsuarioDomain save(UsuarioDomain UsuarioDomain);
 
+    UsuarioDomain update(UsuarioDomain UsuarioDomain);
+
     UsuarioDomain findById(Long id);
 
     void deleteById(Long Id);

@@ -13,57 +13,64 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "animal")
 public class AnimalEntity {
-
     @Id
-    @Column(name = "id", unique = true)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_animal")
+    private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_lote")
-    @ManyToOne
     private LoteEntity lote;
 
-    @Column(name = "nombre")
-    private String nombre;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "venta_id_venta")  // Permite null
+    private VentaEntity venta;
 
     @Column(name = "peso")
     private BigDecimal peso;
 
-    @Column(name = "sexo")
+    @Column(name = "sexo", length = 40)
     private String sexo;
 
-    @Column(name = "num_lote")
-    private int num_lote;
+    @Column(name = "slot")
+    private Integer slot;
 
-    public String getId() {
+    @Column(name = "precio_kilo_compra")
+    private BigDecimal precioKiloCompra;
+
+    @Column(name = "precio_kilo_venta")
+    private BigDecimal precioKiloVenta;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public LoteEntity getLote() {
-        return lote;
+    public BigDecimal getPrecioKiloVenta() {
+        return precioKiloVenta;
     }
 
-    public void setLote(LoteEntity lote) {
-        this.lote = lote;
+    public void setPrecioKiloVenta(BigDecimal precioKiloVenta) {
+        this.precioKiloVenta = precioKiloVenta;
     }
 
-    public String getNombre() {
-        return nombre;
+    public BigDecimal getPrecioKiloCompra() {
+        return precioKiloCompra;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setPrecioKiloCompra(BigDecimal precioKiloCompra) {
+        this.precioKiloCompra = precioKiloCompra;
     }
 
-    public BigDecimal getPeso() {
-        return peso;
+    public Integer getSlot() {
+        return slot;
     }
 
-    public void setPeso(BigDecimal peso) {
-        this.peso = peso;
+    public void setSlot(Integer slot) {
+        this.slot = slot;
     }
 
     public String getSexo() {
@@ -74,11 +81,27 @@ public class AnimalEntity {
         this.sexo = sexo;
     }
 
-    public int getNum_lote() {
-        return num_lote;
+    public BigDecimal getPeso() {
+        return peso;
     }
 
-    public void setNum_lote(int num_lote) {
-        this.num_lote = num_lote;
+    public void setPeso(BigDecimal peso) {
+        this.peso = peso;
+    }
+
+    public VentaEntity getVenta() {
+        return venta;
+    }
+
+    public void setVenta(VentaEntity venta) {
+        this.venta = venta;
+    }
+
+    public LoteEntity getLote() {
+        return lote;
+    }
+
+    public void setLote(LoteEntity lote) {
+        this.lote = lote;
     }
 }

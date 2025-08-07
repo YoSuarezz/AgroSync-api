@@ -13,7 +13,6 @@ public class GastoDTO {
 
     private Long id;
     private LoteDTO lote;
-    private UsuarioDTO usuario;
     private BigDecimal cantidad;
     private String descripcion;
     private LocalDate fecha;
@@ -32,14 +31,6 @@ public class GastoDTO {
 
     public void setLote(LoteDTO lote) {
         this.lote = lote;
-    }
-
-    public UsuarioDTO getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioDTO usuario) {
-        this.usuario = usuario;
     }
 
     public BigDecimal getCantidad() {

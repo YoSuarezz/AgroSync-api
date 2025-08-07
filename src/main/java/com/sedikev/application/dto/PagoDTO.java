@@ -13,7 +13,6 @@ public class PagoDTO {
 
     private Long id;
     private VentaDTO venta;
-    private UsuarioDTO usuario;
     private String tipoPago;
     private BigDecimal cantidad;
     private String descripcion;
@@ -33,14 +32,6 @@ public class PagoDTO {
 
     public void setVenta(VentaDTO venta) {
         this.venta = venta;
-    }
-
-    public UsuarioDTO getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioDTO usuario) {
-        this.usuario = usuario;
     }
 
     public String getTipoPago() {

@@ -5,19 +5,23 @@ import com.sedikev.domain.model.AnimalDomain;
 import com.sedikev.infrastructure.adapter.entity.AnimalEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", uses = {LoteMapper.class})
+@Mapper(componentModel = "spring")
 public interface AnimalMapper {
 
-    AnimalMapper INSTANCE = Mappers.getMapper(AnimalMapper.class);
+    // DOMAIN -> ENTITY
+    @Mapping(source = "idLote",   target = "lote.id")
+    @Mapping(source = "idVenta",  target = "venta.id")
+    AnimalEntity toEntity(AnimalDomain domain);
 
-    @Mapping(source = "id", target = "id")
-    AnimalDTO toDTO(AnimalDomain animalDomain);
-    @Mapping(source = "id", target = "id")
-    AnimalDomain toDomain(AnimalDTO animalDTO);
-    @Mapping(source = "id", target = "id")
-    AnimalEntity toEntity(AnimalDomain animalDomain);
-    @Mapping(source = "id", target = "id")
-    AnimalDomain toDomain(AnimalEntity animalEntity);
+    // ENTITY -> DOMAIN
+    @Mapping(source = "lote.id",   target = "idLote")
+    @Mapping(source = "venta.id",  target = "idVenta")
+    AnimalDomain toDomain(AnimalEntity entity);
+
+    // DOMAIN -> DTO  (nombres coinciden: id, idLote, idVenta, peso, sexo, slot, precioKiloCompra, precioKiloVenta)
+    AnimalDTO toDTO(AnimalDomain domain);
+
+    // DTO -> DOMAIN
+    AnimalDomain toDomain(AnimalDTO dto);
 }

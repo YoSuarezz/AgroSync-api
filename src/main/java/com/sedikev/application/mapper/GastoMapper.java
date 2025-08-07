@@ -3,21 +3,20 @@ package com.sedikev.application.mapper;
 import com.sedikev.domain.model.GastoDomain;
 import com.sedikev.application.dto.GastoDTO;
 import com.sedikev.infrastructure.adapter.entity.GastoEntity;
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {GastoMapper.class})
+@Mapper(componentModel = "spring",
+        uses = {LoteMapper.class})
 public interface GastoMapper {
 
-    GastoMapper INSTANCE = Mappers.getMapper(GastoMapper.class);
+    GastoDTO toDTO(GastoDomain domain);
 
-    @Mapping(source = "id", target = "id")
-    GastoDTO toDTO(GastoDomain gastoDomain);
-    @Mapping(source = "id", target = "id")
-    GastoDomain toDomain(GastoDTO gastoDTO);
-    @Mapping(source = "id", target = "id")
-    GastoEntity toEntity(GastoDomain gastoDomain);
-    @Mapping(source = "id", target = "id")
-    GastoDomain toDomain(GastoEntity gastoEntity);
+    GastoDomain toDomain(GastoDTO dto);
+
+    @Mapping(source = "lote.id",    target = "lote.id")
+    GastoEntity toEntity(GastoDomain domain);
+
+    @Mapping(source = "lote.id",    target = "lote.id")
+    GastoDomain toDomain(GastoEntity entity);
 }
-

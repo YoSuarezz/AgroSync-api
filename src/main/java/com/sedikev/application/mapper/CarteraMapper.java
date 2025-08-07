@@ -3,20 +3,19 @@ package com.sedikev.application.mapper;
 import com.sedikev.domain.model.CarteraDomain;
 import com.sedikev.application.dto.CarteraDTO;
 import com.sedikev.infrastructure.adapter.entity.CarteraEntity;
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UsuarioMapper.class})
 public interface CarteraMapper {
 
-    CarteraMapper INSTANCE = Mappers.getMapper(CarteraMapper.class);
+    CarteraDTO toDTO(CarteraDomain domain);
 
-    @Mapping(source = "id", target = "id")
-    CarteraDTO toDTO(CarteraDomain carteraDomain);
-    @Mapping(source = "id", target = "id")
-    CarteraDomain toDomain(CarteraDTO carteraDTO);
-    @Mapping(source = "id", target = "id")
-    CarteraEntity toEntity(CarteraDomain carteraDomain);
-    @Mapping(source = "id", target = "id")
-    CarteraDomain toDomain(CarteraEntity carteraEntity);
+    CarteraDomain toDomain(CarteraDTO dto);
+
+    @Mapping(source = "usuario.id", target = "usuario.id")
+    CarteraEntity toEntity(CarteraDomain domain);
+
+    @Mapping(source = "usuario.id", target = "usuario.id")
+    CarteraDomain toDomain(CarteraEntity entity);
 }

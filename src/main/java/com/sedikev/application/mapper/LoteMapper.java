@@ -1,22 +1,30 @@
 package com.sedikev.application.mapper;
 
-import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.application.dto.LoteDTO;
+import com.sedikev.domain.model.LoteDomain;
 import com.sedikev.infrastructure.adapter.entity.LoteEntity;
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {UsuarioMapper.class})
+@Mapper(
+        componentModel = "spring",
+        uses = {AnimalMapper.class, UsuarioMapper.class}
+)
 public interface LoteMapper {
 
-    LoteMapper INSTANCE = Mappers.getMapper(LoteMapper.class);
+    // DOMAIN -> ENTITY
+    @Mapping(source = "precioTotal", target = "precioTotal")
+    @Mapping(source = "animales",    target = "animales")
+    LoteEntity toEntity(LoteDomain domain);
 
-    @Mapping(source = "id", target = "id")
-    LoteDTO toDTO(LoteDomain loteDomain);
-    @Mapping(source = "id", target = "id")
-    LoteDomain toDomain(LoteDTO loteDTO);
-    @Mapping(source = "id", target = "id")
-    LoteEntity toEntity(LoteDomain loteDomain);
-    @Mapping(source = "id", target = "id")
-    LoteDomain toDomain(LoteEntity loteEntity);
+    // ENTITY -> DOMAIN
+    @Mapping(source = "precioTotal", target = "precioTotal")
+    @Mapping(source = "animales",    target = "animales")
+    LoteDomain toDomain(LoteEntity entity);
+
+    // DOMAIN -> DTO
+    LoteDTO toDTO(LoteDomain domain);
+
+    // DTO -> DOMAIN
+    LoteDomain toDomain(LoteDTO dto);
 }

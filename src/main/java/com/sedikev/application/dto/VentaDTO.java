@@ -5,18 +5,17 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Data
-@Getter
-@Setter
+@Getter @Setter
 public class VentaDTO {
-
     private Long id;
-    private AnimalDTO animal;
     private UsuarioDTO usuario;
     private String estado;
-    private BigDecimal precio_kilo;
+    private BigDecimal precioVenta;
     private LocalDate fecha;
+    private List<AnimalDTO> animales;
 
     public Long getId() {
         return id;
@@ -24,14 +23,6 @@ public class VentaDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public AnimalDTO getAnimal() {
-        return animal;
-    }
-
-    public void setAnimal(AnimalDTO animal) {
-        this.animal = animal;
     }
 
     public UsuarioDTO getUsuario() {
@@ -50,20 +41,28 @@ public class VentaDTO {
         this.estado = estado;
     }
 
-    public BigDecimal getPrecio_kilo() {
-        return precio_kilo;
-    }
-
-    public void setPrecio_kilo(BigDecimal precio_kilo) {
-        this.precio_kilo = precio_kilo;
-    }
-
     public LocalDate getFecha() {
         return fecha;
     }
 
     public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
+    }
+
+    public BigDecimal getPrecioVenta() {
+        return precioVenta;
+    }
+
+    public void setPrecioVenta(BigDecimal precioVenta) {
+        this.precioVenta = precioVenta;
+    }
+
+    public List<AnimalDTO> getAnimales() {
+        return animales;
+    }
+
+    public void setAnimales(List<AnimalDTO> animales) {
+        this.animales = animales;
     }
 }
 

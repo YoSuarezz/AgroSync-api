@@ -7,39 +7,39 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Data
-@Getter
-@Setter
+@Getter @Setter
 public class AnimalDomain {
-
-    private String id;
-    private LoteDomain lote;
-    private String nombre;
+    private Long id;
+    private Long idLote;
+    private Long idVenta;
     private BigDecimal peso;
     private String sexo;
-    private Integer num_lote;
+    private Integer slot;
+    private BigDecimal precioKiloCompra;
+    private BigDecimal precioKiloVenta;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public LoteDomain getLote() {
-        return lote;
+    public Long getIdLote() {
+        return idLote;
     }
 
-    public void setLote(LoteDomain lote) {
-        this.lote = lote;
+    public void setIdLote(Long idLote) {
+        this.idLote = idLote;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Long getIdVenta() {
+        return idVenta;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setIdVenta(Long idVenta) {
+        this.idVenta = idVenta;
     }
 
     public BigDecimal getPeso() {
@@ -58,11 +58,27 @@ public class AnimalDomain {
         this.sexo = sexo;
     }
 
-    public Integer getNum_lote() {
-        return num_lote;
+    public Integer getSlot() {
+        return slot;
     }
 
-    public void setNum_lote(Integer num_lote) {
-        this.num_lote = num_lote;
+    public void setSlot(Integer slot) {
+        this.slot = slot;
+    }
+
+    public BigDecimal getPrecioKiloCompra() {
+        return precioKiloCompra;
+    }
+
+    public void setPrecioKiloCompra(BigDecimal precioKiloCompra) {
+        this.precioKiloCompra = precioKiloCompra;
+    }
+
+    public BigDecimal getPrecioKiloVenta() {
+        return precioKiloVenta;
+    }
+
+    public void setPrecioKiloVenta(BigDecimal precioKiloVenta) {
+        this.precioKiloVenta = precioKiloVenta;
     }
 }

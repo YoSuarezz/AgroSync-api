@@ -18,16 +18,12 @@ public class GastoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_gasto")
     private Long id;
 
     @JoinColumn(name = "id_lote")
     @ManyToOne
     private LoteEntity lote;
-
-    @JoinColumn(name = "id_usuario")
-    @ManyToOne
-    private UsuarioEntity usuario;
 
     @Column(name = "cantidad")
     private BigDecimal cantidad;
@@ -54,14 +50,6 @@ public class GastoEntity {
 
     public void setLote(LoteEntity lote) {
         this.lote = lote;
-    }
-
-    public UsuarioEntity getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioEntity usuario) {
-        this.usuario = usuario;
     }
 
     public BigDecimal getCantidad() {

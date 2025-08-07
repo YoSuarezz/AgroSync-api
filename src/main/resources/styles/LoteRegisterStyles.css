@@ -1,0 +1,80 @@
+.label {
+    -fx-font-weight: bold;
+}
+
+/* styles.css */
+.text-field {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;  /* Solo borde inferior */
+    -fx-border-color: #a0a0a0;  /* Color gris */
+}
+
+/* Cambiar color al enfocar */
+.text-field:focused {
+    -fx-border-color: #0078d7;  /* Azul al seleccionar */
+}
+
+.button {
+    -fx-cursor: hand; /* Cambia el cursor al pasar sobre el texto */
+}
+
+/* Estilo base del ComboBox */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #a0a0a0 transparent;
+}
+
+.panel {
+    -fx-background-color: #27ae60;
+}
+
+
+/* Estilo de la lista desplegable */
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+/* Estilo de los items de la lista */
+.combo-box-popup .list-cell {
+    -fx-padding: 8px 10px;
+    -fx-background-color: white;
+    -fx-text-fill: #333333;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #4a90e2;
+}
+
+/* Estilo del botón del ComboBox */
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+/* Afecta a TODOS los TitledPane */
+.titled-pane > .title {
+    -fx-font-size: 30px;  /* Tamaño deseado (ej: 14px, 16px, etc.) */
+    -fx-font-weight: bold; /* Negrita (opcional) */
+}
+
+/* Afecta solo al texto (por si hay otros elementos en el título) */
+.titled-pane > .title > .text {
+    -fx-font-size: 30px !important; /* Fuerza el tamaño */
+    -fx-font-weight: bold;
+}
+
+/* Opcional: estilo cuando está expandido */
+.titled-pane:expanded > .title {
+    -fx-font-weight: bold;
+    /* Puedes añadir más estilos si quieres */
+}
+
+/* Afecta a TODOS los botones dentro de cualquier TitledPane */
+.titled-pane .button {
+    -fx-font-size: 14px;  /* Tamaño deseado (ej: 14px, 16px, etc.) */
+    -fx-font-weight: bold; /* Negrita (opcional) */
+}

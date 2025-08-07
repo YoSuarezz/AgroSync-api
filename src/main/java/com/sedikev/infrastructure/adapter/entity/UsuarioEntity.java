@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -16,7 +15,7 @@ import java.util.List;
 public class UsuarioEntity {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id_usuario")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -36,14 +35,6 @@ public class UsuarioEntity {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<VentaEntity> lista_ventaEntity;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<PagoEntity> lista_pagoEntity;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<GastoEntity> lista_gastoEntity;
 
     public Long getId() {
         return id;
@@ -93,19 +84,13 @@ public class UsuarioEntity {
         this.lista_ventaEntity = lista_ventaEntity;
     }
 
-    public List<PagoEntity> getLista_pagoEntity() {
-        return lista_pagoEntity;
-    }
-
-    public void setLista_pagoEntity(List<PagoEntity> lista_pagoEntity) {
-        this.lista_pagoEntity = lista_pagoEntity;
-    }
-
-    public List<GastoEntity> getLista_gastoEntity() {
-        return lista_gastoEntity;
-    }
-
-    public void setLista_gastoEntity(List<GastoEntity> lista_gastoEntity) {
-        this.lista_gastoEntity = lista_gastoEntity;
+    @Override
+    public String toString() {
+        return "UsuarioEntity{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", tipo_usuario='" + tipo_usuario + '\'' +
+                '}';
     }
 }
