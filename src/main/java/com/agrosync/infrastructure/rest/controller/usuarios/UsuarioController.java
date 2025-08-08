@@ -44,6 +44,7 @@ public class UsuarioController {
         } catch (final Exception excepcion) {
             httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             var userMessage = "Error al registrar el usuario";
+            excepcion.printStackTrace();
             usuarioResponse.getMensajes().add(userMessage);
         }
         return new ResponseEntity<>(usuarioResponse, httpStatusCode);

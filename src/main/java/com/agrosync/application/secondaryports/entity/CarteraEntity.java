@@ -21,7 +21,7 @@ public class CarteraEntity {
     private Long id;
 
     @JoinColumn(name = "id_usuario")
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private UsuarioEntity usuario;
 
     @Column(name = "saldo")
