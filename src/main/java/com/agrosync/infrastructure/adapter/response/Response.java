@@ -6,23 +6,21 @@ import java.util.List;
 public class Response<T> {
 
     private List<String> mensajes = new ArrayList<>();
-    private List<T> datos;
+    private Object datos;
 
-    public final List<String> getMensajes() {
+    public List<String> getMensajes() {
         return mensajes;
     }
 
-    public final void setMensajes(List<String> mensajes) {
+    public void setMensajes(List<String> mensajes) {
         this.mensajes = mensajes;
     }
 
-    public final List<T> getDatos() {
+    public Object getDatos() {
         return datos;
     }
 
-    public final void setDatos(List<T> datos) {
+    public void setDatos(Object datos) {
         this.datos = datos;
     }
-
-
 }

@@ -44,8 +44,9 @@ public class UsuarioDTO {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public UsuarioDTO setNombre(String nombre) {
         this.nombre = TextHelper.applyTrim(nombre);
+        return this;
     }
 
     public String getTelefono() {
