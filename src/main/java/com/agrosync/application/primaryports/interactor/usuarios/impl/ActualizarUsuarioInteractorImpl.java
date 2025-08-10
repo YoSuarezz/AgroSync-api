@@ -3,7 +3,7 @@ package com.agrosync.application.primaryports.interactor.usuarios.impl;
 import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
 import com.agrosync.application.primaryports.interactor.usuarios.ActualizarUsuarioInteractor;
 import com.agrosync.application.primaryports.mapper.usuarios.UsuarioDTOMapper;
-import com.agrosync.application.usecase.usuarios.ActualizarUsuario;
+import com.agrosync.application.usecase.usuarios.usuario.ActualizarUsuario;
 import com.agrosync.domain.usuarios.UsuarioDomain;
 import org.springframework.stereotype.Service;
 

@@ -39,15 +39,17 @@ public class TIpoUsuarioEntity {
         return id;
     }
 
-    public void setId(Long id) {
+    public TIpoUsuarioEntity setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public TIpoUsuarioEntity setNombre(String nombre) {
         this.nombre = TextHelper.applyTrim(nombre);
+        return this;
     }
 }

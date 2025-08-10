@@ -8,10 +8,10 @@
 		<version>3.4.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.sedikev</groupId>
-	<artifactId>sedikev</artifactId>
+	<groupId>com.agrosync</groupId>
+	<artifactId>agrosync</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sedikev</name>
+	<name>agrosync</name>
 	<description>Sistema de gestión de compra y ventaEntity de ganado, con manejo de carteraEntity.</description>
 	<url/>
 	<licenses>
