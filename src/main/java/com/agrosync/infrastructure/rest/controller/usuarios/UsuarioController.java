@@ -2,6 +2,7 @@ package com.agrosync.infrastructure.rest.controller.usuarios;
 
 import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
 import com.agrosync.application.primaryports.dto.usuarios.UsuarioRequest;
+import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuarioPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuariosInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.RegistrarNuevoUsuarioInteractor;
 import com.agrosync.application.primaryports.mapper.UsuarioMapper;
@@ -24,12 +25,14 @@ public class UsuarioController {
     private final UsuarioMapper usuarioMapper;
     private final RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor;
     private final ObtenerUsuariosInteractor obtenerUsuarioInteractor;
+    private final ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor;
 
-    public UsuarioController(UsuarioService usuarioService, UsuarioMapper usuarioMapper, RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor, ObtenerUsuariosInteractor obtenerUsuarioInteractor) {
+    public UsuarioController(UsuarioService usuarioService, UsuarioMapper usuarioMapper, RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor, ObtenerUsuariosInteractor obtenerUsuarioInteractor, ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor) {
         this.usuarioService = usuarioService;
         this.usuarioMapper = usuarioMapper;
         this.registrarNuevoUsuarioInteractor = registrarNuevoUsuarioInteractor;
         this.obtenerUsuarioInteractor = obtenerUsuarioInteractor;
+        this.obtenerUsuarioPorIdInteractor = obtenerUsuarioPorIdInteractor;
     }
 
     @PostMapping()
@@ -59,7 +62,6 @@ public class UsuarioController {
                                                               @RequestParam(defaultValue = "nombre") String sortBy,
                                                               @RequestParam(defaultValue = "ASC") String sortDirection,
                                                               @RequestParam(required = false) String nombre) {
-
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
@@ -79,6 +81,26 @@ public class UsuarioController {
             httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             usuarioResponse.getMensajes().add("Error al consultar los Usuarios");
         }
+        return new ResponseEntity<>(usuarioResponse, httpStatusCode);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponse> consultarPorID(@PathVariable Long id) {
+
+        var httpStatusCode = HttpStatus.ACCEPTED;
+        var usuarioResponse = new UsuarioResponse();
+        try {
+            usuarioResponse.setDatos(obtenerUsuarioPorIdInteractor.ejecutar(id));
+            usuarioResponse.getMensajes().add("Producto consultado correctamente");
+
+        } catch (final AgroSyncException excepcion) {
+            httpStatusCode = HttpStatus.BAD_REQUEST;
+            usuarioResponse.getMensajes().add(excepcion.getMessage());
+        } catch (final Exception excepcion) {
+            httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            var userMessage = "Error al consultar el producto";
+            usuarioResponse.getMensajes().add(userMessage);
+        }
 
         return new ResponseEntity<>(usuarioResponse, httpStatusCode);
     }
@@ -95,16 +117,6 @@ public class UsuarioController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         usuarioService.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(path = "usuario/{id}")
-    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id) {
-        UsuarioDomain usuarioDomain = usuarioService.findById(id);
-        if (usuarioDomain == null) {
-            return ResponseEntity.notFound().build();
-        }
-        UsuarioDTO responseDTO = usuarioMapper.toDTO(usuarioDomain);
-        return ResponseEntity.ok(responseDTO);
     }
 
 }

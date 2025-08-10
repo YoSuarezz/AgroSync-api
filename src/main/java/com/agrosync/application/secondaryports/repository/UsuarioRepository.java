@@ -10,8 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long>, JpaSpecificationExecutor<UsuarioEntity> {
 
-    Optional<UsuarioEntity> findById(Long id);
-
     void deleteById(Long id);
 
     boolean existsByNombre(String nombre);
