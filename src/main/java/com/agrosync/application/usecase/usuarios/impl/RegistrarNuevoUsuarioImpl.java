@@ -29,7 +29,6 @@ public class RegistrarNuevoUsuarioImpl implements RegistrarNuevoUsuario {
     public void ejecutar(UsuarioDomain data) {
         registrarNuevoUsuarioRulesValidator.validar(data);
         UsuarioEntity usuarioEntity = UsuarioEntityMapper.INSTANCE.toEntity(data);
-
         UsuarioEntity usuarioGuardado = usuarioRepository.save(usuarioEntity);
 
         // crear la cartera asociada al usuario (Provisional)

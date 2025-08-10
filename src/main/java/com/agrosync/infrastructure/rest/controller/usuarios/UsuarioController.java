@@ -2,13 +2,12 @@ package com.agrosync.infrastructure.rest.controller.usuarios;
 
 import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
 import com.agrosync.application.primaryports.dto.usuarios.UsuarioRequest;
+import com.agrosync.application.primaryports.interactor.usuarios.ActualizarUsuarioInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuarioPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuariosInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.RegistrarNuevoUsuarioInteractor;
-import com.agrosync.application.primaryports.mapper.UsuarioMapper;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.domain.service.UsuarioService;
-import com.agrosync.domain.usuarios.UsuarioDomain;
 import com.agrosync.infrastructure.adapter.response.usuarios.UsuarioResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,17 +21,17 @@ import org.springframework.web.bind.annotation.*;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final UsuarioMapper usuarioMapper;
     private final RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor;
     private final ObtenerUsuariosInteractor obtenerUsuarioInteractor;
     private final ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor;
+    private final ActualizarUsuarioInteractor actualizarUsuarioInteractor;
 
-    public UsuarioController(UsuarioService usuarioService, UsuarioMapper usuarioMapper, RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor, ObtenerUsuariosInteractor obtenerUsuarioInteractor, ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor) {
+    public UsuarioController(UsuarioService usuarioService, RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor, ObtenerUsuariosInteractor obtenerUsuarioInteractor, ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor, ActualizarUsuarioInteractor actualizarUsuarioInteractor) {
         this.usuarioService = usuarioService;
-        this.usuarioMapper = usuarioMapper;
         this.registrarNuevoUsuarioInteractor = registrarNuevoUsuarioInteractor;
         this.obtenerUsuarioInteractor = obtenerUsuarioInteractor;
         this.obtenerUsuarioPorIdInteractor = obtenerUsuarioPorIdInteractor;
+        this.actualizarUsuarioInteractor = actualizarUsuarioInteractor;
     }
 
     @PostMapping()
@@ -57,11 +56,11 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<UsuarioResponse> consultarProductos(@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size,
-                                                              @RequestParam(defaultValue = "nombre") String sortBy,
-                                                              @RequestParam(defaultValue = "ASC") String sortDirection,
-                                                              @RequestParam(required = false) String nombre) {
+    public ResponseEntity<UsuarioResponse> consultarUsuarios(@RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "10") int size,
+                                                             @RequestParam(defaultValue = "nombre") String sortBy,
+                                                             @RequestParam(defaultValue = "ASC") String sortDirection,
+                                                             @RequestParam(required = false) String nombre) {
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
@@ -85,32 +84,45 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> consultarPorID(@PathVariable Long id) {
+    public ResponseEntity<UsuarioResponse> consultarUsuarioPorId(@PathVariable Long id) {
 
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();
         try {
             usuarioResponse.setDatos(obtenerUsuarioPorIdInteractor.ejecutar(id));
-            usuarioResponse.getMensajes().add("Producto consultado correctamente");
+            usuarioResponse.getMensajes().add("Usuario consultado correctamente");
 
         } catch (final AgroSyncException excepcion) {
             httpStatusCode = HttpStatus.BAD_REQUEST;
             usuarioResponse.getMensajes().add(excepcion.getMessage());
         } catch (final Exception excepcion) {
             httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            var userMessage = "Error al consultar el producto";
+            var userMessage = "Error al consultar el Usuario";
             usuarioResponse.getMensajes().add(userMessage);
         }
 
         return new ResponseEntity<>(usuarioResponse, httpStatusCode);
     }
 
-    @PutMapping(path = "usuario")
-    public ResponseEntity<UsuarioDTO> update(@RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDomain usuarioDomain = usuarioMapper.toDomain(usuarioDTO);
-        UsuarioDomain usuarioSaved = usuarioService.save(usuarioDomain);
-        UsuarioDTO responseDTO = usuarioMapper.toDTO(usuarioSaved);
-        return ResponseEntity.ok(responseDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuario) {
+
+        var httpStatusCode = HttpStatus.ACCEPTED;
+        var usuarioResponse = new UsuarioResponse();
+
+        try {
+            usuario.setId(id);
+            actualizarUsuarioInteractor.ejecutar(usuario);
+            usuarioResponse.getMensajes().add("Usuario actualizado correctamente");
+        } catch (final AgroSyncException excepcion) {
+            httpStatusCode = HttpStatus.BAD_REQUEST;
+            usuarioResponse.getMensajes().add(excepcion.getMessage());
+        } catch (final Exception excepcion) {
+            httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            var mensajeUsuario = "Error al actualizar el Usuario";
+            usuarioResponse.getMensajes().add(mensajeUsuario);
+        }
+        return new ResponseEntity<>(usuarioResponse, httpStatusCode);
     }
 
     @DeleteMapping(path = "usuario/{id}")

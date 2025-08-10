@@ -24,7 +24,7 @@ public class CreateUsuarioUseCase implements UseCaseWithReturn<UsuarioDomain, Us
     @Override
     public UsuarioDomain ejecutar(UsuarioDomain usuarioDomain) {
         // 1) NO permitir nombre duplicado
-        if (usuarioRepository.existsByNombre(usuarioDomain.getNombre())) {
+        if (usuarioRepository.existsByNombreIgnoreCase(usuarioDomain.getNombre())) {
             throw new BusinessAgroSyncException("Ya existe un usuario con ese nombre");
         }
         // 2) NO permitir teléfono duplicado

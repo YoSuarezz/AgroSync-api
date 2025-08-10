@@ -36,8 +36,9 @@ public class UsuarioDTO {
         return id;
     }
 
-    public void setId(Long id) {
+    public UsuarioDTO setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getNombre() {
