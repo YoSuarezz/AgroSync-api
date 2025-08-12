@@ -18,19 +18,6 @@ public class AgroSyncApplication {
         SpringApplication.run(AgroSyncApplication.class, args);
     }
 
-
-    @Bean
-    CommandLineRunner init(TipoUsuarioRepository tipoUsuarioRepository) {
-        return args -> {
-            if (tipoUsuarioRepository.count() == 0) {
-                tipoUsuarioRepository.saveAll(List.of(
-                        TIpoUsuarioEntity.create().setId(1L).setNombre("Cliente"),
-                        TIpoUsuarioEntity.create().setId(2L).setNombre("Proveedor")
-                ));
-            }
-        };
-    }
-
     @Bean
     WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -45,5 +32,4 @@ public class AgroSyncApplication {
             }
         };
     }
-
 }
