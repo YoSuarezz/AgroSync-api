@@ -20,7 +20,7 @@ public class TipoUsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<UsuarioResponse> consultarUsuarioPorId() {
+    public ResponseEntity<UsuarioResponse> consultarTipoUsuario() {
 
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();

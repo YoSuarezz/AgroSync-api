@@ -37,7 +37,8 @@ public class TipoUsuarioDTO {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    public TipoUsuarioDTO setNombre(String nombre) {
         this.nombre = TextHelper.applyTrim(nombre);
+        return this;
     }
 }

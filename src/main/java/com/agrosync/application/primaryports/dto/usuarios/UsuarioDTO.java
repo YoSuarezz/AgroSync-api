@@ -54,15 +54,17 @@ public class UsuarioDTO {
         return TextHelper.applyTrim(telefono);
     }
 
-    public void setTelefono(String telefono) {
+    public UsuarioDTO setTelefono(String telefono) {
         this.telefono = telefono;
+        return this;
     }
 
     public TipoUsuarioDTO getTipo_usuario() {
         return tipo_usuario;
     }
 
-    public void setTipo_usuario(TipoUsuarioDTO tipo_usuario) {
+    public UsuarioDTO setTipo_usuario(TipoUsuarioDTO tipo_usuario) {
         this.tipo_usuario = ObjectHelper.getDefault(tipo_usuario, TipoUsuarioDTO.create());
+        return this;
     }
 }

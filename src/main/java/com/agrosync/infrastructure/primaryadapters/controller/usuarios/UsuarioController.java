@@ -1,5 +1,6 @@
 package com.agrosync.infrastructure.primaryadapters.controller.usuarios;
 
+import com.agrosync.application.primaryports.dto.usuarios.TipoUsuarioDTO;
 import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
 import com.agrosync.application.primaryports.dto.usuarios.UsuarioRequest;
 import com.agrosync.application.primaryports.interactor.usuarios.ActualizarUsuarioInteractor;
@@ -60,15 +61,27 @@ public class UsuarioController {
                                                              @RequestParam(defaultValue = "10") int size,
                                                              @RequestParam(defaultValue = "nombre") String sortBy,
                                                              @RequestParam(defaultValue = "ASC") String sortDirection,
-                                                             @RequestParam(required = false) String nombre) {
+                                                             @RequestParam(required = false) String nombre,
+                                                             @RequestParam(required = false) String telefono,
+                                                             @RequestParam(required = false) String tipoUsuario) {
+
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         try {
-            UsuarioDTO usuarioDTO = UsuarioDTO.create().setNombre(nombre);
-            var request = UsuarioRequest.create().setPageable(pageable).setUsuario(usuarioDTO);
+            UsuarioDTO usuarioDTO = UsuarioDTO.create()
+                    .setNombre(nombre)
+                    .setTelefono(telefono);
+
+            if (tipoUsuario != null && !tipoUsuario.trim().isEmpty()) {
+                usuarioDTO.setTipo_usuario(TipoUsuarioDTO.create().setNombre(tipoUsuario));
+            }
+
+            var request = UsuarioRequest.create()
+                    .setPageable(pageable)
+                    .setUsuario(usuarioDTO);
 
             usuarioResponse.setDatos(obtenerUsuarioInteractor.ejecutar(request));
             usuarioResponse.getMensajes().add("Usuarios consultados correctamente");
@@ -77,11 +90,14 @@ public class UsuarioController {
             httpStatusCode = HttpStatus.BAD_REQUEST;
             usuarioResponse.getMensajes().add(excepcion.getMessage());
         } catch (final Exception excepcion) {
+            excepcion.printStackTrace();
             httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             usuarioResponse.getMensajes().add("Error al consultar los Usuarios");
         }
+
         return new ResponseEntity<>(usuarioResponse, httpStatusCode);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponse> consultarUsuarioPorId(@PathVariable Long id) {

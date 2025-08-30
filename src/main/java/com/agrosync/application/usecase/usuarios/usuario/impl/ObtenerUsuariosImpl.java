@@ -5,6 +5,7 @@ import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.mapper.usuarios.UsuarioEntityMapper;
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.usecase.usuarios.usuario.ObtenerUsuarios;
+import com.agrosync.crosscutting.enums.TipoUsuarioEnum;
 import com.agrosync.domain.usuarios.UsuarioDomain;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.Page;
@@ -28,10 +29,15 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
     public Page<UsuarioDomain> ejecutar(UsuarioRequest data) {
         Pageable pageable = data.getPageable();
         String nombre = data.getUsuario().getNombre();
+        String telefono = data.getUsuario().getTelefono();
+        String tipoUsuarioNombre = data.getUsuario().getTipo_usuario() != null
+                ? data.getUsuario().getTipo_usuario().getNombre()
+                : null;
 
         return usuarioRepository.findAll((Root<UsuarioEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            // Filtro por nombre (múltiples palabras)
             if (nombre != null && !nombre.isBlank()) {
                 var palabrasNombre = Arrays.stream(nombre.trim().split("\\s+"))
                         .map(String::toLowerCase)
@@ -41,6 +47,20 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
                     predicates.add(cb.like(cb.lower(nombrePath), "%" + palabra + "%"));
                 }
             }
+
+            // Filtro por teléfono
+            if (telefono != null && !telefono.isBlank()) {
+                predicates.add(cb.like(cb.lower(root.get("telefono")), "%" + telefono.toLowerCase() + "%"));
+            }
+
+            // Filtro por tipo de usuario (Enum)
+            if (tipoUsuarioNombre != null && !tipoUsuarioNombre.isBlank()) {
+                predicates.add(cb.equal(
+                        root.get("tipo_usuario").get("id"),
+                        TipoUsuarioEnum.valueOf(tipoUsuarioNombre.toUpperCase()).getId()
+                ));
+            }
+
             return cb.and(predicates.toArray(new Predicate[0]));
         }, pageable).map(UsuarioEntityMapper.INSTANCE::toDomain);
     }
