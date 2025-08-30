@@ -6,7 +6,7 @@ import com.agrosync.application.secondaryports.entity.CarteraEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {UsuarioMapper.class})
+@Mapper(componentModel = "spring")
 public interface CarteraMapper {
 
     CarteraDTO toDTO(CarteraDomain domain);

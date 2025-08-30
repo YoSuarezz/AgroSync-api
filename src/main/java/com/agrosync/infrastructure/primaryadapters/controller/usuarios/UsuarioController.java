@@ -8,7 +8,6 @@ import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuarioP
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuariosInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.RegistrarNuevoUsuarioInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
-import com.agrosync.domain.service.UsuarioService;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.usuarios.UsuarioResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +20,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    private final UsuarioService usuarioService;
     private final RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor;
     private final ObtenerUsuariosInteractor obtenerUsuarioInteractor;
     private final ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor;
     private final ActualizarUsuarioInteractor actualizarUsuarioInteractor;
 
-    public UsuarioController(UsuarioService usuarioService, RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor, ObtenerUsuariosInteractor obtenerUsuarioInteractor, ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor, ActualizarUsuarioInteractor actualizarUsuarioInteractor) {
-        this.usuarioService = usuarioService;
+    public UsuarioController(RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor, ObtenerUsuariosInteractor obtenerUsuarioInteractor, ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor, ActualizarUsuarioInteractor actualizarUsuarioInteractor) {
         this.registrarNuevoUsuarioInteractor = registrarNuevoUsuarioInteractor;
         this.obtenerUsuarioInteractor = obtenerUsuarioInteractor;
         this.obtenerUsuarioPorIdInteractor = obtenerUsuarioPorIdInteractor;
@@ -90,7 +87,6 @@ public class UsuarioController {
             httpStatusCode = HttpStatus.BAD_REQUEST;
             usuarioResponse.getMensajes().add(excepcion.getMessage());
         } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
             httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             usuarioResponse.getMensajes().add("Error al consultar los Usuarios");
         }
@@ -139,12 +135,6 @@ public class UsuarioController {
             usuarioResponse.getMensajes().add(mensajeUsuario);
         }
         return new ResponseEntity<>(usuarioResponse, httpStatusCode);
-    }
-
-    @DeleteMapping(path = "usuario/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        usuarioService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 
 }

@@ -1,6 +1,5 @@
 package com.agrosync.application.usecase.lote;
 
-import com.agrosync.application.primaryports.mapper.UsuarioMapper;
 import com.agrosync.application.usecase.UseCaseWithReturn;
 import com.agrosync.crosscutting.exception.custom.BusinessAgroSyncException;
 import com.agrosync.domain.model.CarteraDomain;
@@ -23,7 +22,7 @@ public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
     private final LoteRepository loteRepository;
     private final LoteMapper loteMapper;
     private final CarteraService carteraService;
-    private final UsuarioMapper usuarioMapper;
+    //private final UsuarioMapper usuarioMapper;
 
     @Override
     public LoteDomain ejecutar(LoteDomain loteDomain) {
@@ -58,7 +57,7 @@ public class CreateLoteUseCase implements UseCaseWithReturn<LoteDomain, LoteDoma
             // si no existía, la creamos con saldo 0
             cartera = new CarteraDomain();
             // Asumiendo que existe un usuarioMapper
-            cartera.setUsuario(usuarioMapper.toDomain(loteSaved.getUsuario()));            cartera.setSaldo(BigDecimal.ZERO);
+            //cartera.setUsuario(usuarioMapper.toDomain(loteSaved.getUsuario()));            cartera.setSaldo(BigDecimal.ZERO);
             cartera = carteraService.save(cartera);
         }
         // Restamos porque es un gasto para nosotros
