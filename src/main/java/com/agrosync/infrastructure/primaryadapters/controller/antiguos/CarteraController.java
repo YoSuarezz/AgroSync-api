@@ -1,6 +1,6 @@
 package com.agrosync.infrastructure.primaryadapters.controller.antiguos;
 
-import com.agrosync.application.primaryports.dto.CarteraDTO;
+import com.agrosync.application.primaryports.dto.carteras.CarteraDTO;
 import com.agrosync.application.primaryports.mapper.CarteraMapper;
 import com.agrosync.domain.model.CarteraDomain;
 import com.agrosync.domain.service.CarteraService;
