@@ -1,7 +1,7 @@
 package com.agrosync.infrastructure.primaryadapters.controller.antiguos;
 
-import com.agrosync.application.primaryports.dto.GastoDTO;
-import com.agrosync.application.primaryports.mapper.GastoMapper;
+import com.agrosync.application.primaryports.dto.gastos.GastoDTO;
+import com.agrosync.application.primaryports.mapper.gastos.GastoMapper;
 import com.agrosync.domain.model.GastoDomain;
 import com.agrosync.domain.service.GastoService;
 import lombok.RequiredArgsConstructor;

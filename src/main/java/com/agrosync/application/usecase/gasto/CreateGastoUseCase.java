@@ -4,8 +4,8 @@ import com.agrosync.application.usecase.UseCaseWithReturn;
 import com.agrosync.crosscutting.exception.custom.BusinessAgroSyncException;
 import com.agrosync.domain.model.GastoDomain;
 import com.agrosync.application.secondaryports.repository.GastoRepository;
-import com.agrosync.application.primaryports.mapper.GastoMapper;
-import com.agrosync.application.secondaryports.entity.GastoEntity;
+import com.agrosync.application.primaryports.mapper.gastos.GastoMapper;
+import com.agrosync.application.secondaryports.entity.gastos.GastoEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

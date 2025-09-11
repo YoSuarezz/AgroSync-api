@@ -3,7 +3,7 @@ package com.agrosync.application.usecase.gasto;
 import com.agrosync.application.usecase.UseCaseWithReturn;
 import com.agrosync.domain.model.GastoDomain;
 import com.agrosync.application.secondaryports.repository.GastoRepository;
-import com.agrosync.application.primaryports.mapper.GastoMapper;
+import com.agrosync.application.primaryports.mapper.gastos.GastoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

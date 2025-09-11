@@ -1,20 +1,24 @@
-package com.agrosync.application.primaryports.dto;
+package com.agrosync.domain.gastos;
 
-import lombok.*;
-
+import com.agrosync.domain.model.LoteDomain;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
-@Getter
-@Setter
-public class GastoDTO {
+public class GastoDomain {
 
     private Long id;
-    private LoteDTO lote;
+    private LoteDomain lote;
     private BigDecimal cantidad;
     private String descripcion;
     private LocalDate fecha;
+
+    public GastoDomain(Long id, LoteDomain lote, BigDecimal cantidad, String descripcion, LocalDate fecha) {
+        this.id = id;
+        this.lote = lote;
+        this.cantidad = cantidad;
+        this.descripcion = descripcion;
+        this.fecha = fecha;
+    }
 
     public Long getId() {
         return id;
@@ -24,11 +28,11 @@ public class GastoDTO {
         this.id = id;
     }
 
-    public LoteDTO getLote() {
+    public LoteDomain getLote() {
         return lote;
     }
 
-    public void setLote(LoteDTO lote) {
+    public void setLote(LoteDomain lote) {
         this.lote = lote;
     }
 
@@ -56,4 +60,3 @@ public class GastoDTO {
         this.fecha = fecha;
     }
 }
-

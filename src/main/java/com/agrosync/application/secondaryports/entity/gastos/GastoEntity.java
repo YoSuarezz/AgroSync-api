@@ -1,17 +1,15 @@
-package com.agrosync.application.secondaryports.entity;
+package com.agrosync.application.secondaryports.entity.gastos;
 
+import com.agrosync.application.secondaryports.entity.LoteEntity;
+import com.agrosync.crosscutting.helpers.NumericHelper;
+import com.agrosync.crosscutting.helpers.ObjectHelper;
+import com.agrosync.crosscutting.helpers.TextHelper;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "gasto")
 public class GastoEntity {
@@ -36,6 +34,22 @@ public class GastoEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
 
+    public GastoEntity() {
+        setId(id);
+        setLote(lote);
+        setCantidad(BigDecimal.ZERO);
+        setDescripcion(TextHelper.EMPTY);
+        setFecha(LocalDate.now());
+    }
+
+    public GastoEntity(Long id, LoteEntity lote, BigDecimal cantidad, String descripcion, LocalDate fecha) {
+        setId(id);
+        setLote(lote);
+        setCantidad(cantidad);
+        setDescripcion(descripcion);
+        setFecha(fecha);
+    }
+
     public Long getId() {
         return id;
     }
@@ -49,7 +63,7 @@ public class GastoEntity {
     }
 
     public void setLote(LoteEntity lote) {
-        this.lote = lote;
+        this.lote = ObjectHelper.getDefault(lote, new LoteEntity());
     }
 
     public BigDecimal getCantidad() {
@@ -65,7 +79,7 @@ public class GastoEntity {
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.descripcion = TextHelper.applyTrim(descripcion);
     }
 
     public LocalDate getFecha() {

@@ -1,5 +1,6 @@
 package com.agrosync.application.secondaryports.entity;
 
+import com.agrosync.application.secondaryports.entity.gastos.GastoEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import jakarta.persistence.*;
