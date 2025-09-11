@@ -2,7 +2,7 @@ package com.agrosync.application.primaryports.mapper;
 
 import com.agrosync.domain.model.CarteraDomain;
 import com.agrosync.application.primaryports.dto.carteras.CarteraDTO;
-import com.agrosync.application.secondaryports.entity.CarteraEntity;
+import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

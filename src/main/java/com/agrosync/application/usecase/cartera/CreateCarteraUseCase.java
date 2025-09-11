@@ -4,7 +4,7 @@ import com.agrosync.application.primaryports.mapper.CarteraMapper;
 import com.agrosync.application.usecase.UseCaseWithReturn;
 import com.agrosync.domain.model.CarteraDomain;
 import com.agrosync.application.secondaryports.repository.CarteraRepository;
-import com.agrosync.application.secondaryports.entity.CarteraEntity;
+import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

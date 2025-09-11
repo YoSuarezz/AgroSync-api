@@ -1,6 +1,6 @@
 package com.agrosync.application.secondaryports.repository;
 
-import com.agrosync.application.secondaryports.entity.CarteraEntity;
+import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

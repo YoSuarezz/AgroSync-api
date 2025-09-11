@@ -7,9 +7,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-@Data
-@Getter
-@Setter
 public class CarteraDTO {
 
     private Long id;
@@ -20,6 +17,16 @@ public class CarteraDTO {
         setId(id);
         setUsuario(UsuarioDTO.create());
         setSaldo(BigDecimal.ZERO);
+    }
+
+    public CarteraDTO(Long id, UsuarioDTO usuario, BigDecimal saldo) {
+        setId(id);
+        setUsuario(usuario);
+        setSaldo(saldo);
+    }
+
+    public static CarteraDTO create(Long id, UsuarioDTO usuario, BigDecimal saldo) {
+        return new CarteraDTO(id, usuario, saldo);
     }
 
     public Long getId() {
@@ -45,7 +52,7 @@ public class CarteraDTO {
     }
 
     public CarteraDTO setSaldo(BigDecimal saldo) {
-        this.saldo = BigDecimal.ZERO;
+        this.saldo = saldo;
         return this;
     }
 }
