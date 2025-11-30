@@ -1,20 +1,22 @@
 package com.agrosync.domain.usuarios;
 
+import java.util.UUID;
+
 public class TipoUsuarioDomain {
 
-    private Long id;
+    private UUID id;
     private String nombre;
 
-    public TipoUsuarioDomain(Long id, String nombre) {
+    public TipoUsuarioDomain(UUID id, String nombre) {
         setId(id);
         setNombre(nombre);
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

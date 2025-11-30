@@ -9,6 +9,7 @@ import com.agrosync.domain.usuarios.UsuarioDomain;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ObtenerUsuarioPorIdImpl implements ObtenerUsuarioPorId {
@@ -22,7 +23,7 @@ public class ObtenerUsuarioPorIdImpl implements ObtenerUsuarioPorId {
     }
 
     @Override
-    public UsuarioDomain ejecutar(Long data) {
+    public UsuarioDomain ejecutar(UUID data) {
         obtenerUsuarioPorIdRulesValidator.validar(data);
         Optional<UsuarioEntity> resultado = usuarioRepository.findById(data);
         return UsuarioEntityMapper.INSTANCE.toDomain(resultado.get());

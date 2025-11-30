@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
@@ -96,7 +98,7 @@ public class UsuarioController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> consultarUsuarioPorId(@PathVariable Long id) {
+    public ResponseEntity<UsuarioResponse> consultarUsuarioPorId(@PathVariable UUID id) {
 
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();
@@ -117,7 +119,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuario) {
+    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody UsuarioDTO usuario) {
 
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();

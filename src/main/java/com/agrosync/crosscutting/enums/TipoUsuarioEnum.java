@@ -5,13 +5,14 @@ import com.agrosync.application.secondaryports.repository.TipoUsuarioRepository;
 import com.agrosync.crosscutting.exception.custom.CrosscuttingAgroSyncException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public enum TipoUsuarioEnum {
     PROVEEDOR("Proveedor"),
     CLIENTE("Cliente");
 
     private final String nombre;
-    private Long id;
+    private UUID id;
     private static TipoUsuarioRepository repository;
 
     TipoUsuarioEnum(String nombre) {
@@ -26,7 +27,7 @@ public enum TipoUsuarioEnum {
         TipoUsuarioEnum.repository = repository;
     }
 
-    public Long getId() {
+    public UUID getId() {
         synchronized (this) {
             if (id == null) {
                 Optional<TipoUsuarioEntity> resultados = repository.findByNombreIgnoreCase(this.nombre);

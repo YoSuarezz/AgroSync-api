@@ -4,6 +4,8 @@ import com.agrosync.application.usecase.usuarios.usuario.rulesvalidator.ObtenerU
 import com.agrosync.domain.usuarios.rules.UsuarioIdExisteRule;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class ObtenerUsuarioPorIdRulesValidatorImpl implements ObtenerUsuarioPorIdRulesValidator {
 
@@ -14,7 +16,7 @@ public class ObtenerUsuarioPorIdRulesValidatorImpl implements ObtenerUsuarioPorI
     }
 
     @Override
-    public void validar(Long data) {
+    public void validar(UUID data) {
         usuarioIdExisteRule.validate(data);
     }
 }

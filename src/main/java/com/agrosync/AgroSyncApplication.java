@@ -24,8 +24,6 @@ public class AgroSyncApplication {
             var tipoUsuario = tipoUsuarioRepository.findAll();
             if (tipoUsuario.isEmpty()) {
                 tipoUsuarioRepository.saveAll(List.of(
-                        TipoUsuarioEntity.create().setNombre("Proveedor"),
-                        TipoUsuarioEntity.create().setNombre("Cliente")
                 ));
             }
         };

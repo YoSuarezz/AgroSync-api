@@ -8,6 +8,8 @@ import com.agrosync.domain.usuarios.UsuarioDomain;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @Transactional
 public class ObtenerUsuarioPorIdInteractorImpl implements ObtenerUsuarioPorIdInteractor {
@@ -19,7 +21,7 @@ public class ObtenerUsuarioPorIdInteractorImpl implements ObtenerUsuarioPorIdInt
     }
 
     @Override
-    public UsuarioDTO ejecutar(Long data) {
+    public UsuarioDTO ejecutar(UUID data) {
         UsuarioDomain resultado = obtenerUsuarioPorId.ejecutar(data);
         return UsuarioDTOMapper.INSTANCE.toDTO(resultado);
     }

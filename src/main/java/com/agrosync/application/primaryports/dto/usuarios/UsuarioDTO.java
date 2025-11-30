@@ -3,9 +3,11 @@ package com.agrosync.application.primaryports.dto.usuarios;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 
+import java.util.UUID;
+
 public class UsuarioDTO {
 
-    private Long id;
+    private UUID id;
     private String nombre;
     private String telefono;
     private TipoUsuarioDTO tipo_usuario;
@@ -17,14 +19,14 @@ public class UsuarioDTO {
         setTipo_usuario(TipoUsuarioDTO.create());
     }
 
-    public UsuarioDTO(Long id, String nombre, String telefono, TipoUsuarioDTO tipoUsuario) {
+    public UsuarioDTO(UUID id, String nombre, String telefono, TipoUsuarioDTO tipoUsuario) {
         setId(id);
         setNombre(nombre);
         setTelefono(telefono);
         setTipo_usuario(tipoUsuario);
     }
 
-    public static UsuarioDTO create(Long id, String nombre, String telefono, TipoUsuarioDTO tipoUsuario) {
+    public static UsuarioDTO create(UUID id, String nombre, String telefono, TipoUsuarioDTO tipoUsuario) {
         return new UsuarioDTO(id, nombre, telefono, tipoUsuario);
     }
 
@@ -32,11 +34,11 @@ public class UsuarioDTO {
         return new UsuarioDTO();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public UsuarioDTO setId(Long id) {
+    public UsuarioDTO setId(UUID id) {
         this.id = id;
         return this;
     }
