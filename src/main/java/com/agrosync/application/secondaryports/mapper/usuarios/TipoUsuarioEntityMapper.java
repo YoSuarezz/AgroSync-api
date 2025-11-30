@@ -1,6 +1,6 @@
 package com.agrosync.application.secondaryports.mapper.usuarios;
 
-import com.agrosync.application.secondaryports.entity.usuarios.TIpoUsuarioEntity;
+import com.agrosync.application.secondaryports.entity.usuarios.TipoUsuarioEntity;
 import com.agrosync.domain.usuarios.TipoUsuarioDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -12,11 +12,11 @@ public interface TipoUsuarioEntityMapper {
 
     TipoUsuarioEntityMapper INSTANCE = Mappers.getMapper(TipoUsuarioEntityMapper.class);
 
-    TIpoUsuarioEntity toEntity(TipoUsuarioDomain domain);
+    TipoUsuarioEntity toEntity(TipoUsuarioDomain domain);
 
-    TipoUsuarioDomain toDomain(TIpoUsuarioEntity entity);
+    TipoUsuarioDomain toDomain(TipoUsuarioEntity entity);
 
-    List<TIpoUsuarioEntity> toEntityCollection(List<TipoUsuarioDomain> domainCollection);
+    List<TipoUsuarioEntity> toEntityCollection(List<TipoUsuarioDomain> domainCollection);
 
-    List<TipoUsuarioDomain> toDomainCollection(List<TIpoUsuarioEntity> entityCollection);
+    List<TipoUsuarioDomain> toDomainCollection(List<TipoUsuarioEntity> entityCollection);
 }

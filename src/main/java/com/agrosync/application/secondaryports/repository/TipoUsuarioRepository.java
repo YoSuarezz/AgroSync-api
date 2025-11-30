@@ -1,13 +1,13 @@
 package com.agrosync.application.secondaryports.repository;
 
-import com.agrosync.application.secondaryports.entity.usuarios.TIpoUsuarioEntity;
+import com.agrosync.application.secondaryports.entity.usuarios.TipoUsuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface TipoUsuarioRepository extends JpaRepository<TIpoUsuarioEntity, Long> {
+public interface TipoUsuarioRepository extends JpaRepository<TipoUsuarioEntity, Long> {
 
-    Optional<TIpoUsuarioEntity> findByNombreIgnoreCase(String nombre);
+    Optional<TipoUsuarioEntity> findByNombreIgnoreCase(String nombre);
 }

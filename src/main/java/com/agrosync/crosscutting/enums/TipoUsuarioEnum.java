@@ -1,6 +1,6 @@
 package com.agrosync.crosscutting.enums;
 
-import com.agrosync.application.secondaryports.entity.usuarios.TIpoUsuarioEntity;
+import com.agrosync.application.secondaryports.entity.usuarios.TipoUsuarioEntity;
 import com.agrosync.application.secondaryports.repository.TipoUsuarioRepository;
 import com.agrosync.crosscutting.exception.custom.CrosscuttingAgroSyncException;
 
@@ -29,7 +29,7 @@ public enum TipoUsuarioEnum {
     public Long getId() {
         synchronized (this) {
             if (id == null) {
-                Optional<TIpoUsuarioEntity> resultados = repository.findByNombreIgnoreCase(this.nombre);
+                Optional<TipoUsuarioEntity> resultados = repository.findByNombreIgnoreCase(this.nombre);
 
                 if (resultados.isEmpty()) {
                     throw new CrosscuttingAgroSyncException(
@@ -39,7 +39,7 @@ public enum TipoUsuarioEnum {
                     );
                 }
 
-                TIpoUsuarioEntity tipoUsuarioEntity = resultados.get();
+                TipoUsuarioEntity tipoUsuarioEntity = resultados.get();
                 if (tipoUsuarioEntity.getId() == null) {
                     throw new CrosscuttingAgroSyncException(
                             "TipoUsuario sin ID asignado",

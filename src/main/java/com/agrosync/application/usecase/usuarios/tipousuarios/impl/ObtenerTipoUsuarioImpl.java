@@ -1,6 +1,6 @@
 package com.agrosync.application.usecase.usuarios.tipousuarios.impl;
 
-import com.agrosync.application.secondaryports.entity.usuarios.TIpoUsuarioEntity;
+import com.agrosync.application.secondaryports.entity.usuarios.TipoUsuarioEntity;
 import com.agrosync.application.secondaryports.mapper.usuarios.TipoUsuarioEntityMapper;
 import com.agrosync.application.secondaryports.repository.TipoUsuarioRepository;
 import com.agrosync.application.usecase.usuarios.tipousuarios.ObtenerTipoUsuario;
@@ -20,7 +20,7 @@ public class ObtenerTipoUsuarioImpl implements ObtenerTipoUsuario {
 
     @Override
     public List<TipoUsuarioDomain> ejecutar() {
-        List<TIpoUsuarioEntity> resultados = tipoUsuarioRepository.findAll();
+        List<TipoUsuarioEntity> resultados = tipoUsuarioRepository.findAll();
         return TipoUsuarioEntityMapper.INSTANCE.toDomainCollection(resultados);
     }
 }

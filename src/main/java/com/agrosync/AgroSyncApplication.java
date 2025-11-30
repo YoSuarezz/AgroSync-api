@@ -1,6 +1,6 @@
 package com.agrosync;
 
-import com.agrosync.application.secondaryports.entity.usuarios.TIpoUsuarioEntity;
+import com.agrosync.application.secondaryports.entity.usuarios.TipoUsuarioEntity;
 import com.agrosync.application.secondaryports.repository.TipoUsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,8 +24,8 @@ public class AgroSyncApplication {
             var tipoUsuario = tipoUsuarioRepository.findAll();
             if (tipoUsuario.isEmpty()) {
                 tipoUsuarioRepository.saveAll(List.of(
-                        TIpoUsuarioEntity.create().setNombre("Proveedor"),
-                        TIpoUsuarioEntity.create().setNombre("Cliente")
+                        TipoUsuarioEntity.create().setNombre("Proveedor"),
+                        TipoUsuarioEntity.create().setNombre("Cliente")
                 ));
             }
         };

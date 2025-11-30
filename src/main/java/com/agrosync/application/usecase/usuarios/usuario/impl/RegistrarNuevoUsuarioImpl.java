@@ -15,12 +15,10 @@ public class RegistrarNuevoUsuarioImpl implements RegistrarNuevoUsuario {
 
     private final UsuarioRepository usuarioRepository;
     private final RegistrarNuevoUsuarioRulesValidator registrarNuevoUsuarioRulesValidator;
-    private final CarteraRepository carteraRepository;
 
-    public RegistrarNuevoUsuarioImpl(UsuarioRepository usuarioRepository, RegistrarNuevoUsuarioRulesValidator registrarNuevoUsuarioRulesValidator, CarteraRepository carteraRepository) {
+    public RegistrarNuevoUsuarioImpl(UsuarioRepository usuarioRepository, RegistrarNuevoUsuarioRulesValidator registrarNuevoUsuarioRulesValidator) {
         this.usuarioRepository = usuarioRepository;
         this.registrarNuevoUsuarioRulesValidator = registrarNuevoUsuarioRulesValidator;
-        this.carteraRepository = carteraRepository;
     }
 
     @Override
@@ -28,12 +26,5 @@ public class RegistrarNuevoUsuarioImpl implements RegistrarNuevoUsuario {
         registrarNuevoUsuarioRulesValidator.validar(data);
         UsuarioEntity usuarioEntity = UsuarioEntityMapper.INSTANCE.toEntity(data);
         UsuarioEntity usuarioGuardado = usuarioRepository.save(usuarioEntity);
-
-        // crear la cartera asociada al usuario (Provisional)
-
-        CarteraEntity cartera = new CarteraEntity();
-        cartera.setUsuario(usuarioGuardado);
-        cartera.setSaldo(BigDecimal.ZERO);
-        carteraRepository.save(cartera);
     }
 }
