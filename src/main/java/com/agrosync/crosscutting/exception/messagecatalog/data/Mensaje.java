@@ -1,10 +1,5 @@
 package com.agrosync.crosscutting.exception.messagecatalog.data;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@Getter
-@RequiredArgsConstructor
 public final class Mensaje {
 
     private final CodigoMensaje codigo;
@@ -25,4 +20,19 @@ public final class Mensaje {
     public String getIdentificador() {
         return codigo.getIdentificador();
     }
+
+    public Mensaje(CodigoMensaje codigo, String contenido) {
+        this.codigo = codigo;
+        this.contenido = contenido;
+    }
+
+    public CodigoMensaje getCodigo() {
+        return codigo;
+    }
+
+    public String getContenido() {
+        return contenido;
+    }
+
+
 }

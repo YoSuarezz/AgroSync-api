@@ -1,30 +1,11 @@
 package com.agrosync.application.secondaryports.repository;
 
-import com.agrosync.application.secondaryports.entity.LoteEntity;
+import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
-public interface LoteRepository extends JpaRepository<LoteEntity, Long> {
-
-    LoteEntity save(LoteEntity loteEntity);
-
-    Optional<LoteEntity> findById(Long id);
-
-    void deleteById(Long id);
-
-    List<LoteEntity> findAll();
-
-    boolean existsByContramarca(int contramarca);
-
-    boolean existsByContramarcaAndIdNot(int contramarca, Long id);
-
-    @Query(value = "SELECT * FROM lote WHERE contramarca = :contramarca AND WEEK(fecha, 3) = :semana", nativeQuery = true)
-    Optional<LoteEntity> findByContramarcaAndSemana(@Param("contramarca") Integer contramarca,
-                                                    @Param("semana") Integer semana);
-  
-    List<LoteEntity> findByUsuarioId(Long usuarioId);
+@Repository
+public interface LoteRepository extends JpaRepository<LoteEntity, UUID> {
 }

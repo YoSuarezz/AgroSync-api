@@ -1,6 +1,8 @@
 package com.agrosync.application.primaryports.mapper.usuarios;
 
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.ActualizarUsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.RegistrarNuevoUsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.domain.usuarios.UsuarioDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -14,14 +16,16 @@ public interface UsuarioDTOMapper {
 
     UsuarioDTOMapper INSTANCE = Mappers.getMapper(UsuarioDTOMapper.class);
 
-    UsuarioDomain toDomain(UsuarioDTO dto);
+    UsuarioDomain toDomain(RegistrarNuevoUsuarioDTO dto);
 
-    UsuarioDTO toDTO(UsuarioDomain domain);
+    UsuarioDomain toDomain(ActualizarUsuarioDTO dto);
 
-    List<UsuarioDTO> toDTOCollection(List<UsuarioDomain> domainList);
+    ObtenerUsuarioDTO toObtenerDTO(UsuarioDomain domain);
 
-    default Page<UsuarioDTO> toDTOCollection(Page<UsuarioDomain> DomainPage) {
-        List<UsuarioDTO> dtoList = toDTOCollection(DomainPage.getContent());
+    List<ObtenerUsuarioDTO> toObtenerDTOCollection(List<UsuarioDomain> domainList);
+
+    default Page<ObtenerUsuarioDTO> toObtenerDTOCollection(Page<UsuarioDomain> DomainPage) {
+        List<ObtenerUsuarioDTO> dtoList = toObtenerDTOCollection(DomainPage.getContent());
         return new PageImpl<>(dtoList, DomainPage.getPageable(), DomainPage.getTotalElements());
     }
 

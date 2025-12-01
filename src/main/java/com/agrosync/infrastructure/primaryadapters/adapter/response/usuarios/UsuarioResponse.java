@@ -1,15 +1,15 @@
 package com.agrosync.infrastructure.primaryadapters.adapter.response.usuarios;
 
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
-import com.agrosync.infrastructure.primaryadapters.adapter.response.Response;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.ResponseWithData;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class UsuarioResponse extends Response<UsuarioDTO> {
+public class UsuarioResponse<T> extends ResponseWithData<T> {
 
-    public UsuarioResponse() {
-        setMensajes(new ArrayList<String>());
-        setDatos(new ArrayList<>());
+    public static <T> UsuarioResponse<T> build(final List<String> mensajes, final T datos) {
+        UsuarioResponse<T> response = new UsuarioResponse<>();
+        response.setMensajes(mensajes);
+        response.setDatos(datos);
+        return response;
     }
-
 }

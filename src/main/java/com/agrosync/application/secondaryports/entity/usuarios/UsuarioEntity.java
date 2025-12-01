@@ -1,23 +1,28 @@
 package com.agrosync.application.secondaryports.entity.usuarios;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.agrosync.application.secondaryports.entity.LoteEntity;
-import com.agrosync.application.secondaryports.entity.VentaEntity;
+import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
+import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
+import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
+import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
+import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
+import com.agrosync.application.primaryports.enums.usuarios.EstadoUsuarioEnum;
+import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "usuario")
 public class UsuarioEntity {
 
     @Id
-    @Column(name = "id_usuario")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "nombre")
     private String nombre;
@@ -25,42 +30,73 @@ public class UsuarioEntity {
     @Column(name = "telefono")
     private String telefono;
 
-    @ManyToOne
-    @JoinColumn(name = "id_tipo_usuario")
-    private TIpoUsuarioEntity tipo_usuario;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_usuario")
+    private TipoUsuarioEnum tipoUsuario;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<LoteEntity> lista_loteEntity;
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private CarteraEntity cartera;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<VentaEntity> lista_ventaEntity;
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
+    private List<CompraEntity> compras;
+
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
+    private List<CuentaPagarEntity> cuentasPagar;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<VentaEntity> ventas;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<CuentaCobrarEntity> cuentasCobrar;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado")
+    private EstadoUsuarioEnum estado;
 
     public UsuarioEntity() {
-        setId(id);
+        setId(UUIDHelper.getDefault());
         setNombre(TextHelper.EMPTY);
         setTelefono(TextHelper.EMPTY);
-        setTipo_usuario(TIpoUsuarioEntity.create());
-        setLista_loteEntity(new ArrayList<>());
-        setLista_ventaEntity(new ArrayList<>());
+        setTipoUsuario(TipoUsuarioEnum.CLIENTE);
+        setCartera(CarteraEntity.create());
+        setCompras(new ArrayList<>());
+        setCuentasPagar(new ArrayList<>());
+        setVentas(new ArrayList<>());
+        setCuentasCobrar(new ArrayList<>());
+        setEstado(EstadoUsuarioEnum.ACTIVO);
     }
 
-    public UsuarioEntity(Long id, String nombre, String telefono, TIpoUsuarioEntity tipo_usuario, List<LoteEntity> lista_loteEntity, List<VentaEntity> lista_ventaEntity) {
+    public UsuarioEntity(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado) {
         setId(id);
         setNombre(nombre);
         setTelefono(telefono);
-        setTipo_usuario(tipo_usuario);
-        setLista_loteEntity(lista_loteEntity);
-        setLista_ventaEntity(lista_ventaEntity);
+        setTipoUsuario(tipoUsuario);
+        setCartera(cartera);
+        setCompras(compras);
+        setCuentasPagar(cuentasPagar);
+        setVentas(ventas);
+        setCuentasCobrar(cuentasCobrar);
+        setEstado(estado);
     }
 
-    public Long getId() {
+    public static UsuarioEntity create(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado) {
+        return new UsuarioEntity(id, nombre, telefono, tipoUsuario, cartera, compras, cuentasPagar, ventas, cuentasCobrar, estado);
+    }
+
+    public static UsuarioEntity create(UUID id) {
+        return new UsuarioEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO);
+    }
+
+    public static UsuarioEntity create() {
+        return new UsuarioEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO);
+    }
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(UUID id) {
+        this.id = UUIDHelper.getDefault(id, UUIDHelper.getDefault());
     }
 
     public String getNombre() {
@@ -79,27 +115,59 @@ public class UsuarioEntity {
         this.telefono = TextHelper.applyTrim(telefono);
     }
 
-    public TIpoUsuarioEntity getTipo_usuario() {
-        return tipo_usuario;
+    public TipoUsuarioEnum getTipoUsuario() {
+        return tipoUsuario;
     }
 
-    public void setTipo_usuario(TIpoUsuarioEntity tipo_usuario) {
-        this.tipo_usuario = ObjectHelper.getDefault(tipo_usuario, TIpoUsuarioEntity.create());
+    public void setTipoUsuario(TipoUsuarioEnum tipoUsuario) {
+        this.tipoUsuario = ObjectHelper.getDefault(tipoUsuario, TipoUsuarioEnum.CLIENTE);
     }
 
-    public List<LoteEntity> getLista_loteEntity() {
-        return lista_loteEntity;
+    public CarteraEntity getCartera() {
+        return cartera;
     }
 
-    public void setLista_loteEntity(List<LoteEntity> lista_loteEntity) {
-        this.lista_loteEntity = lista_loteEntity;
+    public void setCartera(CarteraEntity cartera) {
+        this.cartera = ObjectHelper.getDefault(cartera, CarteraEntity.create());
     }
 
-    public List<VentaEntity> getLista_ventaEntity() {
-        return lista_ventaEntity;
+    public List<CompraEntity> getCompras() {
+        return compras;
     }
 
-    public void setLista_ventaEntity(List<VentaEntity> lista_ventaEntity) {
-        this.lista_ventaEntity = lista_ventaEntity;
+    public void setCompras(List<CompraEntity> compras) {
+        this.compras = compras;
+    }
+
+    public List<CuentaPagarEntity> getCuentasPagar() {
+        return cuentasPagar;
+    }
+
+    public void setCuentasPagar(List<CuentaPagarEntity> cuentasPagar) {
+        this.cuentasPagar = cuentasPagar;
+    }
+
+    public List<VentaEntity> getVentas() {
+        return ventas;
+    }
+
+    public void setVentas(List<VentaEntity> ventas) {
+        this.ventas = ventas;
+    }
+
+    public List<CuentaCobrarEntity> getCuentasCobrar() {
+        return cuentasCobrar;
+    }
+
+    public void setCuentasCobrar(List<CuentaCobrarEntity> cuentasCobrar) {
+        this.cuentasCobrar = cuentasCobrar;
+    }
+
+    public EstadoUsuarioEnum getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoUsuarioEnum estado) {
+        this.estado = ObjectHelper.getDefault(estado, EstadoUsuarioEnum.ACTIVO);
     }
 }
