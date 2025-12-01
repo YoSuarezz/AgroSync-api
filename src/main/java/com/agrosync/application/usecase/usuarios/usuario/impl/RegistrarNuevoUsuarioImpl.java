@@ -8,8 +8,6 @@ import com.agrosync.application.usecase.usuarios.usuario.rulesvalidator.Registra
 import com.agrosync.domain.usuarios.UsuarioDomain;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
 @Service
 public class RegistrarNuevoUsuarioImpl implements RegistrarNuevoUsuario {
 
@@ -25,6 +23,6 @@ public class RegistrarNuevoUsuarioImpl implements RegistrarNuevoUsuario {
     public void ejecutar(UsuarioDomain data) {
         registrarNuevoUsuarioRulesValidator.validar(data);
         UsuarioEntity usuarioEntity = UsuarioEntityMapper.INSTANCE.toEntity(data);
-        UsuarioEntity usuarioGuardado = usuarioRepository.save(usuarioEntity);
+        usuarioRepository.save(usuarioEntity);
     }
 }

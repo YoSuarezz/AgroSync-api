@@ -1,7 +1,7 @@
 package com.agrosync.application.primaryports.interactor.usuarios.impl;
 
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioRequest;
+import com.agrosync.application.primaryports.dto.usuarios.request.RegiserNewUserDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioRequest;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuariosInteractor;
 import com.agrosync.application.primaryports.mapper.usuarios.UsuarioDTOMapper;
 import com.agrosync.application.usecase.usuarios.usuario.ObtenerUsuarios;
@@ -21,7 +21,7 @@ public class ObtenerUsuariosInteractorImpl implements ObtenerUsuariosInteractor 
     }
 
     @Override
-    public Page<UsuarioDTO> ejecutar(UsuarioRequest data) {
+    public Page<RegiserNewUserDTO> ejecutar(UsuarioRequest data) {
         Page<UsuarioDomain> resultados = obtenerUsuarios.ejecutar(data);
         return UsuarioDTOMapper.INSTANCE.toDTOCollection(resultados);
     }

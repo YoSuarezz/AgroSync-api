@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.mapper.usuarios;
 
-import com.agrosync.application.primaryports.dto.usuarios.TipoUsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.TipoUsuarioDTO;
 import com.agrosync.domain.usuarios.TipoUsuarioDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

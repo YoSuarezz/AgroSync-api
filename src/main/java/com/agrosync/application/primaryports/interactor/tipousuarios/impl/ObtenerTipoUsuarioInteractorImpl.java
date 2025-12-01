@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.interactor.tipousuarios.impl;
 
-import com.agrosync.application.primaryports.dto.usuarios.TipoUsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.TipoUsuarioDTO;
 import com.agrosync.application.primaryports.interactor.tipousuarios.ObtenerTipoUsuarioInteractor;
 import com.agrosync.application.primaryports.mapper.usuarios.TipoUsuarioDTOMapper;
 import com.agrosync.application.usecase.usuarios.tipousuarios.ObtenerTipoUsuario;

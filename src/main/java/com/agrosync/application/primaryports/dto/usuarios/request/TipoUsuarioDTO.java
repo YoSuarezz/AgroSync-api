@@ -1,4 +1,4 @@
-package com.agrosync.application.primaryports.dto.usuarios;
+package com.agrosync.application.primaryports.dto.usuarios.request;
 
 import com.agrosync.crosscutting.helpers.TextHelper;
 

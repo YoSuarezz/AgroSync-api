@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.interactor.usuarios.impl;
 
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.RegiserNewUserDTO;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuarioPorIdInteractor;
 import com.agrosync.application.primaryports.mapper.usuarios.UsuarioDTOMapper;
 import com.agrosync.application.usecase.usuarios.usuario.ObtenerUsuarioPorId;
@@ -21,7 +21,7 @@ public class ObtenerUsuarioPorIdInteractorImpl implements ObtenerUsuarioPorIdInt
     }
 
     @Override
-    public UsuarioDTO ejecutar(UUID data) {
+    public RegiserNewUserDTO ejecutar(UUID data) {
         UsuarioDomain resultado = obtenerUsuarioPorId.ejecutar(data);
         return UsuarioDTOMapper.INSTANCE.toDTO(resultado);
     }

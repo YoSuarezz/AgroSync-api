@@ -1,6 +1,6 @@
 package com.agrosync.application.usecase.usuarios.usuario.impl;
 
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioRequest;
+import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioRequest;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.mapper.usuarios.UsuarioEntityMapper;
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
@@ -30,9 +30,6 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
         Pageable pageable = data.getPageable();
         String nombre = data.getUsuario().getNombre();
         String telefono = data.getUsuario().getTelefono();
-        String tipoUsuarioNombre = data.getUsuario().getTipo_usuario() != null
-                ? data.getUsuario().getTipo_usuario().getNombre()
-                : null;
 
         return usuarioRepository.findAll((Root<UsuarioEntity> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -51,14 +48,6 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
             // Filtro por teléfono
             if (telefono != null && !telefono.isBlank()) {
                 predicates.add(cb.like(cb.lower(root.get("telefono")), "%" + telefono.toLowerCase() + "%"));
-            }
-
-            // Filtro por tipo de usuario (Enum)
-            if (tipoUsuarioNombre != null && !tipoUsuarioNombre.isBlank()) {
-                predicates.add(cb.equal(
-                        root.get("tipo_usuario").get("id"),
-                        TipoUsuarioEnum.valueOf(tipoUsuarioNombre.toUpperCase()).getId()
-                ));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));

@@ -1,8 +1,8 @@
 package com.agrosync.infrastructure.primaryadapters.controller.usuarios;
 
-import com.agrosync.application.primaryports.dto.usuarios.TipoUsuarioDTO;
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioRequest;
+import com.agrosync.application.primaryports.dto.usuarios.request.RegiserNewUserDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.TipoUsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioRequest;
 import com.agrosync.application.primaryports.interactor.usuarios.ActualizarUsuarioInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuarioPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuariosInteractor;
@@ -35,7 +35,7 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public ResponseEntity<UsuarioResponse> registrarUsuario(@RequestBody UsuarioDTO usuario) {
+    public ResponseEntity<UsuarioResponse> registrarUsuario(@RequestBody RegiserNewUserDTO usuario) {
 
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();
@@ -45,9 +45,11 @@ public class UsuarioController {
             usuarioResponse.getMensajes().add("Se ha registrado el usuario correctamente");
 
         } catch (final AgroSyncException excepcion) {
+            excepcion.printStackTrace();
             httpStatusCode = HttpStatus.BAD_REQUEST;
             usuarioResponse.getMensajes().add(excepcion.getMensajeUsuario());
         } catch (final Exception excepcion) {
+            excepcion.printStackTrace();
             httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             var userMessage = "Error al registrar el usuario";
             usuarioResponse.getMensajes().add(userMessage);
@@ -70,13 +72,10 @@ public class UsuarioController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         try {
-            UsuarioDTO usuarioDTO = UsuarioDTO.create()
+            RegiserNewUserDTO usuarioDTO = RegiserNewUserDTO.create()
                     .setNombre(nombre)
                     .setTelefono(telefono);
 
-            if (tipoUsuario != null && !tipoUsuario.trim().isEmpty()) {
-                usuarioDTO.setTipo_usuario(TipoUsuarioDTO.create().setNombre(tipoUsuario));
-            }
 
             var request = UsuarioRequest.create()
                     .setPageable(pageable)
@@ -86,9 +85,11 @@ public class UsuarioController {
             usuarioResponse.getMensajes().add("Usuarios consultados correctamente");
 
         } catch (final AgroSyncException excepcion) {
+            excepcion.printStackTrace();
             httpStatusCode = HttpStatus.BAD_REQUEST;
             usuarioResponse.getMensajes().add(excepcion.getMessage());
         } catch (final Exception excepcion) {
+            excepcion.printStackTrace();
             httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             usuarioResponse.getMensajes().add("Error al consultar los Usuarios");
         }
@@ -119,7 +120,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody UsuarioDTO usuario) {
+    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody RegiserNewUserDTO usuario) {
 
         var httpStatusCode = HttpStatus.ACCEPTED;
         var usuarioResponse = new UsuarioResponse();

@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.interactor.usuarios.impl;
 
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.RegiserNewUserDTO;
 import com.agrosync.application.primaryports.interactor.usuarios.RegistrarNuevoUsuarioInteractor;
 import com.agrosync.application.primaryports.mapper.usuarios.UsuarioDTOMapper;
 import com.agrosync.application.usecase.usuarios.usuario.RegistrarNuevoUsuario;
@@ -19,7 +19,7 @@ public class RegistrarNuevoUsuarioInteractorImpl implements RegistrarNuevoUsuari
     }
 
     @Override
-    public void ejecutar(UsuarioDTO data) {
+    public void ejecutar(RegiserNewUserDTO data) {
         UsuarioDomain usuarioDomain = UsuarioDTOMapper.INSTANCE.toDomain(data);
         registrarNuevoUsuario.ejecutar(usuarioDomain);
     }
