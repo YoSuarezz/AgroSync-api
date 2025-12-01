@@ -2,7 +2,6 @@ package com.agrosync.application.secondaryports.entity.carteras;
 
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
-import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import jakarta.persistence.*;
 
@@ -32,7 +31,7 @@ public class CarteraEntity extends Auditoria {
 
     public CarteraEntity() {
         setId(UUIDHelper.getDefault());
-        setUsuario(UsuarioEntity.create());
+        setUsuario(null);
         setSaldoActual(BigDecimal.ZERO);
         setTotalCuentasPagar(BigDecimal.ZERO);
         setTotalCuentasCobrar(BigDecimal.ZERO);
@@ -51,11 +50,11 @@ public class CarteraEntity extends Auditoria {
     }
 
     public static CarteraEntity create(UUID id) {
-        return new CarteraEntity(id, UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+        return new CarteraEntity(id, null, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     public static CarteraEntity create() {
-        return new CarteraEntity(UUIDHelper.getDefault(), UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+        return new CarteraEntity(UUIDHelper.getDefault(), null, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     public UUID getId() {
@@ -71,7 +70,7 @@ public class CarteraEntity extends Auditoria {
     }
 
     public void setUsuario(UsuarioEntity usuario) {
-        this.usuario = ObjectHelper.getDefault(usuario, UsuarioEntity.create());
+        this.usuario = usuario;
     }
 
     public BigDecimal getSaldoActual() {

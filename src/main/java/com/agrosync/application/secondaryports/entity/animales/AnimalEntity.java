@@ -4,6 +4,7 @@ import com.agrosync.application.primaryports.enums.EstadoAnimalEnum;
 import com.agrosync.application.primaryports.enums.SexoEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
+import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
@@ -47,6 +48,10 @@ public class AnimalEntity extends Auditoria {
     @Column(name = "estado")
     private EstadoAnimalEnum estado;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_venta")
+    private VentaEntity venta;
+
     public AnimalEntity() {
         setId(UUIDHelper.getDefault());
         setSlot(TextHelper.EMPTY);
@@ -57,9 +62,10 @@ public class AnimalEntity extends Auditoria {
         setPrecioKiloCompra(BigDecimal.ZERO);
         setPrecioKiloVenta(BigDecimal.ZERO);
         setEstado(EstadoAnimalEnum.DISPONIBLE);
+        setVenta(VentaEntity.create());
     }
 
-    public AnimalEntity(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteEntity lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado) {
+    public AnimalEntity(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteEntity lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado, VentaEntity venta) {
         setId(id);
         setSlot(slot);
         setNumeroAnimal(numeroAnimal);
@@ -69,18 +75,19 @@ public class AnimalEntity extends Auditoria {
         setPrecioKiloCompra(precioKiloCompra);
         setPrecioKiloVenta(precioKiloVenta);
         setEstado(estado);
+        setVenta(venta);
     }
 
-    public static AnimalEntity create(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteEntity lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado) {
-        return new AnimalEntity(id, slot, numeroAnimal, peso, sexo, lote, precioKiloCompra, precioKiloVenta, estado);
+    public static AnimalEntity create(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteEntity lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado, VentaEntity venta) {
+        return new AnimalEntity(id, slot, numeroAnimal, peso, sexo, lote, precioKiloCompra, precioKiloVenta, estado, venta);
     }
 
     public static AnimalEntity create(UUID id) {
-        return new AnimalEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, BigDecimal.ZERO, SexoEnum.MACHO, LoteEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, EstadoAnimalEnum.DISPONIBLE);
+        return new AnimalEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, BigDecimal.ZERO, SexoEnum.MACHO, LoteEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, EstadoAnimalEnum.DISPONIBLE, VentaEntity.create());
     }
 
     public static AnimalEntity create() {
-        return new AnimalEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, BigDecimal.ZERO, SexoEnum.MACHO, LoteEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, EstadoAnimalEnum.DISPONIBLE);
+        return new AnimalEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, BigDecimal.ZERO, SexoEnum.MACHO, LoteEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, EstadoAnimalEnum.DISPONIBLE, VentaEntity.create());
     }
 
     public UUID getId() {
@@ -96,7 +103,7 @@ public class AnimalEntity extends Auditoria {
     }
 
     public void setSlot(String slot) {
-        this.slot = TextHelper.EMPTY;
+        this.slot = TextHelper.applyTrim(slot);
     }
 
     public String getNumeroAnimal() {
@@ -153,5 +160,13 @@ public class AnimalEntity extends Auditoria {
 
     public void setEstado(EstadoAnimalEnum estado) {
         this.estado = estado;
+    }
+
+    public VentaEntity getVenta() {
+        return venta;
+    }
+
+    public void setVenta(VentaEntity venta) {
+        this.venta = venta;
     }
 }

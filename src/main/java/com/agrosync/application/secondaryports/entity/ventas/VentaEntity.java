@@ -4,7 +4,6 @@ import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
-import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import jakarta.persistence.*;
@@ -36,7 +35,7 @@ public class VentaEntity extends Auditoria {
     @Column(name = "precio_total_venta")
     private BigDecimal precioTotalVenta;
 
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnimalEntity> animales;
 
     @OneToOne(mappedBy = "venta", cascade = CascadeType.ALL)
@@ -49,7 +48,7 @@ public class VentaEntity extends Auditoria {
         setFechaVenta(LocalDate.now());
         setPrecioTotalVenta(BigDecimal.ZERO);
         setAnimales(new ArrayList<>());
-        setCuentaCobrar(CuentaCobrarEntity.create());
+        setCuentaCobrar(null);
     }
 
     public VentaEntity(UUID id, String numeroVenta, UsuarioEntity cliente, LocalDate fechaVenta, BigDecimal precioTotalVenta, List<AnimalEntity> animales, CuentaCobrarEntity cuentaCobrar) {
@@ -67,11 +66,11 @@ public class VentaEntity extends Auditoria {
     }
 
     public static VentaEntity create(UUID id) {
-        return new VentaEntity(id, TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, new ArrayList<>(), CuentaCobrarEntity.create());
+        return new VentaEntity(id, TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, new ArrayList<>(), null);
     }
 
     public static VentaEntity create() {
-        return new VentaEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, new ArrayList<>(), CuentaCobrarEntity.create());
+        return new VentaEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, new ArrayList<>(), null);
     }
 
     public UUID getId() {
@@ -127,6 +126,6 @@ public class VentaEntity extends Auditoria {
     }
 
     public void setCuentaCobrar(CuentaCobrarEntity cuentaCobrar) {
-        this.cuentaCobrar = ObjectHelper.getDefault(cuentaCobrar, CuentaCobrarEntity.create());
+        this.cuentaCobrar = cuentaCobrar;
     }
 }

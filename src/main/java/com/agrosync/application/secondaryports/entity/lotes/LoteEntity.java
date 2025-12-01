@@ -3,7 +3,6 @@ package com.agrosync.application.secondaryports.entity.lotes;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
-import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import jakarta.persistence.*;
@@ -43,7 +42,7 @@ public class LoteEntity extends Auditoria {
 
     public LoteEntity() {
         setId(UUIDHelper.getDefault());
-        setCompra(CompraEntity.create());
+        setCompra(null);
         setNumeroLote(TextHelper.EMPTY);
         setContramarca(TextHelper.EMPTY);
         setFecha(LocalDate.now());
@@ -66,11 +65,11 @@ public class LoteEntity extends Auditoria {
     }
 
     public static LoteEntity create(UUID id) {
-        return new LoteEntity(id, CompraEntity.create(), TextHelper.EMPTY, TextHelper.EMPTY, LocalDate.now(), BigDecimal.ZERO, new ArrayList<>());
+        return new LoteEntity(id, null, TextHelper.EMPTY, TextHelper.EMPTY, LocalDate.now(), BigDecimal.ZERO, new ArrayList<>());
     }
 
     public static LoteEntity create() {
-        return new LoteEntity(UUIDHelper.getDefault(), CompraEntity.create(), TextHelper.EMPTY, TextHelper.EMPTY, LocalDate.now(), BigDecimal.ZERO, new ArrayList<>());
+        return new LoteEntity(UUIDHelper.getDefault(), null, TextHelper.EMPTY, TextHelper.EMPTY, LocalDate.now(), BigDecimal.ZERO, new ArrayList<>());
     }
 
     public UUID getId() {
@@ -86,7 +85,7 @@ public class LoteEntity extends Auditoria {
     }
 
     public void setCompra(CompraEntity compra) {
-        this.compra = ObjectHelper.getDefault(compra, CompraEntity.create());
+        this.compra = compra;
     }
 
     public String getNumeroLote() {

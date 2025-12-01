@@ -19,17 +19,6 @@ public class AgroSyncApplication {
     }
 
     @Bean
-    CommandLineRunner init(TipoUsuarioRepository tipoUsuarioRepository) {
-        return args -> {
-            var tipoUsuario = tipoUsuarioRepository.findAll();
-            if (tipoUsuario.isEmpty()) {
-                tipoUsuarioRepository.saveAll(List.of(
-                ));
-            }
-        };
-    }
-
-    @Bean
     WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override

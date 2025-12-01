@@ -44,7 +44,7 @@ public class TipoUsuarioEntity {
     }
 
     public void setId(UUID id) {
-        this.id = UUIDHelper.getDefault();
+        this.id = UUIDHelper.getDefault(id, UUIDHelper.getDefault());
     }
 
     public String getNombre() {

@@ -5,7 +5,6 @@ import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.cobros.CobroEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
-import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import jakarta.persistence.*;
@@ -41,7 +40,7 @@ public class CuentaCobrarEntity extends Auditoria {
     @Column(name = "saldo_pendiente")
     private BigDecimal saldoPendiente;
 
-    @OneToMany(mappedBy = "cuentaPorCobrar")
+    @OneToMany(mappedBy = "cuentaCobrar")
     private List<CobroEntity> cobros;
 
     @Enumerated(EnumType.STRING)
@@ -57,8 +56,8 @@ public class CuentaCobrarEntity extends Auditoria {
     public CuentaCobrarEntity() {
         setId(UUIDHelper.getDefault());
         setNumeroCuenta(TextHelper.EMPTY);
-        setVenta(VentaEntity.create());
-        setCliente(UsuarioEntity.create());
+        setVenta(null);
+        setCliente(null);
         setMontoTotal(BigDecimal.ZERO);
         setSaldoPendiente(BigDecimal.ZERO);
         setCobros(new ArrayList<>());
@@ -85,11 +84,11 @@ public class CuentaCobrarEntity extends Auditoria {
     }
 
     public static CuentaCobrarEntity create(UUID id) {
-        return new CuentaCobrarEntity(id, TextHelper.EMPTY, VentaEntity.create(), UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
+        return new CuentaCobrarEntity(id, TextHelper.EMPTY, null, null, BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
     }
 
     public static CuentaCobrarEntity create() {
-        return new CuentaCobrarEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, VentaEntity.create(), UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
+        return new CuentaCobrarEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, null, null, BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
     }
 
     public UUID getId() {
@@ -113,7 +112,7 @@ public class CuentaCobrarEntity extends Auditoria {
     }
 
     public void setVenta(VentaEntity venta) {
-        this.venta = ObjectHelper.getDefault(venta, VentaEntity.create());
+        this.venta = venta;
     }
 
     public UsuarioEntity getCliente() {
@@ -121,7 +120,7 @@ public class CuentaCobrarEntity extends Auditoria {
     }
 
     public void setCliente(UsuarioEntity cliente) {
-        this.cliente = ObjectHelper.getDefault(cliente, UsuarioEntity.create());
+        this.cliente = cliente;
     }
 
     public BigDecimal getMontoTotal() {

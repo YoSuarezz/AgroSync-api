@@ -56,7 +56,7 @@ public class CuentaPagarEntity extends Auditoria {
     public CuentaPagarEntity() {
         setId(UUIDHelper.getDefault());
         setNumeroCuenta(TextHelper.EMPTY);
-        setCompra(CompraEntity.create());
+        setCompra(null);
         setProveedor(UsuarioEntity.create());
         setMontoTotal(BigDecimal.ZERO);
         setSaldoPendiente(BigDecimal.ZERO);
@@ -84,11 +84,11 @@ public class CuentaPagarEntity extends Auditoria {
     }
 
     public static CuentaPagarEntity create(UUID id) {
-        return new CuentaPagarEntity(id, TextHelper.EMPTY, CompraEntity.create(), UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
+        return new CuentaPagarEntity(id, TextHelper.EMPTY, null, UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
     }
 
     public static CuentaPagarEntity create() {
-        return new CuentaPagarEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, CompraEntity.create(), UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
+        return new CuentaPagarEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, null, UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
     }
 
     public UUID getId() {
