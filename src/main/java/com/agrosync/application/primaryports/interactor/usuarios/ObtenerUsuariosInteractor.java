@@ -1,9 +1,9 @@
 package com.agrosync.application.primaryports.interactor.usuarios;
 
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioDTO;
-import com.agrosync.application.primaryports.dto.usuarios.UsuarioRequest;
+import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioPageDTO;
+import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.application.primaryports.interactor.InteractorWithReturn;
-import org.springframework.data.domain.Page;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
 
-public interface ObtenerUsuariosInteractor extends InteractorWithReturn<UsuarioRequest, Page<UsuarioDTO>> {
+public interface ObtenerUsuariosInteractor extends InteractorWithReturn<UsuarioPageDTO, PageResponse<ObtenerUsuarioDTO>> {
 }

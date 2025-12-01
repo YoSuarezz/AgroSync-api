@@ -1,11 +1,9 @@
 package com.agrosync.crosscutting.exception.messagecatalog.data;
 
-import lombok.Getter;
-
 import static com.agrosync.crosscutting.helpers.TextHelper.UNDERLINE;
 import static com.agrosync.crosscutting.helpers.TextHelper.concatenate;
 
-@Getter
+
 public enum CodigoMensaje {
 
     M00001(TipoMensaje.TECNICO, CategoriaMensaje.ERROR, "00001", true),
@@ -30,5 +28,21 @@ public enum CodigoMensaje {
 
     public String getIdentificador() {
         return concatenate(tipo.name(), UNDERLINE, categoria.name(), UNDERLINE, codigo);
+    }
+
+    public TipoMensaje getTipo() {
+        return tipo;
+    }
+
+    public CategoriaMensaje getCategoria() {
+        return categoria;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public boolean isBase() {
+        return base;
     }
 }

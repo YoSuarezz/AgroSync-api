@@ -5,6 +5,8 @@ import com.agrosync.domain.usuarios.exceptions.UsuarioIdNoExisteException;
 import com.agrosync.domain.usuarios.rules.UsuarioIdExisteRule;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UsuarioIdExisteRuleImpl implements UsuarioIdExisteRule {
 
@@ -15,7 +17,7 @@ public class UsuarioIdExisteRuleImpl implements UsuarioIdExisteRule {
     }
 
     @Override
-    public void validate(Long data) {
+    public void validate(UUID data) {
         if (!usuarioRepository.existsById(data)) {
             throw UsuarioIdNoExisteException.create();
         }
