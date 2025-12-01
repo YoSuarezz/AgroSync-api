@@ -23,6 +23,7 @@ public class RegistrarNuevoUsuarioImpl implements RegistrarNuevoUsuario {
     public void ejecutar(UsuarioDomain data) {
         registrarNuevoUsuarioRulesValidator.validar(data);
         UsuarioEntity usuarioEntity = UsuarioEntityMapper.INSTANCE.toEntity(data);
+        usuarioEntity.getCartera().setUsuario(usuarioEntity);
         usuarioRepository.save(usuarioEntity);
     }
 }

@@ -167,6 +167,6 @@ public class UsuarioEntity {
     }
 
     public void setEstado(EstadoUsuarioEnum estado) {
-        this.estado = estado;
+        this.estado = ObjectHelper.getDefault(estado, EstadoUsuarioEnum.ACTIVO);
     }
 }
