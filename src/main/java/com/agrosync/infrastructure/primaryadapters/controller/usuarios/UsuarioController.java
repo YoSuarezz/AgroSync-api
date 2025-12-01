@@ -1,25 +1,29 @@
 package com.agrosync.infrastructure.primaryadapters.controller.usuarios;
 
-import com.agrosync.application.primaryports.dto.usuarios.request.RegiserNewUserDTO;
-import com.agrosync.application.primaryports.dto.usuarios.request.TipoUsuarioDTO;
-import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioRequest;
+import com.agrosync.application.primaryports.dto.usuarios.request.ActualizarUsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.RegistrarNuevoUsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioPageDTO;
+import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.application.primaryports.interactor.usuarios.ActualizarUsuarioInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuarioPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuariosInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.RegistrarNuevoUsuarioInteractor;
+import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.GenericResponse;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.usuarios.UsuarioResponse;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     private final RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor;
@@ -35,109 +39,78 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public ResponseEntity<UsuarioResponse> registrarUsuario(@RequestBody RegiserNewUserDTO usuario) {
-
-        var httpStatusCode = HttpStatus.ACCEPTED;
-        var usuarioResponse = new UsuarioResponse();
-
+    public ResponseEntity<GenericResponse> registrarUsuario(@RequestBody RegistrarNuevoUsuarioDTO usuario) {
         try {
             registrarNuevoUsuarioInteractor.ejecutar(usuario);
-            usuarioResponse.getMensajes().add("Se ha registrado el usuario correctamente");
-
+            return GenerateResponse.generateSuccessResponse(List.of("Se ha registrado el usuario correctamente"));
         } catch (final AgroSyncException excepcion) {
-            excepcion.printStackTrace();
-            httpStatusCode = HttpStatus.BAD_REQUEST;
-            usuarioResponse.getMensajes().add(excepcion.getMensajeUsuario());
+            return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
         } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
-            httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             var userMessage = "Error al registrar el usuario";
-            usuarioResponse.getMensajes().add(userMessage);
+            return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(usuarioResponse, httpStatusCode);
     }
 
     @GetMapping
-    public ResponseEntity<UsuarioResponse> consultarUsuarios(@RequestParam(defaultValue = "0") int page,
-                                                             @RequestParam(defaultValue = "10") int size,
-                                                             @RequestParam(defaultValue = "nombre") String sortBy,
-                                                             @RequestParam(defaultValue = "ASC") String sortDirection,
-                                                             @RequestParam(required = false) String nombre,
-                                                             @RequestParam(required = false) String telefono,
-                                                             @RequestParam(required = false) String tipoUsuario) {
-
-        var httpStatusCode = HttpStatus.ACCEPTED;
-        var usuarioResponse = new UsuarioResponse();
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+    public ResponseEntity<UsuarioResponse<PageResponse<ObtenerUsuarioDTO>>> consultarUsuarios(@RequestParam(defaultValue = "0") int page,
+                                                                                                     @RequestParam(defaultValue = "10") int size,
+                                                                                                     @RequestParam(defaultValue = "nombre") String sortBy,
+                                                                                                     @RequestParam(defaultValue = "ASC") String sortDirection,
+                                                                                                     @RequestParam(required = false) String nombre,
+                                                                                                     @RequestParam(required = false) String telefono,
+                                                                                                     @RequestParam(required = false, name = "tipoUsuario") TipoUsuarioEnum tipoUsuario) {
 
         try {
-            RegiserNewUserDTO usuarioDTO = RegiserNewUserDTO.create()
-                    .setNombre(nombre)
-                    .setTelefono(telefono);
+            ObtenerUsuarioDTO filtro = ObtenerUsuarioDTO.create(null, nombre, telefono, tipoUsuario);
+            UsuarioPageDTO request = UsuarioPageDTO.create(page, size, sortBy, sortDirection, filtro, tipoUsuario);
 
-
-            var request = UsuarioRequest.create()
-                    .setPageable(pageable)
-                    .setUsuario(usuarioDTO);
-
-            usuarioResponse.setDatos(obtenerUsuarioInteractor.ejecutar(request));
-            usuarioResponse.getMensajes().add("Usuarios consultados correctamente");
+            PageResponse<ObtenerUsuarioDTO> resultados = obtenerUsuarioInteractor.ejecutar(request);
+            UsuarioResponse<PageResponse<ObtenerUsuarioDTO>> response = UsuarioResponse.build(List.of("Usuarios consultados correctamente"), resultados);
+            return GenerateResponse.generateSuccessResponseWithData(response);
 
         } catch (final AgroSyncException excepcion) {
-            excepcion.printStackTrace();
-            httpStatusCode = HttpStatus.BAD_REQUEST;
-            usuarioResponse.getMensajes().add(excepcion.getMessage());
+            var response = UsuarioResponse.build(List.of(excepcion.getMensajeUsuario()), PageResponse.from(Page.<ObtenerUsuarioDTO>empty()));
+            return GenerateResponse.generateBadRequestResponseWithData(response);
+        } catch (final IllegalArgumentException excepcion) {
+            var response = UsuarioResponse.build(List.of(excepcion.getMessage()), PageResponse.from(Page.<ObtenerUsuarioDTO>empty()));
+            return GenerateResponse.generateBadRequestResponseWithData(response);
         } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
-            httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            usuarioResponse.getMensajes().add("Error al consultar los Usuarios");
+            var response = UsuarioResponse.build(List.of("Error al consultar los Usuarios"), PageResponse.from(Page.<ObtenerUsuarioDTO>empty()));
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(usuarioResponse, httpStatusCode);
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> consultarUsuarioPorId(@PathVariable UUID id) {
+    public ResponseEntity<UsuarioResponse<ObtenerUsuarioDTO>> consultarUsuarioPorId(@PathVariable UUID id) {
 
-        var httpStatusCode = HttpStatus.ACCEPTED;
-        var usuarioResponse = new UsuarioResponse();
         try {
-            usuarioResponse.setDatos(obtenerUsuarioPorIdInteractor.ejecutar(id));
-            usuarioResponse.getMensajes().add("Usuario consultado correctamente");
+            ObtenerUsuarioDTO usuario = obtenerUsuarioPorIdInteractor.ejecutar(id);
+            var usuarioResponse = UsuarioResponse.build(List.of("Usuario consultado correctamente"), usuario);
+            return GenerateResponse.generateSuccessResponseWithData(usuarioResponse);
 
         } catch (final AgroSyncException excepcion) {
-            httpStatusCode = HttpStatus.BAD_REQUEST;
-            usuarioResponse.getMensajes().add(excepcion.getMessage());
+            var usuarioResponse = UsuarioResponse.<ObtenerUsuarioDTO>build(List.of(excepcion.getMensajeUsuario()), null);
+            return GenerateResponse.generateBadRequestResponseWithData(usuarioResponse);
         } catch (final Exception excepcion) {
-            httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             var userMessage = "Error al consultar el Usuario";
-            usuarioResponse.getMensajes().add(userMessage);
+            var usuarioResponse = UsuarioResponse.<ObtenerUsuarioDTO>build(List.of(userMessage), null);
+            return new ResponseEntity<>(usuarioResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(usuarioResponse, httpStatusCode);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody RegiserNewUserDTO usuario) {
-
-        var httpStatusCode = HttpStatus.ACCEPTED;
-        var usuarioResponse = new UsuarioResponse();
+    public ResponseEntity<GenericResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody ActualizarUsuarioDTO usuario) {
 
         try {
             usuario.setId(id);
             actualizarUsuarioInteractor.ejecutar(usuario);
-            usuarioResponse.getMensajes().add("Usuario actualizado correctamente");
+            return GenerateResponse.generateSuccessResponse(List.of("Usuario actualizado correctamente"));
         } catch (final AgroSyncException excepcion) {
-            httpStatusCode = HttpStatus.BAD_REQUEST;
-            usuarioResponse.getMensajes().add(excepcion.getMessage());
+            return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
         } catch (final Exception excepcion) {
-            httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             var mensajeUsuario = "Error al actualizar el Usuario";
-            usuarioResponse.getMensajes().add(mensajeUsuario);
+            return new ResponseEntity<>(GenericResponse.build(List.of(mensajeUsuario)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(usuarioResponse, httpStatusCode);
     }
 
 }

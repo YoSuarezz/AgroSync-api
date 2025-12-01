@@ -1,11 +1,12 @@
 package com.agrosync.application.primaryports.interactor.usuarios.impl;
 
-import com.agrosync.application.primaryports.dto.usuarios.request.RegiserNewUserDTO;
-import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioRequest;
+import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioPageDTO;
+import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuariosInteractor;
 import com.agrosync.application.primaryports.mapper.usuarios.UsuarioDTOMapper;
-import com.agrosync.application.usecase.usuarios.usuario.ObtenerUsuarios;
+import com.agrosync.application.usecase.usuarios.ObtenerUsuarios;
 import com.agrosync.domain.usuarios.UsuarioDomain;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,9 @@ public class ObtenerUsuariosInteractorImpl implements ObtenerUsuariosInteractor 
     }
 
     @Override
-    public Page<RegiserNewUserDTO> ejecutar(UsuarioRequest data) {
+    public PageResponse<ObtenerUsuarioDTO> ejecutar(UsuarioPageDTO data) {
         Page<UsuarioDomain> resultados = obtenerUsuarios.ejecutar(data);
-        return UsuarioDTOMapper.INSTANCE.toDTOCollection(resultados);
+        Page<ObtenerUsuarioDTO> dtoPage = UsuarioDTOMapper.INSTANCE.toObtenerDTOCollection(resultados);
+        return PageResponse.from(dtoPage);
     }
 }

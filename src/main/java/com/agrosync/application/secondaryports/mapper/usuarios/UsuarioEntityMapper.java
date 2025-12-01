@@ -13,7 +13,6 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper(uses = {
-        TipoUsuarioEntityMapper.class,
         CarteraEntityMapper.class,
         CompraEntityMapper.class,
         CuentaPagarEntityMapper.class,

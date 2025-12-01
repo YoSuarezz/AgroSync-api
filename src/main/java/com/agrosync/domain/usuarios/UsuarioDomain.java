@@ -1,6 +1,7 @@
 package com.agrosync.domain.usuarios;
 
-import com.agrosync.application.primaryports.enums.EstadoUsuarioEnum;
+import com.agrosync.application.primaryports.enums.usuarios.EstadoUsuarioEnum;
+import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.carteras.CarteraDomain;
 import com.agrosync.domain.compras.CompraDomain;
@@ -15,7 +16,7 @@ public class UsuarioDomain extends BaseDomain {
 
     private String nombre;
     private String telefono;
-    private TipoUsuarioDomain tipoUsuario;
+    private TipoUsuarioEnum tipoUsuario;
     private CarteraDomain cartera;
     private List<CompraDomain> compras;
     private List<CuentaPagarDomain> cuentasPagar;
@@ -27,7 +28,7 @@ public class UsuarioDomain extends BaseDomain {
         super();
     }
 
-    public UsuarioDomain(UUID id, String nombre, String telefono, TipoUsuarioDomain tipoUsuario, CarteraDomain cartera, List<CompraDomain> compras, List<CuentaPagarDomain> cuentasPagar, List<VentaDomain> ventas, List<CuentaCobrarDomain> cuentasCobrar, EstadoUsuarioEnum estado) {
+    public UsuarioDomain(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraDomain cartera, List<CompraDomain> compras, List<CuentaPagarDomain> cuentasPagar, List<VentaDomain> ventas, List<CuentaCobrarDomain> cuentasCobrar, EstadoUsuarioEnum estado) {
         super(id);
         setNombre(nombre);
         setTelefono(telefono);
@@ -56,11 +57,11 @@ public class UsuarioDomain extends BaseDomain {
         this.telefono = telefono;
     }
 
-    public TipoUsuarioDomain getTipoUsuario() {
+    public TipoUsuarioEnum getTipoUsuario() {
         return tipoUsuario;
     }
 
-    public void setTipoUsuario(TipoUsuarioDomain tipoUsuario) {
+    public void setTipoUsuario(TipoUsuarioEnum tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
 

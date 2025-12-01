@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.dto.auth;
 
-import com.agrosync.application.primaryports.enums.RolEnum;
+import com.agrosync.application.primaryports.enums.auth.RolEnum;
 
 public class RegisterRequest {
 

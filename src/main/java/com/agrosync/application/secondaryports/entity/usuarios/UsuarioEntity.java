@@ -1,11 +1,12 @@
 package com.agrosync.application.secondaryports.entity.usuarios;
 
-import com.agrosync.application.primaryports.enums.EstadoUsuarioEnum;
 import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
 import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
+import com.agrosync.application.primaryports.enums.usuarios.EstadoUsuarioEnum;
+import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
@@ -29,9 +30,9 @@ public class UsuarioEntity {
     @Column(name = "telefono")
     private String telefono;
 
-    @ManyToOne
-    @JoinColumn(name = "id_tipo_usuario")
-    private TipoUsuarioEntity tipoUsuario;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_usuario")
+    private TipoUsuarioEnum tipoUsuario;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private CarteraEntity cartera;
@@ -56,7 +57,7 @@ public class UsuarioEntity {
         setId(UUIDHelper.getDefault());
         setNombre(TextHelper.EMPTY);
         setTelefono(TextHelper.EMPTY);
-        setTipoUsuario(TipoUsuarioEntity.create());
+        setTipoUsuario(TipoUsuarioEnum.CLIENTE);
         setCartera(CarteraEntity.create());
         setCompras(new ArrayList<>());
         setCuentasPagar(new ArrayList<>());
@@ -65,7 +66,7 @@ public class UsuarioEntity {
         setEstado(EstadoUsuarioEnum.ACTIVO);
     }
 
-    public UsuarioEntity(UUID id, String nombre, String telefono, TipoUsuarioEntity tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado) {
+    public UsuarioEntity(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado) {
         setId(id);
         setNombre(nombre);
         setTelefono(telefono);
@@ -78,16 +79,16 @@ public class UsuarioEntity {
         setEstado(estado);
     }
 
-    public static UsuarioEntity create(UUID id, String nombre, String telefono, TipoUsuarioEntity tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado) {
+    public static UsuarioEntity create(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado) {
         return new UsuarioEntity(id, nombre, telefono, tipoUsuario, cartera, compras, cuentasPagar, ventas, cuentasCobrar, estado);
     }
 
     public static UsuarioEntity create(UUID id) {
-        return new UsuarioEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEntity.create(), CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO);
+        return new UsuarioEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO);
     }
 
     public static UsuarioEntity create() {
-        return new UsuarioEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEntity.create(), CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO);
+        return new UsuarioEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO);
     }
 
     public UUID getId() {
@@ -114,12 +115,12 @@ public class UsuarioEntity {
         this.telefono = TextHelper.applyTrim(telefono);
     }
 
-    public TipoUsuarioEntity getTipoUsuario() {
+    public TipoUsuarioEnum getTipoUsuario() {
         return tipoUsuario;
     }
 
-    public void setTipoUsuario(TipoUsuarioEntity tipoUsuario) {
-        this.tipoUsuario = ObjectHelper.getDefault(tipoUsuario, TipoUsuarioEntity.create());
+    public void setTipoUsuario(TipoUsuarioEnum tipoUsuario) {
+        this.tipoUsuario = ObjectHelper.getDefault(tipoUsuario, TipoUsuarioEnum.CLIENTE);
     }
 
     public CarteraEntity getCartera() {

@@ -1,7 +1,7 @@
 package com.agrosync.application.secondaryports.entity.animales;
 
-import com.agrosync.application.primaryports.enums.EstadoAnimalEnum;
-import com.agrosync.application.primaryports.enums.SexoEnum;
+import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
+import com.agrosync.application.primaryports.enums.animales.SexoEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;

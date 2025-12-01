@@ -1,6 +1,6 @@
 package com.agrosync.infrastructure.secondaryadapters.auth.service;
 
-import com.agrosync.application.primaryports.enums.RolEnum;
+import com.agrosync.application.primaryports.enums.auth.RolEnum;
 import com.agrosync.application.secondaryports.entity.auth.AuthUserEntity;
 import com.agrosync.application.secondaryports.repository.AuthUserRepository;
 import com.agrosync.crosscutting.helpers.JwtHelper;

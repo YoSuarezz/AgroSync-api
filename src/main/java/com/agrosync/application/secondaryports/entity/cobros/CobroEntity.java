@@ -1,6 +1,6 @@
 package com.agrosync.application.secondaryports.entity.cobros;
 
-import com.agrosync.application.primaryports.enums.MetodoPagoEnum;
+import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
