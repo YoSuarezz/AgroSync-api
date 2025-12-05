@@ -17,6 +17,6 @@ public class RegisterAuthImpl implements RegisterAuth {
 
     @Override
     public AuthResponse ejecutar(AuthUserDomain data) {
-        return authUserDetailsService.register(data.getEmail(), data.getPassword(), data.getRol());
+        return authUserDetailsService.register(data.getEmail(), data.getPassword(), data.getRol(), data.getSuscripcionId());
     }
 }

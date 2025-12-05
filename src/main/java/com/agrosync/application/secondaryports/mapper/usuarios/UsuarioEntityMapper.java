@@ -7,10 +7,13 @@ import com.agrosync.application.secondaryports.mapper.compras.CompraEntityMapper
 import com.agrosync.application.secondaryports.mapper.cuentascobrar.CuentaCobrarEntityMapper;
 import com.agrosync.application.secondaryports.mapper.cuentaspagar.CuentaPagarEntityMapper;
 import com.agrosync.application.secondaryports.mapper.ventas.VentaEntityMapper;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mapper(uses = {
         CarteraEntityMapper.class,
@@ -22,12 +25,18 @@ import java.util.List;
 public interface UsuarioEntityMapper {
 
     UsuarioEntityMapper INSTANCE = Mappers.getMapper(UsuarioEntityMapper.class);
-
+    
+    @Mapping(target = "suscripcion", source = "suscripcionId")
     UsuarioEntity toEntity(UsuarioDomain domain);
 
+    @Mapping(target = "suscripcionId", source = "suscripcion.id")
     UsuarioDomain toDomain(UsuarioEntity entity);
 
     List<UsuarioEntity> toEntityCollection(List<UsuarioDomain> domainCollection);
 
     List<UsuarioDomain> toDomainCollection(List<UsuarioEntity> entityCollection);
+
+    default SuscripcionEntity map(UUID suscripcionId) {
+        return SuscripcionEntity.create(suscripcionId);
+    }
 }

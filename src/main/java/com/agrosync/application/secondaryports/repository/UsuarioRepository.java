@@ -12,9 +12,21 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, UUID>, J
 
     boolean existsByNombreIgnoreCase(String nombre);
 
+    boolean existsByNombreIgnoreCaseAndSuscripcion_Id(String nombre, UUID suscripcionId);
+
     boolean existsByNombreAndIdNot(String nombre, UUID id);
+
+    boolean existsByNombreAndIdNotAndSuscripcion_Id(String nombre, UUID id, UUID suscripcionId);
 
     boolean existsByTelefono(String telefono);
 
+    boolean existsByTelefonoAndSuscripcion_Id(String telefono, UUID suscripcionId);
+
     boolean existsByTelefonoAndIdNot(String telefono, UUID id);
+
+    boolean existsByTelefonoAndIdNotAndSuscripcion_Id(String telefono, UUID id, UUID suscripcionId);
+
+    java.util.Optional<UsuarioEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
+
+    boolean existsByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
 }

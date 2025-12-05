@@ -1,9 +1,6 @@
 package com.agrosync.application.secondaryports.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Temporal;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -11,6 +8,7 @@ import java.util.Date;
 
 import static jakarta.persistence.TemporalType.TIMESTAMP;
 
+@MappedSuperclass
 public class Auditoria {
 
     @Column(name = "created_date")

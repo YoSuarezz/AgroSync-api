@@ -1,6 +1,7 @@
 package com.agrosync.domain.usuarios.rules.impl;
 
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
+import com.agrosync.domain.usuarios.UsuarioDomain;
 import com.agrosync.domain.usuarios.exceptions.NumeroTelefonoUsuarioExisteException;
 import com.agrosync.domain.usuarios.rules.NumeroTelefonoUsuarioNoExisteRule;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ public class NumeroTelefonoUsuarioNoExisteRuleImpl implements NumeroTelefonoUsua
     }
 
     @Override
-    public void validate(String data) {
-        if (usuarioRepository.existsByTelefono(data)) {
+    public void validate(UsuarioDomain data) {
+        if (usuarioRepository.existsByTelefonoAndSuscripcion_Id(data.getTelefono(), data.getSuscripcionId())) {
             throw NumeroTelefonoUsuarioExisteException.create();
         }
     }
