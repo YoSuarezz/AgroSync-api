@@ -21,8 +21,10 @@ public class RegistrarNuevoUsuarioImpl implements RegistrarNuevoUsuario {
 
     @Override
     public void ejecutar(UsuarioDomain data) {
+
         registrarNuevoUsuarioRulesValidator.validar(data);
         UsuarioEntity usuarioEntity = UsuarioEntityMapper.INSTANCE.toEntity(data);
+        System.out.println("SUS" + usuarioEntity.getSuscripcion().getId());
         usuarioEntity.getCartera().setUsuario(usuarioEntity);
         usuarioRepository.save(usuarioEntity);
     }
