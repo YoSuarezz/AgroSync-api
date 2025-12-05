@@ -4,6 +4,7 @@ import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
 import com.agrosync.application.primaryports.enums.animales.SexoEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
@@ -52,6 +53,10 @@ public class AnimalEntity extends Auditoria {
     @JoinColumn(name = "id_venta")
     private VentaEntity venta;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
+
     public AnimalEntity() {
         setId(UUIDHelper.getDefault());
         setSlot(TextHelper.EMPTY);
@@ -63,9 +68,10 @@ public class AnimalEntity extends Auditoria {
         setPrecioKiloVenta(BigDecimal.ZERO);
         setEstado(EstadoAnimalEnum.DISPONIBLE);
         setVenta(VentaEntity.create());
+        setSuscripcion(SuscripcionEntity.create());
     }
 
-    public AnimalEntity(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteEntity lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado, VentaEntity venta) {
+    public AnimalEntity(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteEntity lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado, VentaEntity venta, SuscripcionEntity suscripcion) {
         setId(id);
         setSlot(slot);
         setNumeroAnimal(numeroAnimal);
@@ -76,18 +82,19 @@ public class AnimalEntity extends Auditoria {
         setPrecioKiloVenta(precioKiloVenta);
         setEstado(estado);
         setVenta(venta);
+        setSuscripcion(suscripcion);
     }
 
-    public static AnimalEntity create(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteEntity lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado, VentaEntity venta) {
-        return new AnimalEntity(id, slot, numeroAnimal, peso, sexo, lote, precioKiloCompra, precioKiloVenta, estado, venta);
+    public static AnimalEntity create(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteEntity lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado, VentaEntity venta, SuscripcionEntity suscripcion) {
+        return new AnimalEntity(id, slot, numeroAnimal, peso, sexo, lote, precioKiloCompra, precioKiloVenta, estado, venta, suscripcion);
     }
 
     public static AnimalEntity create(UUID id) {
-        return new AnimalEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, BigDecimal.ZERO, SexoEnum.MACHO, LoteEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, EstadoAnimalEnum.DISPONIBLE, VentaEntity.create());
+        return new AnimalEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, BigDecimal.ZERO, SexoEnum.MACHO, LoteEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, EstadoAnimalEnum.DISPONIBLE, VentaEntity.create(), SuscripcionEntity.create());
     }
 
     public static AnimalEntity create() {
-        return new AnimalEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, BigDecimal.ZERO, SexoEnum.MACHO, LoteEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, EstadoAnimalEnum.DISPONIBLE, VentaEntity.create());
+        return new AnimalEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, BigDecimal.ZERO, SexoEnum.MACHO, LoteEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, EstadoAnimalEnum.DISPONIBLE, VentaEntity.create(), SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -168,5 +175,13 @@ public class AnimalEntity extends Auditoria {
 
     public void setVenta(VentaEntity venta) {
         this.venta = venta;
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public void setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = suscripcion;
     }
 }

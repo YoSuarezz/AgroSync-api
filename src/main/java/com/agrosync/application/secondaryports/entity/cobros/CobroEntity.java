@@ -3,6 +3,7 @@ package com.agrosync.application.secondaryports.entity.cobros;
 import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
@@ -37,6 +38,10 @@ public class CobroEntity extends Auditoria {
     @Column(name = "concepto")
     private String concepto;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
+
     public CobroEntity() {
         setId(UUIDHelper.getDefault());
         setCuentaCobrar(CuentaCobrarEntity.create());
@@ -44,27 +49,29 @@ public class CobroEntity extends Auditoria {
         setFechaCobro(LocalDateTime.now());
         setMetodoPago(MetodoPagoEnum.OTRO);
         setConcepto(TextHelper.EMPTY);
+        setSuscripcion(SuscripcionEntity.create());
     }
 
-    public CobroEntity(UUID id, CuentaCobrarEntity cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto) {
+    public CobroEntity(UUID id, CuentaCobrarEntity cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto, SuscripcionEntity suscripcion) {
         setId(id);
         setCuentaCobrar(cuentaCobrar);
         setMonto(monto);
         setFechaCobro(fechaCobro);
         setMetodoPago(metodoPago);
         setConcepto(concepto);
+        setSuscripcion(suscripcion);
     }
 
-    public static CobroEntity create(UUID id, CuentaCobrarEntity cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto) {
-        return new CobroEntity(id, cuentaCobrar, monto, fechaCobro, metodoPago, concepto);
+    public static CobroEntity create(UUID id, CuentaCobrarEntity cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto, SuscripcionEntity suscripcion) {
+        return new CobroEntity(id, cuentaCobrar, monto, fechaCobro, metodoPago, concepto, suscripcion);
     }
 
     public static CobroEntity create(UUID id) {
-        return new CobroEntity(id, CuentaCobrarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, TextHelper.EMPTY);
+        return new CobroEntity(id, CuentaCobrarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, TextHelper.EMPTY, SuscripcionEntity.create());
     }
 
     public static CobroEntity create() {
-        return new CobroEntity(UUIDHelper.getDefault(), CuentaCobrarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, TextHelper.EMPTY);
+        return new CobroEntity(UUIDHelper.getDefault(), CuentaCobrarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, TextHelper.EMPTY, SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -113,5 +120,13 @@ public class CobroEntity extends Auditoria {
 
     public void setConcepto(String concepto) {
         this.concepto = TextHelper.applyTrim(concepto);
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public void setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = suscripcion;
     }
 }

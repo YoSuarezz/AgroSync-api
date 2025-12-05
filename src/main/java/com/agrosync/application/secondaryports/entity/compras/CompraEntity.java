@@ -3,6 +3,7 @@ package com.agrosync.application.secondaryports.entity.compras;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
 import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
@@ -40,6 +41,10 @@ public class CompraEntity extends Auditoria {
     @OneToOne(mappedBy = "compra", cascade = CascadeType.ALL)
     private CuentaPagarEntity cuentaPagar;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
+
     public CompraEntity() {
         setId(UUIDHelper.getDefault());
         setNumeroCompra(TextHelper.EMPTY);
@@ -48,9 +53,10 @@ public class CompraEntity extends Auditoria {
         setPrecioTotalCompra(BigDecimal.ZERO);
         setLote(LoteEntity.create());
         setCuentaPagar(CuentaPagarEntity.create());
+        setSuscripcion(SuscripcionEntity.create());
     }
 
-    public CompraEntity(UUID id, String numeroCompra, UsuarioEntity proveedor, LocalDate fechaCompra, BigDecimal precioTotalCompra, LoteEntity lote, CuentaPagarEntity cuentaPagar) {
+    public CompraEntity(UUID id, String numeroCompra, UsuarioEntity proveedor, LocalDate fechaCompra, BigDecimal precioTotalCompra, LoteEntity lote, CuentaPagarEntity cuentaPagar, SuscripcionEntity suscripcion) {
         setId(id);
         setNumeroCompra(numeroCompra);
         setProveedor(proveedor);
@@ -58,18 +64,19 @@ public class CompraEntity extends Auditoria {
         setPrecioTotalCompra(precioTotalCompra);
         setLote(lote);
         setCuentaPagar(cuentaPagar);
+        setSuscripcion(suscripcion);
     }
 
-    public static CompraEntity create(UUID id, String numeroCompra, UsuarioEntity proveedor, LocalDate fechaCompra, BigDecimal precioTotalCompra, LoteEntity lote, CuentaPagarEntity cuentaPagar) {
-        return new CompraEntity(id, numeroCompra, proveedor, fechaCompra, precioTotalCompra, lote, cuentaPagar);
+    public static CompraEntity create(UUID id, String numeroCompra, UsuarioEntity proveedor, LocalDate fechaCompra, BigDecimal precioTotalCompra, LoteEntity lote, CuentaPagarEntity cuentaPagar, SuscripcionEntity suscripcion) {
+        return new CompraEntity(id, numeroCompra, proveedor, fechaCompra, precioTotalCompra, lote, cuentaPagar, suscripcion);
     }
 
     public static CompraEntity create(UUID id) {
-        return new CompraEntity(id, TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, LoteEntity.create(), CuentaPagarEntity.create());
+        return new CompraEntity(id, TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, LoteEntity.create(), CuentaPagarEntity.create(), SuscripcionEntity.create());
     }
 
     public static CompraEntity create() {
-        return new CompraEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, LoteEntity.create(), CuentaPagarEntity.create());
+        return new CompraEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, LoteEntity.create(), CuentaPagarEntity.create(), SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -126,5 +133,13 @@ public class CompraEntity extends Auditoria {
 
     public void setCuentaPagar(CuentaPagarEntity cuentaPagar) {
         this.cuentaPagar = ObjectHelper.getDefault(cuentaPagar, CuentaPagarEntity.create());
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public void setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = suscripcion;
     }
 }
