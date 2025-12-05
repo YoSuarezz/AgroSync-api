@@ -32,7 +32,6 @@ public class CompraController {
         } catch (final AgroSyncException excepcion) {
             return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
         } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
             var userMessage = "Error al registrar la compra";
             return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
