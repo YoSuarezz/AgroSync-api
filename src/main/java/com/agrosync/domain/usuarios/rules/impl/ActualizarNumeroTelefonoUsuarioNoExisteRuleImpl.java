@@ -17,7 +17,7 @@ public class ActualizarNumeroTelefonoUsuarioNoExisteRuleImpl implements Actualiz
 
     @Override
     public void validate(UsuarioDomain data) {
-        if (usuarioRepository.existsByTelefonoAndIdNot(data.getTelefono(), data.getId())) {
+        if (usuarioRepository.existsByTelefonoAndIdNotAndSuscripcion_Id(data.getTelefono(), data.getId(), data.getSuscripcionId())) {
             throw NumeroTelefonoUsuarioExisteException.create();
         }
     }

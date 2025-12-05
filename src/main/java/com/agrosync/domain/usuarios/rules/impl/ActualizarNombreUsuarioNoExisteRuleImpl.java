@@ -17,7 +17,7 @@ public class ActualizarNombreUsuarioNoExisteRuleImpl implements ActualizarNombre
 
     @Override
     public void validate(UsuarioDomain data) {
-        if (usuarioRepository.existsByNombreAndIdNot(data.getNombre(), data.getId())) {
+        if (usuarioRepository.existsByNombreAndIdNotAndSuscripcion_Id(data.getNombre(), data.getId(), data.getSuscripcionId())) {
             throw NombreUsuarioExisteException.create();
         }
     }

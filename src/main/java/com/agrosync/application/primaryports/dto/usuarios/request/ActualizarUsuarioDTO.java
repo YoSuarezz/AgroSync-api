@@ -13,12 +13,14 @@ public class ActualizarUsuarioDTO {
     private String nombre;
     private String telefono;
     private TipoUsuarioEnum tipoUsuario;
+    private UUID suscripcionId;
 
     public ActualizarUsuarioDTO() {
         setId(UUIDHelper.getDefault());
         setNombre(TextHelper.EMPTY);
         setTelefono(TextHelper.EMPTY);
         setTipoUsuario(TipoUsuarioEnum.CLIENTE);
+        setSuscripcionId(null);
     }
 
     public ActualizarUsuarioDTO(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario) {
@@ -69,5 +71,13 @@ public class ActualizarUsuarioDTO {
 
     public void setTipoUsuario(TipoUsuarioEnum tipoUsuario) {
         this.tipoUsuario = ObjectHelper.getDefault(tipoUsuario, TipoUsuarioEnum.CLIENTE);
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

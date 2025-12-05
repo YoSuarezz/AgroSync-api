@@ -8,6 +8,7 @@ import com.agrosync.application.secondaryports.mapper.usuarios.UsuarioEntityMapp
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.usecase.usuarios.ObtenerUsuarios;
 import com.agrosync.domain.usuarios.UsuarioDomain;
+import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,13 +27,16 @@ import java.util.stream.Collectors;
 public class ObtenerUsuariosImpl implements ObtenerUsuarios {
 
     private final UsuarioRepository usuarioRepository;
+    private final SuscripcionExisteRule suscripcionExisteRule;
 
-    public ObtenerUsuariosImpl(UsuarioRepository usuarioRepository) {
+    public ObtenerUsuariosImpl(UsuarioRepository usuarioRepository, SuscripcionExisteRule suscripcionExisteRule) {
         this.usuarioRepository = usuarioRepository;
+        this.suscripcionExisteRule = suscripcionExisteRule;
     }
 
     @Override
     public Page<UsuarioDomain> ejecutar(UsuarioPageDTO data) {
+        suscripcionExisteRule.validate(data.getSuscripcionId());
         String sortBy = StringUtils.hasText(data.getSortBy()) ? data.getSortBy() : "nombre";
         String sortDirection = StringUtils.hasText(data.getSortDirection()) ? data.getSortDirection() : "ASC";
 
@@ -73,6 +77,10 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
 
         if (tipoFiltro != null) {
             specs.add((root, query, cb) -> cb.equal(root.get("tipoUsuario"), tipoFiltro));
+        }
+
+        if (data.getSuscripcionId() != null) {
+            specs.add((root, query, cb) -> cb.equal(root.get("suscripcion").get("id"), data.getSuscripcionId()));
         }
 
         return Specification.allOf(specs);

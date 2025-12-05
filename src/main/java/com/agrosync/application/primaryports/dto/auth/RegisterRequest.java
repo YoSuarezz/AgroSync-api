@@ -7,6 +7,7 @@ public class RegisterRequest {
     private String email;
     private String password;
     private RolEnum rol;
+    private java.util.UUID suscripcionId;
 
     public String getEmail() {
         return email;
@@ -30,5 +31,13 @@ public class RegisterRequest {
 
     public void setRol(RolEnum rol) {
         this.rol = rol;
+    }
+
+    public java.util.UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(java.util.UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

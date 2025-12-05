@@ -3,17 +3,22 @@ package com.agrosync.application.primaryports.dto.usuarios.request;
 import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
+
+import java.util.UUID;
 
 public class RegistrarNuevoUsuarioDTO {
 
     private String nombre;
     private String telefono;
     private TipoUsuarioEnum tipoUsuario;
+    private UUID suscripcionId;
 
     public RegistrarNuevoUsuarioDTO() {
         setNombre(TextHelper.EMPTY);
         setTelefono(TextHelper.EMPTY);
         setTipoUsuario(TipoUsuarioEnum.CLIENTE);
+        setSuscripcionId(UUIDHelper.getDefault());
     }
 
     public RegistrarNuevoUsuarioDTO(String nombre, String telefono, TipoUsuarioEnum tipoUsuario) {
@@ -54,5 +59,13 @@ public class RegistrarNuevoUsuarioDTO {
 
     public void setTipoUsuario(TipoUsuarioEnum tipoUsuario) {
         this.tipoUsuario = ObjectHelper.getDefault(tipoUsuario, TipoUsuarioEnum.CLIENTE);
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

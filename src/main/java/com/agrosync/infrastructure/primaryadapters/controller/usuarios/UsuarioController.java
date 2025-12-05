@@ -2,6 +2,7 @@ package com.agrosync.infrastructure.primaryadapters.controller.usuarios;
 
 import com.agrosync.application.primaryports.dto.usuarios.request.ActualizarUsuarioDTO;
 import com.agrosync.application.primaryports.dto.usuarios.request.RegistrarNuevoUsuarioDTO;
+import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioPageDTO;
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.application.primaryports.interactor.usuarios.ActualizarUsuarioInteractor;
@@ -39,8 +40,10 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public ResponseEntity<GenericResponse> registrarUsuario(@RequestBody RegistrarNuevoUsuarioDTO usuario) {
+    public ResponseEntity<GenericResponse> registrarUsuario(@RequestBody RegistrarNuevoUsuarioDTO usuario,
+                                                           @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
+            usuario.setSuscripcionId(suscripcionId);
             registrarNuevoUsuarioInteractor.ejecutar(usuario);
             return GenerateResponse.generateSuccessResponse(List.of("Se ha registrado el usuario correctamente"));
         } catch (final AgroSyncException excepcion) {
@@ -58,11 +61,12 @@ public class UsuarioController {
                                                                                                      @RequestParam(defaultValue = "ASC") String sortDirection,
                                                                                                      @RequestParam(required = false) String nombre,
                                                                                                      @RequestParam(required = false) String telefono,
-                                                                                                     @RequestParam(required = false, name = "tipoUsuario") TipoUsuarioEnum tipoUsuario) {
+                                                                                                     @RequestParam(required = false, name = "tipoUsuario") TipoUsuarioEnum tipoUsuario,
+                                                                                                     @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
             ObtenerUsuarioDTO filtro = ObtenerUsuarioDTO.create(null, nombre, telefono, tipoUsuario);
-            UsuarioPageDTO request = UsuarioPageDTO.create(page, size, sortBy, sortDirection, filtro, tipoUsuario);
+            UsuarioPageDTO request = UsuarioPageDTO.create(page, size, sortBy, sortDirection, filtro, tipoUsuario, suscripcionId);
 
             PageResponse<ObtenerUsuarioDTO> resultados = obtenerUsuarioInteractor.ejecutar(request);
             UsuarioResponse<PageResponse<ObtenerUsuarioDTO>> response = UsuarioResponse.build(List.of("Usuarios consultados correctamente"), resultados);
@@ -81,10 +85,12 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponse<ObtenerUsuarioDTO>> consultarUsuarioPorId(@PathVariable UUID id) {
+    public ResponseEntity<UsuarioResponse<ObtenerUsuarioDTO>> consultarUsuarioPorId(@PathVariable UUID id,
+                                                                                   @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
-            ObtenerUsuarioDTO usuario = obtenerUsuarioPorIdInteractor.ejecutar(id);
+            UsuarioIdSuscripcionDTO request = UsuarioIdSuscripcionDTO.create(id, suscripcionId);
+            ObtenerUsuarioDTO usuario = obtenerUsuarioPorIdInteractor.ejecutar(request);
             var usuarioResponse = UsuarioResponse.build(List.of("Usuario consultado correctamente"), usuario);
             return GenerateResponse.generateSuccessResponseWithData(usuarioResponse);
 
@@ -99,10 +105,12 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GenericResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody ActualizarUsuarioDTO usuario) {
+    public ResponseEntity<GenericResponse> actualizarUsuario(@PathVariable UUID id, @RequestBody ActualizarUsuarioDTO usuario,
+                                                             @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
             usuario.setId(id);
+            usuario.setSuscripcionId(suscripcionId);
             actualizarUsuarioInteractor.ejecutar(usuario);
             return GenerateResponse.generateSuccessResponse(List.of("Usuario actualizado correctamente"));
         } catch (final AgroSyncException excepcion) {

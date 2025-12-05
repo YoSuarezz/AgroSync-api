@@ -1,6 +1,7 @@
 package com.agrosync.domain.usuarios.rules.impl;
 
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
+import com.agrosync.domain.usuarios.UsuarioDomain;
 import com.agrosync.domain.usuarios.exceptions.NombreUsuarioExisteException;
 import com.agrosync.domain.usuarios.rules.NombreUsuarioNoExisteRule;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ public class NombreUsuarioNoExisteRuleImpl implements NombreUsuarioNoExisteRule 
     }
 
     @Override
-    public void validate(String data) {
-        if (usuarioRepository.existsByNombreIgnoreCase(data)) {
+    public void validate(UsuarioDomain data) {
+        if (usuarioRepository.existsByNombreIgnoreCaseAndSuscripcion_Id(data.getNombre(), data.getSuscripcionId())) {
             throw NombreUsuarioExisteException.create();
         }
     }
