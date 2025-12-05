@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/subscription")
+@RequestMapping("/subscription")
 public class SuscripcionController {
 
     private final ObtenerSuscripcionesInteractor obtenerSuscripcionesInteractor;
