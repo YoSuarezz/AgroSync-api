@@ -14,10 +14,12 @@ public class ActualizarUsuarioImpl implements ActualizarUsuario {
 
     private final UsuarioRepository usuarioRepository;
     private final ActualizarUsuarioRulesValidator actualizarUsuarioRulesValidator;
+    private final UsuarioEntityMapper usuarioEntityMapper;
 
-    public ActualizarUsuarioImpl(UsuarioRepository usuarioRepository, ActualizarUsuarioRulesValidator actualizarUsuarioRulesValidator) {
+    public ActualizarUsuarioImpl(UsuarioRepository usuarioRepository, ActualizarUsuarioRulesValidator actualizarUsuarioRulesValidator, UsuarioEntityMapper usuarioEntityMapper) {
         this.usuarioRepository = usuarioRepository;
         this.actualizarUsuarioRulesValidator = actualizarUsuarioRulesValidator;
+        this.usuarioEntityMapper = usuarioEntityMapper;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class ActualizarUsuarioImpl implements ActualizarUsuario {
         UsuarioEntity usuarioExistente = usuarioRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
                 .orElseThrow(UsuarioIdNoExisteException::create);
 
-        UsuarioEntity usuarioEntity = UsuarioEntityMapper.INSTANCE.toEntity(data);
+        UsuarioEntity usuarioEntity = usuarioEntityMapper.toEntity(data);
         usuarioEntity.setCartera(usuarioExistente.getCartera());
         usuarioRepository.save(usuarioEntity);
     }

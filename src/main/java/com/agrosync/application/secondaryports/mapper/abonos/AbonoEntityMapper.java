@@ -8,10 +8,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AbonoEntityMapper {
-
-    AbonoEntityMapper INSTANCE = Mappers.getMapper(AbonoEntityMapper.class);
 
     @Mapping(target = "cuentaPagar", ignore = true)
     AbonoEntity toEntity(AbonoDomain domain);

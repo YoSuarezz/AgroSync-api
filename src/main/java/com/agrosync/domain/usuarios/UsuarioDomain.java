@@ -2,6 +2,8 @@ package com.agrosync.domain.usuarios;
 
 import com.agrosync.application.primaryports.enums.usuarios.EstadoUsuarioEnum;
 import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.crosscutting.helpers.TextHelper;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.carteras.CarteraDomain;
 import com.agrosync.domain.compras.CompraDomain;
@@ -9,6 +11,7 @@ import com.agrosync.domain.cuentascobrar.CuentaCobrarDomain;
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
 import com.agrosync.domain.ventas.VentaDomain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,6 +44,18 @@ public class UsuarioDomain extends BaseDomain {
         setCuentasCobrar(cuentasCobrar);
         setEstado(estado);
         setSuscripcionId(suscripcionId);
+    }
+
+    public static UsuarioDomain create(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraDomain cartera, List<CompraDomain> compras, List<CuentaPagarDomain> cuentasPagar, List<VentaDomain> ventas, List<CuentaCobrarDomain> cuentasCobrar, EstadoUsuarioEnum estado, UUID suscripcionId) {
+        return new UsuarioDomain(id, nombre, telefono, tipoUsuario, cartera, compras, cuentasPagar, ventas, cuentasCobrar, estado, suscripcionId);
+    }
+
+    public static UsuarioDomain create(UUID id) {
+        return new UsuarioDomain(id, TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, new CarteraDomain(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO, UUIDHelper.getDefault());
+    }
+
+    public static UsuarioDomain create() {
+        return new UsuarioDomain(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, new CarteraDomain(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO, UUIDHelper.getDefault());
     }
 
     public String getNombre() {

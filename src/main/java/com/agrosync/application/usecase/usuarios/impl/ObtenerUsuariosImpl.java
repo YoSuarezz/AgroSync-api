@@ -28,10 +28,12 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
 
     private final UsuarioRepository usuarioRepository;
     private final SuscripcionExisteRule suscripcionExisteRule;
+    private final UsuarioEntityMapper usuarioEntityMapper;
 
-    public ObtenerUsuariosImpl(UsuarioRepository usuarioRepository, SuscripcionExisteRule suscripcionExisteRule) {
+    public ObtenerUsuariosImpl(UsuarioRepository usuarioRepository, SuscripcionExisteRule suscripcionExisteRule, UsuarioEntityMapper usuarioEntityMapper) {
         this.usuarioRepository = usuarioRepository;
         this.suscripcionExisteRule = suscripcionExisteRule;
+        this.usuarioEntityMapper = usuarioEntityMapper;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
         Page<UsuarioEntity> entities = usuarioRepository.findAll(spec, pageable);
 
         return new PageImpl<>(
-                UsuarioEntityMapper.INSTANCE.toDomainCollection(entities.getContent()),
+                usuarioEntityMapper.toDomainCollection(entities.getContent()),
                 pageable,
                 entities.getTotalElements()
         );

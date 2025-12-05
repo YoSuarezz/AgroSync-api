@@ -17,16 +17,18 @@ public class ObtenerUsuarioPorIdImpl implements ObtenerUsuarioPorId {
 
     private final UsuarioRepository usuarioRepository;
     private final ObtenerUsuarioPorIdRulesValidator obtenerUsuarioPorIdRulesValidator;
+    private final UsuarioEntityMapper usuarioEntityMapper;
 
-    public ObtenerUsuarioPorIdImpl(UsuarioRepository usuarioRepository, ObtenerUsuarioPorIdRulesValidator obtenerUsuarioPorIdRulesValidator) {
+    public ObtenerUsuarioPorIdImpl(UsuarioRepository usuarioRepository, ObtenerUsuarioPorIdRulesValidator obtenerUsuarioPorIdRulesValidator, UsuarioEntityMapper usuarioEntityMapper) {
         this.usuarioRepository = usuarioRepository;
         this.obtenerUsuarioPorIdRulesValidator = obtenerUsuarioPorIdRulesValidator;
+        this.usuarioEntityMapper = usuarioEntityMapper;
     }
 
     @Override
     public UsuarioDomain ejecutar(UsuarioIdSuscripcionDTO data) {
         obtenerUsuarioPorIdRulesValidator.validar(data);
         Optional<UsuarioEntity> resultado = usuarioRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return UsuarioEntityMapper.INSTANCE.toDomain(resultado.get());
+        return usuarioEntityMapper.toDomain(resultado.get());
     }
 }

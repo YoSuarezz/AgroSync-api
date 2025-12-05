@@ -10,10 +10,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(uses = {UsuarioEntityMapper.class, LoteEntityMapper.class, CuentaPagarEntityMapper.class})
+@Mapper(componentModel = "spring" , uses = {UsuarioEntityMapper.class, LoteEntityMapper.class, CuentaPagarEntityMapper.class})
 public interface CompraEntityMapper {
-
-    CompraEntityMapper INSTANCE = Mappers.getMapper(CompraEntityMapper.class);
 
     CompraEntity toEntity(CompraDomain domain);
 

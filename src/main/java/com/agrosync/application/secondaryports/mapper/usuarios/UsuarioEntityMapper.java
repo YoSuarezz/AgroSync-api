@@ -15,16 +15,8 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(uses = {
-        CarteraEntityMapper.class,
-        CompraEntityMapper.class,
-        CuentaPagarEntityMapper.class,
-        VentaEntityMapper.class,
-        CuentaCobrarEntityMapper.class
-})
+@Mapper(componentModel = "spring")
 public interface UsuarioEntityMapper {
-
-    UsuarioEntityMapper INSTANCE = Mappers.getMapper(UsuarioEntityMapper.class);
     
     @Mapping(target = "suscripcion", source = "suscripcionId")
     UsuarioEntity toEntity(UsuarioDomain domain);

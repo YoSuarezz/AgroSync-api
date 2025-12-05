@@ -8,10 +8,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CarteraEntityMapper {
-
-    CarteraEntityMapper INSTANCE = Mappers.getMapper(CarteraEntityMapper.class);
 
     @Mapping(target = "usuario", ignore = true)
     CarteraEntity toEntity(CarteraDomain domain);
