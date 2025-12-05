@@ -9,10 +9,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(uses = {AnimalEntityMapper.class})
+@Mapper(componentModel = "spring", uses = {AnimalEntityMapper.class})
 public interface LoteEntityMapper {
-
-    LoteEntityMapper INSTANCE = Mappers.getMapper(LoteEntityMapper.class);
 
     @Mapping(target = "compra", ignore = true)
     LoteEntity toEntity(LoteDomain domain);
