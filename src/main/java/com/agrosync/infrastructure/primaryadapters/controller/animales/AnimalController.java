@@ -2,17 +2,13 @@ package com.agrosync.infrastructure.primaryadapters.controller.animales;
 
 import com.agrosync.application.primaryports.dto.animales.request.AnimalIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.animales.request.AnimalPageDTO;
-import com.agrosync.application.primaryports.dto.animales.request.RegistrarNuevoAnimalDTO;
 import com.agrosync.application.primaryports.dto.animales.response.ObtenerAnimalDTO;
-import com.agrosync.application.primaryports.dto.usuarios.request.RegistrarNuevoUsuarioDTO;
 import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
 import com.agrosync.application.primaryports.enums.animales.SexoEnum;
 import com.agrosync.application.primaryports.interactor.animales.ObtenerAnimalPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.animales.ObtenerAnimalesInteractor;
-import com.agrosync.application.primaryports.interactor.animales.RegistrarNuevoAnimalInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
-import com.agrosync.infrastructure.primaryadapters.adapter.response.GenericResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.animales.AnimalResponse;
 import org.springframework.data.domain.Page;
@@ -28,34 +24,16 @@ import java.util.UUID;
 @RequestMapping("/animales")
 public class AnimalController {
 
-    private final RegistrarNuevoAnimalInteractor registrarNuevoAnimalInteractor;
     private final ObtenerAnimalesInteractor obtenerAnimalesInteractor;
     private final ObtenerAnimalPorIdInteractor obtenerAnimalPorIdInteractor;
 
-    public AnimalController(RegistrarNuevoAnimalInteractor registrarNuevoAnimalInteractor,
-                            ObtenerAnimalesInteractor obtenerAnimalesInteractor,
+    public AnimalController(ObtenerAnimalesInteractor obtenerAnimalesInteractor,
                             ObtenerAnimalPorIdInteractor obtenerAnimalPorIdInteractor) {
-        this.registrarNuevoAnimalInteractor = registrarNuevoAnimalInteractor;
         this.obtenerAnimalesInteractor = obtenerAnimalesInteractor;
         this.obtenerAnimalPorIdInteractor = obtenerAnimalPorIdInteractor;
     }
 
-    @PostMapping()
-    public ResponseEntity<GenericResponse> registrarAnimal(@RequestBody RegistrarNuevoAnimalDTO animal,
-                                                           @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
-        try {
-            animal.setSuscripcionId(suscripcionId);
-            registrarNuevoAnimalInteractor.ejecutar(animal);
-            return GenerateResponse.generateSuccessResponse(List.of("Se ha registrado el animal correctamente"));
-        } catch (final AgroSyncException excepcion) {
-            excepcion.printStackTrace();
-            return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
-        } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
-            var userMessage = "Error al registrar el Animal";
-            return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
 
     @GetMapping
     public ResponseEntity<AnimalResponse<PageResponse<ObtenerAnimalDTO>>> consultarAnimales(@RequestParam(defaultValue = "0") int page,
