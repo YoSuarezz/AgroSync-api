@@ -41,7 +41,7 @@ public class AnimalPageDTO {
     }
 
     public void setPage(int page) {
-        this.page = page;
+        this.page = Math.max(page, 0);
     }
 
     public int getSize() {
@@ -49,7 +49,7 @@ public class AnimalPageDTO {
     }
 
     public void setSize(int size) {
-        this.size = size;
+        this.size = Math.max(size, 1);
     }
 
     public String getSortBy() {
