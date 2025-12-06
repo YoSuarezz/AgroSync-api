@@ -37,4 +37,8 @@ public final class NumericHelper {
         return (includeInitialLimit ? isGreatOrEqual(number, initialLimit) : isGreat(number, initialLimit))
                 && (includeFinalLimit ? isLessOrEqual(number, finalLimit) : isLess(number, finalLimit));
     }
+
+    public static final <T extends Number> T getDefault(final T number, final T defaultValue) {
+        return number != null ? number : defaultValue;
+    }
 }

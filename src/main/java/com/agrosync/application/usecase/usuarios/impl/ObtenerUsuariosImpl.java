@@ -2,7 +2,6 @@ package com.agrosync.application.usecase.usuarios.impl;
 
 import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioPageDTO;
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.mapper.usuarios.UsuarioEntityMapper;
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;

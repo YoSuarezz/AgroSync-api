@@ -7,7 +7,6 @@ import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.usecase.usuarios.ObtenerUsuarioPorId;
 import com.agrosync.application.usecase.usuarios.rulesvalidator.ObtenerUsuarioPorIdRulesValidator;
 import com.agrosync.domain.usuarios.UsuarioDomain;
-import com.agrosync.domain.usuarios.exceptions.UsuarioIdNoExisteException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
