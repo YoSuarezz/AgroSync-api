@@ -7,10 +7,12 @@ import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.mapper.compras.CompraEntityMapper;
 import com.agrosync.application.secondaryports.repository.CompraRepository;
+import com.agrosync.application.usecase.animales.rulesvalidator.RegistrarNuevoAnimalRulesValidator;
 import com.agrosync.application.usecase.compras.RegistrarNuevaCompra;
 import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
 import com.agrosync.application.primaryports.enums.cuentas.EstadoCuenta;
 import com.agrosync.application.usecase.compras.rulesvalidator.RegistrarNuevaCompraRulesValidator;
+import com.agrosync.application.usecase.lotes.rulesvalidator.RegistrarNuevoLoteRulesValidator;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.domain.compras.CompraDomain;
@@ -26,17 +28,24 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
 
     private final CompraRepository compraRepository;
     private final RegistrarNuevaCompraRulesValidator registrarNuevaCompraRulesValidator;
+    private final RegistrarNuevoLoteRulesValidator registrarNuevoLoteRulesValidator;
+    private final RegistrarNuevoAnimalRulesValidator registrarNuevoAnimalRulesValidator;
     private final CompraEntityMapper compraEntityMapper;
 
-    public RegistrarNuevaCompraImpl(CompraRepository compraRepository, RegistrarNuevaCompraRulesValidator registrarNuevaCompraRulesValidator, CompraEntityMapper compraEntityMapper) {
+    public RegistrarNuevaCompraImpl(CompraRepository compraRepository, RegistrarNuevaCompraRulesValidator registrarNuevaCompraRulesValidator, RegistrarNuevoLoteRulesValidator registrarNuevoLoteRulesValidator, RegistrarNuevoAnimalRulesValidator registrarNuevoAnimalRulesValidator, CompraEntityMapper compraEntityMapper) {
         this.compraRepository = compraRepository;
         this.registrarNuevaCompraRulesValidator = registrarNuevaCompraRulesValidator;
+        this.registrarNuevoLoteRulesValidator = registrarNuevoLoteRulesValidator;
+        this.registrarNuevoAnimalRulesValidator = registrarNuevoAnimalRulesValidator;
         this.compraEntityMapper = compraEntityMapper;
     }
 
     @Override
     public void ejecutar(CompraDomain data) {
         registrarNuevaCompraRulesValidator.validar(data);
+        data.getLote().setFecha(data.getFechaCompra());
+        // TODO: Validar animales y lotes correctamente
+        //registrarNuevoLoteRulesValidator.validar(data.getLote());
         CompraEntity compra = compraEntityMapper.toEntity(data);
 
         SuscripcionEntity suscripcion = SuscripcionEntity.create(data.getSuscripcionId());
