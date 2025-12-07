@@ -13,9 +13,5 @@ public interface AnimalRepository extends JpaRepository<AnimalEntity, UUID>, Jpa
 
     boolean existsByNumeroAnimalAndSuscripcion_Id(String numeroAnimal, UUID suscripcionId);
 
-    boolean existsByNumeroAnimalAndIdNotAndSuscripcion_Id(String numeroAnimal, UUID id, UUID suscripcionId);
-
     Optional<AnimalEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
-
-    boolean existsByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
 }

@@ -13,5 +13,4 @@ public interface CuentaPagarRepository extends JpaRepository<CuentaPagarEntity, 
 
     Optional<CuentaPagarEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
 
-    boolean existsByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
 }
