@@ -9,7 +9,7 @@ import com.agrosync.application.secondaryports.mapper.compras.CompraEntityMapper
 import com.agrosync.application.secondaryports.repository.CompraRepository;
 import com.agrosync.application.usecase.compras.RegistrarNuevaCompra;
 import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuenta;
+import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.application.usecase.compras.rulesvalidator.RegistrarNuevaCompraRulesValidator;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
@@ -97,7 +97,7 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
         cuentaPagar.setSuscripcion(suscripcion);
         cuentaPagar.setMontoTotal(precioTotalCompra);
         cuentaPagar.setSaldoPendiente(precioTotalCompra);
-        cuentaPagar.setEstado(EstadoCuenta.PENDIENTE);
+        cuentaPagar.setEstado(EstadoCuentaEnum.PENDIENTE);
         cuentaPagar.setFechaEmision(fechaCompra);
         cuentaPagar.setFechaVencimiento(fechaCompra);
 

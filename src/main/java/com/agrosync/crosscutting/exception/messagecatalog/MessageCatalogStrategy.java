@@ -32,7 +32,7 @@ public final class MessageCatalogStrategy {
 
     public static final Mensaje getMensaje(final CodigoMensaje codigo, final String... parametros) {
 
-        if (ObjectHelper.getObjectHelper().isNull(codigo)) {
+        if (ObjectHelper.isNull(codigo)) {
             var mensajeUsuario = MessageCatalogStrategy.getContenidoMensaje(CodigoMensaje.M00002);
             var mensajeTecnico = MessageCatalogStrategy.getContenidoMensaje(CodigoMensaje.M00001);
             throw new CrosscuttingAgroSyncException(mensajeTecnico, mensajeUsuario);

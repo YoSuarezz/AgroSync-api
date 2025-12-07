@@ -20,7 +20,6 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ObtenerUsuariosImpl implements ObtenerUsuarios {
@@ -65,7 +64,7 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
             List<String> palabrasNombre = Arrays.stream(usuarioFiltro.getNombre().trim().split("\\s+"))
                     .filter(StringUtils::hasText)
                     .map(String::toLowerCase)
-                    .collect(Collectors.toList());
+                    .toList();
 
             for (String palabra : palabrasNombre) {
                 specs.add((root, query, cb) -> cb.like(cb.lower(root.get("nombre")), "%" + palabra + "%"));

@@ -22,8 +22,8 @@ public interface LoteDTOMapper {
 
     List<ObtenerLoteDTO> toObtenerDTOCollection(List<LoteDomain> domainList);
 
-    default Page<ObtenerLoteDTO> toObtenerDTOCollection(Page<LoteDomain> DomainPage) {
-        List<ObtenerLoteDTO> dtoList = toObtenerDTOCollection(DomainPage.getContent());
-        return new PageImpl<>(dtoList, DomainPage.getPageable(), DomainPage.getTotalElements());
+    default Page<ObtenerLoteDTO> toObtenerDTOCollection(Page<LoteDomain> domainPage) {
+        List<ObtenerLoteDTO> dtoList = toObtenerDTOCollection(domainPage.getContent());
+        return new PageImpl<>(dtoList, domainPage.getPageable(), domainPage.getTotalElements());
     }
 }

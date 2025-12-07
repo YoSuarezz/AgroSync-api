@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.enums.cuentas;
 
-public enum EstadoCuenta {
+public enum EstadoCuentaEnum {
     PENDIENTE,
     PARCIALMENTE_PAGADA,
     PARCIALMENTE_COBRADA,

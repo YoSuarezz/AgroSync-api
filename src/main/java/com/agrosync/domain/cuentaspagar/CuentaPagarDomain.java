@@ -1,6 +1,6 @@
 package com.agrosync.domain.cuentaspagar;
 
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuenta;
+import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.abonos.AbonoDomain;
 import com.agrosync.domain.compras.CompraDomain;
@@ -19,7 +19,7 @@ public class CuentaPagarDomain extends BaseDomain {
     private BigDecimal montoTotal;
     private BigDecimal saldoPendiente;
     private List<AbonoDomain> abonos;
-    private EstadoCuenta estado;
+    private EstadoCuentaEnum estado;
     private LocalDate fechaEmision;
     private LocalDate fechaVencimiento;
 
@@ -27,7 +27,7 @@ public class CuentaPagarDomain extends BaseDomain {
         super();
     }
 
-    public CuentaPagarDomain(UUID id, String numeroCuenta, CompraDomain compra, UsuarioDomain proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoDomain> abonos, EstadoCuenta estado, LocalDate fechaEmision, LocalDate fechaVencimiento) {
+    public CuentaPagarDomain(UUID id, String numeroCuenta, CompraDomain compra, UsuarioDomain proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoDomain> abonos, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento) {
         super(id);
         setNumeroCuenta(numeroCuenta);
         setCompra(compra);
@@ -88,11 +88,11 @@ public class CuentaPagarDomain extends BaseDomain {
         this.abonos = abonos;
     }
 
-    public EstadoCuenta getEstado() {
+    public EstadoCuentaEnum getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoCuenta estado) {
+    public void setEstado(EstadoCuentaEnum estado) {
         this.estado = estado;
     }
 

@@ -1,30 +1,30 @@
-package com.agrosync.application.primaryports.dto.lotes.request;
+package com.agrosync.application.primaryports.dto.cuentaspagar.request;
 
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 
 import java.util.UUID;
 
-public class LoteIdSuscripcionDTO {
+public class CuentaPagarIdSuscripcionDTO {
 
     private UUID id;
     private UUID suscripcionId;
 
-    public LoteIdSuscripcionDTO() {
+    public CuentaPagarIdSuscripcionDTO() {
         setId(UUIDHelper.getDefault());
         setSuscripcionId(null);
     }
 
-    public LoteIdSuscripcionDTO(UUID id, UUID suscripcionId) {
+    public CuentaPagarIdSuscripcionDTO(UUID id, UUID suscripcionId) {
         setId(id);
         setSuscripcionId(suscripcionId);
     }
 
-    public static LoteIdSuscripcionDTO create(UUID id, UUID suscripcionId) {
-        return new LoteIdSuscripcionDTO(id, suscripcionId);
+    public static CuentaPagarIdSuscripcionDTO create(UUID id, UUID suscripcionId) {
+        return new CuentaPagarIdSuscripcionDTO(id, suscripcionId);
     }
 
-    public static LoteIdSuscripcionDTO create() {
-        return new LoteIdSuscripcionDTO();
+    public static CuentaPagarIdSuscripcionDTO create() {
+        return new CuentaPagarIdSuscripcionDTO();
     }
 
     public UUID getId() {
