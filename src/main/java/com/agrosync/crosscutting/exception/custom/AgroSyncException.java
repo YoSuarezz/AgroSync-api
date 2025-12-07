@@ -32,7 +32,7 @@ public class AgroSyncException extends RuntimeException {
     }
 
     private final void setLayer(final Layer layer) {
-        this.layer = ObjectHelper.getObjectHelper().getDefault(layer, Layer.DEFAULT);
+        this.layer = ObjectHelper.getDefault(layer, Layer.DEFAULT);
     }
 
     public final String getMensajeUsuario() {

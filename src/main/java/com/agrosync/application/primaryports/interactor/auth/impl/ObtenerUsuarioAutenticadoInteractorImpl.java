@@ -2,9 +2,7 @@ package com.agrosync.application.primaryports.interactor.auth.impl;
 
 import com.agrosync.application.primaryports.interactor.auth.ObtenerUsuarioAutenticadoInteractor;
 import com.agrosync.application.primaryports.interactor.suscripcion.ObtenerSuscripcionPorIdInteractor;
-import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuarioPorIdInteractor;
 import com.agrosync.application.usecase.auth.ObtenerUsuarioAutenticado;
-import com.agrosync.application.usecase.suscripcion.ObtenerSuscripcionPorId;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.auth.AuthUserInfoResponse;
 import org.springframework.stereotype.Service;
 

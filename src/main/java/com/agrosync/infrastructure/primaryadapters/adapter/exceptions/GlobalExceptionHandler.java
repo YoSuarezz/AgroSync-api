@@ -18,6 +18,10 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String MESSAGE_KEY = "message";
+    private static final String PATH_KEY = "path";
+
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -35,22 +39,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleNoHandlerFoundException(Exception ex,
                                                                              ServletWebRequest request) {
         Map<String, String> error = new HashMap<>();
-        error.put("path", request.getRequest().getRequestURI());
-        error.put("message", "Recurso no disponible");
+        error.put(PATH_KEY, request.getRequest().getRequestURI());
+        error.put(MESSAGE_KEY, "Recurso no disponible");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<Map<String, String>> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("message", "Metodo HTTP no soportado para este recurso");
+        error.put(MESSAGE_KEY, "Metodo HTTP no soportado para este recurso");
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(error);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("message", "Acceso denegado");
+        error.put(MESSAGE_KEY, "Acceso denegado");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 }

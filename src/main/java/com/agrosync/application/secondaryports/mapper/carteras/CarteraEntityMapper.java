@@ -4,7 +4,6 @@ import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import com.agrosync.domain.carteras.CarteraDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 

@@ -16,4 +16,5 @@ public interface LoteRepository extends JpaRepository<LoteEntity, UUID>, JpaSpec
     boolean existsByContramarcaAndWeekAndYearAndSuscripcionId(String contramarca, int weekNumber, int year, UUID suscripcionId);
 
     Optional<LoteEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
+
 }

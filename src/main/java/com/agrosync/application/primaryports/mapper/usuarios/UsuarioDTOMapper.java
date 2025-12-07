@@ -24,9 +24,9 @@ public interface UsuarioDTOMapper {
 
     List<ObtenerUsuarioDTO> toObtenerDTOCollection(List<UsuarioDomain> domainList);
 
-    default Page<ObtenerUsuarioDTO> toObtenerDTOCollection(Page<UsuarioDomain> DomainPage) {
-        List<ObtenerUsuarioDTO> dtoList = toObtenerDTOCollection(DomainPage.getContent());
-        return new PageImpl<>(dtoList, DomainPage.getPageable(), DomainPage.getTotalElements());
+    default Page<ObtenerUsuarioDTO> toObtenerDTOCollection(Page<UsuarioDomain> domainPage) {
+        List<ObtenerUsuarioDTO> dtoList = toObtenerDTOCollection(domainPage.getContent());
+        return new PageImpl<>(dtoList, domainPage.getPageable(), domainPage.getTotalElements());
     }
 
 }

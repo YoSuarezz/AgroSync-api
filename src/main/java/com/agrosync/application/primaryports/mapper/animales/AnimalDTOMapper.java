@@ -21,8 +21,8 @@ public interface AnimalDTOMapper {
 
     List<ObtenerAnimalDTO> toObtenerDTOCollection(List<AnimalDomain> domainList);
 
-    default Page<ObtenerAnimalDTO> toObtenerDTOCollection(Page<AnimalDomain> DomainPage) {
-        List<ObtenerAnimalDTO> dtoList = toObtenerDTOCollection(DomainPage.getContent());
-        return new PageImpl<>(dtoList, DomainPage.getPageable(), DomainPage.getTotalElements());
+    default Page<ObtenerAnimalDTO> toObtenerDTOCollection(Page<AnimalDomain> domainPage) {
+        List<ObtenerAnimalDTO> dtoList = toObtenerDTOCollection(domainPage.getContent());
+        return new PageImpl<>(dtoList, domainPage.getPageable(), domainPage.getTotalElements());
     }
 }

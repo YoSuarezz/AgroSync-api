@@ -1,6 +1,6 @@
 package com.agrosync.application.secondaryports.entity.cuentascobrar;
 
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuenta;
+import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.cobros.CobroEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
@@ -46,7 +46,7 @@ public class CuentaCobrarEntity extends Auditoria {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
-    private EstadoCuenta estado;
+    private EstadoCuentaEnum estado;
 
     @Column(name = "fecha_emision")
     private LocalDate fechaEmision;
@@ -66,13 +66,13 @@ public class CuentaCobrarEntity extends Auditoria {
         setMontoTotal(BigDecimal.ZERO);
         setSaldoPendiente(BigDecimal.ZERO);
         setCobros(new ArrayList<>());
-        setEstado(EstadoCuenta.ANULADA);
+        setEstado(EstadoCuentaEnum.ANULADA);
         setFechaEmision(LocalDate.now());
         setFechaVencimiento(LocalDate.now());
         setSuscripcion(SuscripcionEntity.create());
     }
 
-    public CuentaCobrarEntity(UUID id, String numeroCuenta, VentaEntity venta, UsuarioEntity cliente, BigDecimal montoTotal, BigDecimal saldoPendiente, List<CobroEntity> cobros, EstadoCuenta estado, LocalDate fechaEmision, LocalDate fechaVencimiento, SuscripcionEntity suscripcion) {
+    public CuentaCobrarEntity(UUID id, String numeroCuenta, VentaEntity venta, UsuarioEntity cliente, BigDecimal montoTotal, BigDecimal saldoPendiente, List<CobroEntity> cobros, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento, SuscripcionEntity suscripcion) {
         setId(id);
         setNumeroCuenta(numeroCuenta);
         setVenta(venta);
@@ -86,16 +86,16 @@ public class CuentaCobrarEntity extends Auditoria {
         setSuscripcion(suscripcion);
     }
 
-    public static CuentaCobrarEntity create(UUID id, String numeroCuenta, VentaEntity venta, UsuarioEntity cliente, BigDecimal montoTotal, BigDecimal saldoPendiente, List<CobroEntity> cobros, EstadoCuenta estado, LocalDate fechaEmision, LocalDate fechaVencimiento, SuscripcionEntity suscripcion) {
+    public static CuentaCobrarEntity create(UUID id, String numeroCuenta, VentaEntity venta, UsuarioEntity cliente, BigDecimal montoTotal, BigDecimal saldoPendiente, List<CobroEntity> cobros, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento, SuscripcionEntity suscripcion) {
         return new CuentaCobrarEntity(id, numeroCuenta, venta, cliente, montoTotal, saldoPendiente, cobros, estado, fechaEmision, fechaVencimiento, suscripcion);
     }
 
     public static CuentaCobrarEntity create(UUID id) {
-        return new CuentaCobrarEntity(id, TextHelper.EMPTY, null, null, BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now(), SuscripcionEntity.create());
+        return new CuentaCobrarEntity(id, TextHelper.EMPTY, null, null, BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuentaEnum.ANULADA, LocalDate.now(), LocalDate.now(), SuscripcionEntity.create());
     }
 
     public static CuentaCobrarEntity create() {
-        return new CuentaCobrarEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, null, null, BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now(), SuscripcionEntity.create());
+        return new CuentaCobrarEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, null, null, BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuentaEnum.ANULADA, LocalDate.now(), LocalDate.now(), SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -154,11 +154,11 @@ public class CuentaCobrarEntity extends Auditoria {
         this.cobros = cobros;
     }
 
-    public EstadoCuenta getEstado() {
+    public EstadoCuentaEnum getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoCuenta estado) {
+    public void setEstado(EstadoCuentaEnum estado) {
         this.estado = estado;
     }
 

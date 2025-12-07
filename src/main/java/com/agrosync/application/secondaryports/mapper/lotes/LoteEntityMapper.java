@@ -5,7 +5,6 @@ import com.agrosync.application.secondaryports.mapper.animales.AnimalEntityMappe
 import com.agrosync.domain.lotes.LoteDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 

@@ -5,7 +5,6 @@ import com.agrosync.domain.lotes.LoteDomain;
 import com.agrosync.domain.lotes.rules.AnimalesLoteMinimoRule;
 import com.agrosync.domain.lotes.rules.ContramarcaNoVaciaRule;
 import com.agrosync.domain.lotes.rules.ContramarcaSemanalUnicaRule;
-import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.stereotype.Service;
 
 @Service

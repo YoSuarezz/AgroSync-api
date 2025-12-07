@@ -12,10 +12,7 @@ import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEn
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
 import com.agrosync.domain.usuarios.UsuarioDomain;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
-import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {LoteEntityMapper.class})
 public interface CompraEntityMapper {

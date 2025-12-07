@@ -6,7 +6,6 @@ import com.agrosync.application.secondaryports.mapper.usuarios.UsuarioEntityMapp
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
