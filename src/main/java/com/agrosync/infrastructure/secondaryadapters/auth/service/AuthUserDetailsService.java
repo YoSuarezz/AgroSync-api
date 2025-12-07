@@ -106,7 +106,6 @@ public class AuthUserDetailsService implements UserDetailsService {
         AuthResponse authResponse = new AuthResponse();
         authResponse.setToken(token);
         authResponse.setRol(user.getRol().name());
-        authResponse.getMensajes().add("Operación exitosa");
         return authResponse;
     }
 }
