@@ -14,22 +14,15 @@ public class RegistrarNuevoLoteRulesValidatorImpl implements RegistrarNuevoLoteR
     private final ContramarcaNoVaciaRule contramarcaNoVaciaRule;
     private final ContramarcaSemanalUnicaRule contramarcaSemanalUnicaRule;
     private final AnimalesLoteMinimoRule animalesLoteMinimoRule;
-    private final SuscripcionExisteRule suscripcionExisteRule;
 
-
-    public RegistrarNuevoLoteRulesValidatorImpl(ContramarcaNoVaciaRule contramarcaNoVaciaRule,
-                                                ContramarcaSemanalUnicaRule contramarcaSemanalUnicaRule,
-                                                AnimalesLoteMinimoRule animalesLoteMinimoRule,
-                                                SuscripcionExisteRule suscripcionExisteRule) {
+    public RegistrarNuevoLoteRulesValidatorImpl(ContramarcaNoVaciaRule contramarcaNoVaciaRule, ContramarcaSemanalUnicaRule contramarcaSemanalUnicaRule, AnimalesLoteMinimoRule animalesLoteMinimoRule) {
         this.contramarcaNoVaciaRule = contramarcaNoVaciaRule;
         this.contramarcaSemanalUnicaRule = contramarcaSemanalUnicaRule;
         this.animalesLoteMinimoRule = animalesLoteMinimoRule;
-        this.suscripcionExisteRule = suscripcionExisteRule;
     }
 
     @Override
     public void validar(LoteDomain data) {
-        suscripcionExisteRule.validate(data.getSuscripcionId());
         contramarcaNoVaciaRule.validate(data.getContramarca());
         contramarcaSemanalUnicaRule.validate(data);
         animalesLoteMinimoRule.validate(data.getAnimales());
