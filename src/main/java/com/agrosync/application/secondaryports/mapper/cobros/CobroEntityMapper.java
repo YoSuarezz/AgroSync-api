@@ -8,10 +8,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CobroEntityMapper {
-
-    CobroEntityMapper INSTANCE = Mappers.getMapper(CobroEntityMapper.class);
 
     @Mapping(target = "cuentaCobrar", ignore = true)
     CobroEntity toEntity(CobroDomain domain);

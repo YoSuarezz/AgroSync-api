@@ -24,7 +24,7 @@ public class VentaEntity extends Auditoria {
     private UUID id;
 
     @Column(name = "numero_venta")
-    private String numeroVenta; // VE - contramarcaLote - 4 digitos aleatorios
+    private String numeroVenta;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente")
