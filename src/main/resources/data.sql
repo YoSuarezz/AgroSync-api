@@ -54,6 +54,6 @@ INSERT INTO auth_user (
 ON CONFLICT (id) DO NOTHING;
 -- =====================================================
 -- CREDENCIALES DE PRUEBA:
--- Email: admin@agrosync.com
--- Password: admin123
+    -- Email: admin@agrosync.com
+-- Password: 123456789
 -- =====================================================
