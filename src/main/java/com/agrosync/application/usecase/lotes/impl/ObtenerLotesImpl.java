@@ -6,6 +6,7 @@ import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
 import com.agrosync.application.secondaryports.mapper.lotes.LoteEntityMapper;
 import com.agrosync.application.secondaryports.repository.LoteRepository;
 import com.agrosync.application.usecase.lotes.ObtenerLotes;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.lotes.LoteDomain;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.*;
@@ -25,8 +26,8 @@ public class ObtenerLotesImpl implements ObtenerLotes {
     private final LoteEntityMapper loteEntityMapper;
 
     public ObtenerLotesImpl(LoteRepository loteRepository,
-                            SuscripcionExisteRule suscripcionExisteRule,
-                            LoteEntityMapper loteEntityMapper) {
+            SuscripcionExisteRule suscripcionExisteRule,
+            LoteEntityMapper loteEntityMapper) {
         this.loteRepository = loteRepository;
         this.suscripcionExisteRule = suscripcionExisteRule;
         this.loteEntityMapper = loteEntityMapper;
@@ -49,8 +50,7 @@ public class ObtenerLotesImpl implements ObtenerLotes {
         return new PageImpl<>(
                 loteEntityMapper.toDomainCollection(entities.getContent()),
                 pageable,
-                entities.getTotalElements()
-        );
+                entities.getTotalElements());
     }
 
     private Specification<LoteEntity> buildSpecification(LotePageDTO data) {
@@ -58,7 +58,7 @@ public class ObtenerLotesImpl implements ObtenerLotes {
 
         ObtenerLoteDTO loteFiltro = data.getLote();
 
-        if (data.getSuscripcionId() != null) {
+        if (data.getSuscripcionId() != null && !UUIDHelper.isDefault(data.getSuscripcionId())) {
             specs.add((root, query, cb) -> cb.equal(root.get("suscripcion").get("id"), data.getSuscripcionId()));
         }
 
@@ -66,11 +66,10 @@ public class ObtenerLotesImpl implements ObtenerLotes {
 
             if (StringUtils.hasText(loteFiltro.getNumeroLote())) {
                 String numeroLote = loteFiltro.getNumeroLote().toLowerCase().trim();
-                specs.add((root, query, cb) ->
-                        cb.like(cb.lower(root.get("numeroLote")), "%" + numeroLote + "%"));
+                specs.add((root, query, cb) -> cb.like(cb.lower(root.get("numeroLote")), "%" + numeroLote + "%"));
             }
 
-            if (!loteFiltro.getFecha().isEqual(com.agrosync.crosscutting.helpers.DateHelper.DEFAULT_DATE)) {
+            if (loteFiltro.getFecha() != null) {
                 specs.add((root, query, cb) -> cb.equal(root.get("fecha"), loteFiltro.getFecha()));
             }
 
@@ -79,6 +78,6 @@ public class ObtenerLotesImpl implements ObtenerLotes {
             }
         }
 
-        return Specification.allOf(specs);
+        return specs.isEmpty() ? Specification.where(null) : Specification.allOf(specs);
     }
 }

@@ -1,16 +1,22 @@
 package com.agrosync.infrastructure.primaryadapters.controller.cuentaspagar;
 
+import com.agrosync.application.primaryports.dto.abonos.request.RegistrarAbonoDTO;
+import com.agrosync.application.primaryports.dto.abonos.response.ObtenerAbonoDTO;
 import com.agrosync.application.primaryports.dto.cuentaspagar.request.CuentaPagarIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.cuentaspagar.request.CuentaPagarPageDTO;
 import com.agrosync.application.primaryports.dto.cuentaspagar.response.ObtenerCuentaPagarDTO;
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.application.primaryports.interactor.abonos.ObtenerAbonoPorIdInteractor;
+import com.agrosync.application.primaryports.interactor.abonos.ObtenerAbonosPorCuentaPagarInteractor;
+import com.agrosync.application.primaryports.interactor.abonos.RegistrarNuevoAbonoInteractor;
 import com.agrosync.application.primaryports.interactor.cuentaspagar.ObtenerCuentaPagarPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.cuentaspagar.ObtenerCuentasPagarInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
-import com.agrosync.infrastructure.primaryadapters.adapter.response.cuentaspagar.CuentaPagarResponse; // Asumo la existencia de este DTO de respuesta
+import com.agrosync.infrastructure.primaryadapters.adapter.response.abonos.AbonoResponse;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.cuentaspagar.CuentaPagarResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +31,20 @@ public class CuentasPagarController {
 
     private final ObtenerCuentasPagarInteractor obtenerCuentasPagarInteractor;
     private final ObtenerCuentaPagarPorIdInteractor obtenerCuentaPagarPorIdInteractor;
+    private final RegistrarNuevoAbonoInteractor registrarNuevoAbonoInteractor;
+    private final ObtenerAbonosPorCuentaPagarInteractor obtenerAbonosPorCuentaPagarInteractor;
+    private final ObtenerAbonoPorIdInteractor obtenerAbonoPorIdInteractor;
 
     public CuentasPagarController(ObtenerCuentasPagarInteractor obtenerCuentasPagarInteractor,
-                                  ObtenerCuentaPagarPorIdInteractor obtenerCuentaPagarPorIdInteractor) {
+            ObtenerCuentaPagarPorIdInteractor obtenerCuentaPagarPorIdInteractor,
+            RegistrarNuevoAbonoInteractor registrarNuevoAbonoInteractor,
+            ObtenerAbonosPorCuentaPagarInteractor obtenerAbonosPorCuentaPagarInteractor,
+            ObtenerAbonoPorIdInteractor obtenerAbonoPorIdInteractor) {
         this.obtenerCuentasPagarInteractor = obtenerCuentasPagarInteractor;
         this.obtenerCuentaPagarPorIdInteractor = obtenerCuentaPagarPorIdInteractor;
+        this.registrarNuevoAbonoInteractor = registrarNuevoAbonoInteractor;
+        this.obtenerAbonosPorCuentaPagarInteractor = obtenerAbonosPorCuentaPagarInteractor;
+        this.obtenerAbonoPorIdInteractor = obtenerAbonoPorIdInteractor;
     }
 
     @GetMapping
@@ -44,7 +59,9 @@ public class CuentasPagarController {
             @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
-            ObtenerUsuarioDTO proveedorFiltro = proveedorId != null ? ObtenerUsuarioDTO.create(proveedorId, null, null, null) : null;
+            ObtenerUsuarioDTO proveedorFiltro = proveedorId != null
+                    ? ObtenerUsuarioDTO.create(proveedorId, null, null, null)
+                    : null;
 
             ObtenerCuentaPagarDTO filtro = ObtenerCuentaPagarDTO.create(
                     null,
@@ -54,10 +71,10 @@ public class CuentasPagarController {
                     null,
                     null,
                     null,
-                    null
-            );
+                    null);
 
-            CuentaPagarPageDTO request = new CuentaPagarPageDTO(page, size, sortBy, sortDirection, filtro, estado, suscripcionId);
+            CuentaPagarPageDTO request = new CuentaPagarPageDTO(page, size, sortBy, sortDirection, filtro, estado,
+                    suscripcionId);
 
             PageResponse<ObtenerCuentaPagarDTO> resultado = obtenerCuentasPagarInteractor.ejecutar(request);
 
@@ -65,13 +82,16 @@ public class CuentasPagarController {
             return GenerateResponse.generateSuccessResponseWithData(response);
 
         } catch (final AgroSyncException excepcion) {
-            var response = CuentaPagarResponse.build(List.of(excepcion.getMensajeUsuario()), PageResponse.from(Page.<ObtenerCuentaPagarDTO>empty()));
+            var response = CuentaPagarResponse.build(List.of(excepcion.getMensajeUsuario()),
+                    PageResponse.from(Page.<ObtenerCuentaPagarDTO>empty()));
             return GenerateResponse.generateBadRequestResponseWithData(response);
         } catch (final IllegalArgumentException excepcion) {
-            var response = CuentaPagarResponse.build(List.of(excepcion.getMessage()), PageResponse.from(Page.<ObtenerCuentaPagarDTO>empty()));
+            var response = CuentaPagarResponse.build(List.of(excepcion.getMessage()),
+                    PageResponse.from(Page.<ObtenerCuentaPagarDTO>empty()));
             return GenerateResponse.generateBadRequestResponseWithData(response);
         } catch (final Exception excepcion) {
-            var response = CuentaPagarResponse.build(List.of("Error al consultar las Cuentas por Pagar"), PageResponse.from(Page.<ObtenerCuentaPagarDTO>empty()));
+            var response = CuentaPagarResponse.build(List.of("Error al consultar las Cuentas por Pagar"),
+                    PageResponse.from(Page.<ObtenerCuentaPagarDTO>empty()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -90,11 +110,82 @@ public class CuentasPagarController {
             return GenerateResponse.generateSuccessResponseWithData(response);
 
         } catch (final AgroSyncException excepcion) {
-            var response = CuentaPagarResponse.<ObtenerCuentaPagarDTO>build(List.of(excepcion.getMensajeUsuario()), null);
+            var response = CuentaPagarResponse.<ObtenerCuentaPagarDTO>build(List.of(excepcion.getMensajeUsuario()),
+                    null);
             return GenerateResponse.generateBadRequestResponseWithData(response);
         } catch (final Exception excepcion) {
             var userMessage = "Error al consultar la Cuenta por Pagar";
             var response = CuentaPagarResponse.<ObtenerCuentaPagarDTO>build(List.of(userMessage), null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}/abonos")
+    public ResponseEntity<AbonoResponse<List<ObtenerAbonoDTO>>> consultarAbonosPorCuentaPagar(
+            @PathVariable UUID id,
+            @RequestHeader(value = "x-suscripcion-id") UUID suscripcionId) {
+
+        try {
+            UUID[] data = new UUID[] { id, suscripcionId };
+            List<ObtenerAbonoDTO> abonos = obtenerAbonosPorCuentaPagarInteractor.ejecutar(data);
+
+            var response = AbonoResponse.build(List.of("Consulta de abonos exitosa"), abonos);
+            return GenerateResponse.generateSuccessResponseWithData(response);
+
+        } catch (final AgroSyncException excepcion) {
+            var response = AbonoResponse.<List<ObtenerAbonoDTO>>build(List.of(excepcion.getMensajeUsuario()), null);
+            return GenerateResponse.generateBadRequestResponseWithData(response);
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al consultar los abonos";
+            var response = AbonoResponse.<List<ObtenerAbonoDTO>>build(List.of(userMessage), null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{cuentaId}/abonos/{abonoId}")
+    public ResponseEntity<AbonoResponse<ObtenerAbonoDTO>> consultarAbonoPorId(
+            @PathVariable UUID cuentaId,
+            @PathVariable UUID abonoId,
+            @RequestHeader(value = "x-suscripcion-id") UUID suscripcionId) {
+
+        try {
+            UUID[] data = new UUID[] { abonoId, suscripcionId };
+            ObtenerAbonoDTO abono = obtenerAbonoPorIdInteractor.ejecutar(data);
+
+            var response = AbonoResponse.build(List.of("Abono consultado correctamente"), abono);
+            return GenerateResponse.generateSuccessResponseWithData(response);
+
+        } catch (final AgroSyncException excepcion) {
+            var response = AbonoResponse.<ObtenerAbonoDTO>build(List.of(excepcion.getMensajeUsuario()), null);
+            return GenerateResponse.generateBadRequestResponseWithData(response);
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al consultar el abono";
+            var response = AbonoResponse.<ObtenerAbonoDTO>build(List.of(userMessage), null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/{id}/abonos")
+    public ResponseEntity<AbonoResponse<Void>> registrarAbono(
+            @PathVariable UUID id,
+            @RequestBody RegistrarAbonoDTO abonoDTO,
+            @RequestHeader(value = "x-suscripcion-id") UUID suscripcionId) {
+
+        try {
+            abonoDTO.setIdCuentaPagar(id);
+            abonoDTO.setSuscripcionId(suscripcionId);
+
+            registrarNuevoAbonoInteractor.ejecutar(abonoDTO);
+
+            var response = AbonoResponse.<Void>build(List.of("Abono registrado correctamente"), null);
+            return GenerateResponse.generateSuccessResponseWithData(response);
+
+        } catch (final AgroSyncException excepcion) {
+            var response = AbonoResponse.<Void>build(List.of(excepcion.getMensajeUsuario()), null);
+            return GenerateResponse.generateBadRequestResponseWithData(response);
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al registrar el abono";
+            var response = AbonoResponse.<Void>build(List.of(userMessage), null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

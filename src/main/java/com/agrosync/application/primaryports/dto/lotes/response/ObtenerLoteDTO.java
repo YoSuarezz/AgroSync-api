@@ -1,6 +1,5 @@
 package com.agrosync.application.primaryports.dto.lotes.response;
 
-import com.agrosync.crosscutting.helpers.DateHelper;
 import com.agrosync.crosscutting.helpers.NumericHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
@@ -19,7 +18,7 @@ public class ObtenerLoteDTO {
     public ObtenerLoteDTO() {
         setId(UUIDHelper.getDefault());
         setNumeroLote(TextHelper.EMPTY);
-        setFecha(DateHelper.getDefault());
+        this.fecha = null;
         setPesoTotal(BigDecimal.ZERO);
     }
 
@@ -59,7 +58,7 @@ public class ObtenerLoteDTO {
     }
 
     public void setFecha(LocalDate fecha) {
-        this.fecha = DateHelper.getDefault(fecha, DateHelper.getDefault());
+        this.fecha = fecha;
     }
 
     public BigDecimal getPesoTotal() {
