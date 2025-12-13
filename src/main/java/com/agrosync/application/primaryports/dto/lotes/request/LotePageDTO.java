@@ -1,7 +1,6 @@
 package com.agrosync.application.primaryports.dto.lotes.request;
 
 import com.agrosync.application.primaryports.dto.lotes.response.ObtenerLoteDTO;
-import com.agrosync.crosscutting.helpers.ObjectHelper;
 
 import java.util.UUID;
 
@@ -51,7 +50,7 @@ public class LotePageDTO {
     }
 
     public void setLote(ObtenerLoteDTO obtenerLote) {
-        this.obtenerLote = ObjectHelper.getDefault(obtenerLote, ObtenerLoteDTO.create());
+        this.obtenerLote = obtenerLote;
     }
 
     public String getSortDirection() {

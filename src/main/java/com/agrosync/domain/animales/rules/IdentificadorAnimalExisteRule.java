@@ -1,7 +1,7 @@
 package com.agrosync.domain.animales.rules;
 
+import com.agrosync.application.primaryports.dto.animales.request.AnimalIdSuscripcionDTO;
 import com.agrosync.domain.DomainRule;
-import java.util.UUID;
 
-public interface IdentificadorAnimalExisteRule extends DomainRule<UUID> {
+public interface IdentificadorAnimalExisteRule extends DomainRule<AnimalIdSuscripcionDTO> {
 }

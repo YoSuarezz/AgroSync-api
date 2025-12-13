@@ -3,10 +3,10 @@ package com.agrosync.application.usecase.cuentascobrar.impl;
 import com.agrosync.application.primaryports.dto.cuentascobrar.request.CuentaCobrarPageDTO;
 import com.agrosync.application.primaryports.dto.cuentascobrar.response.ObtenerCuentaCobrarDTO;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
-
 import com.agrosync.application.secondaryports.mapper.cuentascobrar.CuentaCobrarEntityMapper;
 import com.agrosync.application.secondaryports.repository.CuentaCobrarRepository;
 import com.agrosync.application.usecase.cuentascobrar.ObtenerCuentasCobrar;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.cuentascobrar.CuentaCobrarDomain;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.*;
@@ -25,8 +25,8 @@ public class ObtenerCuentasCobrarImpl implements ObtenerCuentasCobrar {
     private final CuentaCobrarEntityMapper cuentaCobrarEntityMapper;
 
     public ObtenerCuentasCobrarImpl(CuentaCobrarRepository cuentaCobrarRepository,
-                                    SuscripcionExisteRule suscripcionExisteRule,
-                                    CuentaCobrarEntityMapper cuentaCobrarEntityMapper) {
+            SuscripcionExisteRule suscripcionExisteRule,
+            CuentaCobrarEntityMapper cuentaCobrarEntityMapper) {
         this.cuentaCobrarRepository = cuentaCobrarRepository;
         this.suscripcionExisteRule = suscripcionExisteRule;
         this.cuentaCobrarEntityMapper = cuentaCobrarEntityMapper;
@@ -49,8 +49,7 @@ public class ObtenerCuentasCobrarImpl implements ObtenerCuentasCobrar {
         return new PageImpl<>(
                 cuentaCobrarEntityMapper.toDomainCollection(entities.getContent()),
                 pageable,
-                entities.getTotalElements()
-        );
+                entities.getTotalElements());
     }
 
     private Specification<CuentaCobrarEntity> buildSpecification(CuentaCobrarPageDTO data) {
@@ -58,7 +57,7 @@ public class ObtenerCuentasCobrarImpl implements ObtenerCuentasCobrar {
 
         ObtenerCuentaCobrarDTO filtro = data.getCuentaCobrar();
 
-        if (data.getSuscripcionId() != null) {
+        if (data.getSuscripcionId() != null && !UUIDHelper.isDefault(data.getSuscripcionId())) {
             specs.add((root, query, cb) -> cb.equal(root.get("suscripcion").get("id"), data.getSuscripcionId()));
         }
 
@@ -70,19 +69,21 @@ public class ObtenerCuentasCobrarImpl implements ObtenerCuentasCobrar {
 
             if (StringUtils.hasText(filtro.getNumeroCuenta())) {
                 String numeroCuenta = filtro.getNumeroCuenta().toLowerCase().trim();
-                specs.add((root, query, cb) ->
-                        cb.like(cb.lower(root.get("numeroCuenta")), "%" + numeroCuenta + "%"));
+                specs.add((root, query, cb) -> cb.like(cb.lower(root.get("numeroCuenta")), "%" + numeroCuenta + "%"));
             }
 
-            if (filtro.getCliente() != null && filtro.getCliente().getId() != null) {
+            if (filtro.getCliente() != null
+                    && filtro.getCliente().getId() != null
+                    && !UUIDHelper.isDefault(filtro.getCliente().getId())) {
                 specs.add((root, query, cb) -> cb.equal(root.get("cliente").get("id"), filtro.getCliente().getId()));
             }
 
             if (filtro.getFechaVencimiento() != null) {
-                specs.add((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("fechaVencimiento"), filtro.getFechaVencimiento()));
+                specs.add((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("fechaVencimiento"),
+                        filtro.getFechaVencimiento()));
             }
         }
 
-        return Specification.allOf(specs);
+        return specs.isEmpty() ? Specification.where(null) : Specification.allOf(specs);
     }
 }

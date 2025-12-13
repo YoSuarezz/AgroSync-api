@@ -6,6 +6,7 @@ import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEn
 import com.agrosync.application.secondaryports.mapper.cuentaspagar.CuentaPagarEntityMapper;
 import com.agrosync.application.secondaryports.repository.CuentaPagarRepository;
 import com.agrosync.application.usecase.cuentaspagar.ObtenerCuentasPagar;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.*;
@@ -24,8 +25,8 @@ public class ObtenerCuentasPagarImpl implements ObtenerCuentasPagar {
     private final CuentaPagarEntityMapper cuentaPagarEntityMapper;
 
     public ObtenerCuentasPagarImpl(CuentaPagarRepository cuentaPagarRepository,
-                                   SuscripcionExisteRule suscripcionExisteRule,
-                                   CuentaPagarEntityMapper cuentaPagarEntityMapper) {
+            SuscripcionExisteRule suscripcionExisteRule,
+            CuentaPagarEntityMapper cuentaPagarEntityMapper) {
         this.cuentaPagarRepository = cuentaPagarRepository;
         this.suscripcionExisteRule = suscripcionExisteRule;
         this.cuentaPagarEntityMapper = cuentaPagarEntityMapper;
@@ -48,8 +49,7 @@ public class ObtenerCuentasPagarImpl implements ObtenerCuentasPagar {
         return new PageImpl<>(
                 cuentaPagarEntityMapper.toDomainCollection(entities.getContent()),
                 pageable,
-                entities.getTotalElements()
-        );
+                entities.getTotalElements());
     }
 
     private Specification<CuentaPagarEntity> buildSpecification(CuentaPagarPageDTO data) {
@@ -57,7 +57,7 @@ public class ObtenerCuentasPagarImpl implements ObtenerCuentasPagar {
 
         ObtenerCuentaPagarDTO filtro = data.getCuentaPagar();
 
-        if (data.getSuscripcionId() != null) {
+        if (data.getSuscripcionId() != null && !UUIDHelper.isDefault(data.getSuscripcionId())) {
             specs.add((root, query, cb) -> cb.equal(root.get("suscripcion").get("id"), data.getSuscripcionId()));
         }
 
@@ -69,19 +69,22 @@ public class ObtenerCuentasPagarImpl implements ObtenerCuentasPagar {
 
             if (StringUtils.hasText(filtro.getNumeroCuenta())) {
                 String numeroCuenta = filtro.getNumeroCuenta().toLowerCase().trim();
-                specs.add((root, query, cb) ->
-                        cb.like(cb.lower(root.get("numeroCuenta")), "%" + numeroCuenta + "%"));
+                specs.add((root, query, cb) -> cb.like(cb.lower(root.get("numeroCuenta")), "%" + numeroCuenta + "%"));
             }
 
-            if (filtro.getProveedor() != null && filtro.getProveedor().getId() != null) {
-                specs.add((root, query, cb) -> cb.equal(root.get("proveedor").get("id"), filtro.getProveedor().getId()));
+            if (filtro.getProveedor() != null
+                    && filtro.getProveedor().getId() != null
+                    && !UUIDHelper.isDefault(filtro.getProveedor().getId())) {
+                specs.add(
+                        (root, query, cb) -> cb.equal(root.get("proveedor").get("id"), filtro.getProveedor().getId()));
             }
 
             if (filtro.getFechaVencimiento() != null) {
-                specs.add((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("fechaVencimiento"), filtro.getFechaVencimiento()));
+                specs.add((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("fechaVencimiento"),
+                        filtro.getFechaVencimiento()));
             }
         }
 
-        return Specification.allOf(specs);
+        return specs.isEmpty() ? Specification.where(null) : Specification.allOf(specs);
     }
 }
