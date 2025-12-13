@@ -2,7 +2,6 @@ package com.agrosync.application.primaryports.dto.cuentascobrar.request;
 
 import com.agrosync.application.primaryports.dto.cuentascobrar.response.ObtenerCuentaCobrarDTO;
 import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
-import com.agrosync.crosscutting.helpers.ObjectHelper;
 
 import java.util.UUID;
 
@@ -58,7 +57,7 @@ public class CuentaCobrarPageDTO {
     }
 
     public void setCuentaCobrar(ObtenerCuentaCobrarDTO obtenerCuentaCobrar) {
-        this.obtenerCuentaCobrar = ObjectHelper.getDefault(obtenerCuentaCobrar, ObtenerCuentaCobrarDTO.create());
+        this.obtenerCuentaCobrar = obtenerCuentaCobrar;
     }
 
     public String getSortDirection() {

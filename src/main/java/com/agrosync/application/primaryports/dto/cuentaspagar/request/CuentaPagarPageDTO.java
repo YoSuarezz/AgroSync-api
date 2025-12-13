@@ -2,7 +2,6 @@ package com.agrosync.application.primaryports.dto.cuentaspagar.request;
 
 import com.agrosync.application.primaryports.dto.cuentaspagar.response.ObtenerCuentaPagarDTO;
 import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
-import com.agrosync.crosscutting.helpers.ObjectHelper;
 
 import java.util.UUID;
 
@@ -50,7 +49,7 @@ public class CuentaPagarPageDTO {
     }
 
     public void setCuentaPagar(ObtenerCuentaPagarDTO obtenerCuentaPagar) {
-        this.obtenerCuentaPagar = ObjectHelper.getDefault(obtenerCuentaPagar, ObtenerCuentaPagarDTO.create());
+        this.obtenerCuentaPagar = obtenerCuentaPagar;
     }
 
     public String getSortDirection() {

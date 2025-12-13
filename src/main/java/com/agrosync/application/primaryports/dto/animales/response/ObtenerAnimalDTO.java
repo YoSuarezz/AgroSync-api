@@ -16,6 +16,8 @@ public class ObtenerAnimalDTO {
     private SexoEnum sexo;
     private BigDecimal peso;
     private EstadoAnimalEnum estado;
+    private BigDecimal precioKiloCompra;
+    private BigDecimal precioKiloVenta;
 
     public ObtenerAnimalDTO() {
         setId(UUIDHelper.getDefault());
@@ -23,18 +25,28 @@ public class ObtenerAnimalDTO {
         setSexo(null);
         setPeso(BigDecimal.ZERO);
         setEstado(null);
+        setPrecioKiloCompra(null);
+        setPrecioKiloVenta(null);
     }
 
-    public ObtenerAnimalDTO(UUID id, String numeroAnimal, SexoEnum sexo, BigDecimal peso, EstadoAnimalEnum estado) {
+    public ObtenerAnimalDTO(UUID id, String numeroAnimal, SexoEnum sexo, BigDecimal peso, EstadoAnimalEnum estado,
+                           BigDecimal precioKiloCompra, BigDecimal precioKiloVenta) {
         setId(id);
         setNumeroAnimal(numeroAnimal);
         setSexo(sexo);
         setPeso(peso);
         setEstado(estado);
+        setPrecioKiloCompra(precioKiloCompra);
+        setPrecioKiloVenta(precioKiloVenta);
+    }
+
+    public static ObtenerAnimalDTO create(UUID id, String numeroAnimal, SexoEnum sexo, BigDecimal peso, EstadoAnimalEnum estado,
+                                          BigDecimal precioKiloCompra, BigDecimal precioKiloVenta) {
+        return new ObtenerAnimalDTO(id, numeroAnimal, sexo, peso, estado, precioKiloCompra, precioKiloVenta);
     }
 
     public static ObtenerAnimalDTO create(UUID id, String numeroAnimal, SexoEnum sexo, BigDecimal peso, EstadoAnimalEnum estado) {
-        return new ObtenerAnimalDTO(id, numeroAnimal, sexo, peso, estado);
+        return new ObtenerAnimalDTO(id, numeroAnimal, sexo, peso, estado, null, null);
     }
 
     public static ObtenerAnimalDTO create() {
@@ -79,5 +91,21 @@ public class ObtenerAnimalDTO {
 
     public void setEstado(EstadoAnimalEnum estado) {
         this.estado = estado;
+    }
+
+    public BigDecimal getPrecioKiloCompra() {
+        return precioKiloCompra;
+    }
+
+    public void setPrecioKiloCompra(BigDecimal precioKiloCompra) {
+        this.precioKiloCompra = precioKiloCompra;
+    }
+
+    public BigDecimal getPrecioKiloVenta() {
+        return precioKiloVenta;
+    }
+
+    public void setPrecioKiloVenta(BigDecimal precioKiloVenta) {
+        this.precioKiloVenta = precioKiloVenta;
     }
 }

@@ -26,8 +26,8 @@ public class ObtenerCuentaPagarDTO {
         setMontoTotal(BigDecimal.ZERO);
         setSaldoPendiente(BigDecimal.ZERO);
         setEstado(null);
-        setFechaEmision(DateHelper.getDefault());
-        setFechaVencimiento(DateHelper.getDefault());
+        setFechaEmision(null);
+        setFechaVencimiento(null);
     }
 
     public ObtenerCuentaPagarDTO(UUID id, String numeroCuenta, ObtenerUsuarioDTO proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento) {
@@ -94,7 +94,7 @@ public class ObtenerCuentaPagarDTO {
     }
 
     public void setFechaEmision(LocalDate fechaEmision) {
-        this.fechaEmision = DateHelper.getDefault(fechaEmision, DateHelper.getDefault());
+        this.fechaEmision = fechaEmision;
     }
 
     public LocalDate getFechaVencimiento() {
@@ -102,7 +102,7 @@ public class ObtenerCuentaPagarDTO {
     }
 
     public void setFechaVencimiento(LocalDate fechaVencimiento) {
-        this.fechaVencimiento = DateHelper.getDefault(fechaVencimiento, DateHelper.getDefault());
+        this.fechaVencimiento = fechaVencimiento;
     }
 
     public BigDecimal getSaldoPendiente() {
