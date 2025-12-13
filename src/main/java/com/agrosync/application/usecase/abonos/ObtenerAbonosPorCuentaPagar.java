@@ -1,10 +1,10 @@
 package com.agrosync.application.usecase.abonos;
 
-import com.agrosync.application.primaryports.dto.abonos.response.ObtenerAbonoDTO;
+import com.agrosync.application.primaryports.dto.abonos.request.AbonoIdSuscripcionDTO;
 import com.agrosync.application.usecase.UseCaseWithReturn;
+import com.agrosync.domain.abonos.AbonoDomain;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface ObtenerAbonosPorCuentaPagar extends UseCaseWithReturn<UUID[], List<ObtenerAbonoDTO>> {
+public interface ObtenerAbonosPorCuentaPagar extends UseCaseWithReturn<AbonoIdSuscripcionDTO, List<AbonoDomain>> {
 }

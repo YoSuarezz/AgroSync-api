@@ -1,5 +1,7 @@
 package com.agrosync.infrastructure.primaryadapters.controller.cuentascobrar;
 
+import com.agrosync.application.primaryports.dto.cobros.request.CobroIdSuscripcionDTO;
+import com.agrosync.application.primaryports.dto.cobros.request.CobroPageDTO;
 import com.agrosync.application.primaryports.dto.cobros.request.RegistrarCobroDTO;
 import com.agrosync.application.primaryports.dto.cobros.response.ObtenerCobroDTO;
 import com.agrosync.application.primaryports.dto.cuentascobrar.request.CuentaCobrarIdSuscripcionDTO;
@@ -7,7 +9,9 @@ import com.agrosync.application.primaryports.dto.cuentascobrar.request.CuentaCob
 import com.agrosync.application.primaryports.dto.cuentascobrar.response.ObtenerCuentaCobrarDTO;
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.application.primaryports.interactor.cobros.ObtenerCobroPorIdInteractor;
+import com.agrosync.application.primaryports.interactor.cobros.ObtenerCobrosInteractor;
 import com.agrosync.application.primaryports.interactor.cobros.ObtenerCobrosPorCuentaCobrarInteractor;
 import com.agrosync.application.primaryports.interactor.cobros.RegistrarNuevoCobroInteractor;
 import com.agrosync.application.primaryports.interactor.cuentascobrar.ObtenerCuentaCobrarPorIdInteractor;
@@ -34,17 +38,20 @@ public class CuentasCobrarController {
     private final RegistrarNuevoCobroInteractor registrarNuevoCobroInteractor;
     private final ObtenerCobrosPorCuentaCobrarInteractor obtenerCobrosPorCuentaCobrarInteractor;
     private final ObtenerCobroPorIdInteractor obtenerCobroPorIdInteractor;
+    private final ObtenerCobrosInteractor obtenerCobrosInteractor;
 
     public CuentasCobrarController(ObtenerCuentasCobrarInteractor obtenerCuentasCobrarInteractor,
             ObtenerCuentaCobrarPorIdInteractor obtenerCuentaCobrarPorIdInteractor,
             RegistrarNuevoCobroInteractor registrarNuevoCobroInteractor,
             ObtenerCobrosPorCuentaCobrarInteractor obtenerCobrosPorCuentaCobrarInteractor,
-            ObtenerCobroPorIdInteractor obtenerCobroPorIdInteractor) {
+            ObtenerCobroPorIdInteractor obtenerCobroPorIdInteractor,
+            ObtenerCobrosInteractor obtenerCobrosInteractor) {
         this.obtenerCuentasCobrarInteractor = obtenerCuentasCobrarInteractor;
         this.obtenerCuentaCobrarPorIdInteractor = obtenerCuentaCobrarPorIdInteractor;
         this.registrarNuevoCobroInteractor = registrarNuevoCobroInteractor;
         this.obtenerCobrosPorCuentaCobrarInteractor = obtenerCobrosPorCuentaCobrarInteractor;
         this.obtenerCobroPorIdInteractor = obtenerCobroPorIdInteractor;
+        this.obtenerCobrosInteractor = obtenerCobrosInteractor;
     }
 
     @GetMapping
@@ -126,7 +133,7 @@ public class CuentasCobrarController {
             @RequestHeader(value = "x-suscripcion-id") UUID suscripcionId) {
 
         try {
-            UUID[] data = new UUID[] { id, suscripcionId };
+            CobroIdSuscripcionDTO data = CobroIdSuscripcionDTO.create(id, suscripcionId);
             List<ObtenerCobroDTO> cobros = obtenerCobrosPorCuentaCobrarInteractor.ejecutar(data);
 
             var response = CobroResponse.build(List.of("Consulta de cobros exitosa"), cobros);
@@ -142,14 +149,46 @@ public class CuentasCobrarController {
         }
     }
 
+    @GetMapping("/cobros")
+    public ResponseEntity<CobroResponse<PageResponse<ObtenerCobroDTO>>> consultarCobros(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "fechaCobro") String sortBy,
+            @RequestParam(defaultValue = "DESC") String sortDirection,
+            @RequestParam(required = false, name = "cuentaCobrarId") UUID cuentaCobrarId,
+            @RequestParam(required = false, name = "metodoPago") MetodoPagoEnum metodoPago,
+            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+
+        try {
+            CobroPageDTO request = new CobroPageDTO(page, size, sortBy, sortDirection, null, metodoPago, cuentaCobrarId, suscripcionId);
+
+            PageResponse<ObtenerCobroDTO> resultado = obtenerCobrosInteractor.ejecutar(request);
+
+            var response = CobroResponse.build(List.of("Consulta de cobros exitosa"), resultado);
+            return GenerateResponse.generateSuccessResponseWithData(response);
+
+        } catch (final AgroSyncException excepcion) {
+            var response = CobroResponse.build(List.of(excepcion.getMensajeUsuario()),
+                    PageResponse.from(Page.<ObtenerCobroDTO>empty()));
+            return GenerateResponse.generateBadRequestResponseWithData(response);
+        } catch (final IllegalArgumentException excepcion) {
+            var response = CobroResponse.build(List.of(excepcion.getMessage()),
+                    PageResponse.from(Page.<ObtenerCobroDTO>empty()));
+            return GenerateResponse.generateBadRequestResponseWithData(response);
+        } catch (final Exception excepcion) {
+            var response = CobroResponse.build(List.of("Error al consultar los cobros"),
+                    PageResponse.from(Page.<ObtenerCobroDTO>empty()));
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/{cuentaId}/cobros/{cobroId}")
     public ResponseEntity<CobroResponse<ObtenerCobroDTO>> consultarCobroPorId(
-            @PathVariable UUID cuentaId,
             @PathVariable UUID cobroId,
             @RequestHeader(value = "x-suscripcion-id") UUID suscripcionId) {
 
         try {
-            UUID[] data = new UUID[] { cobroId, suscripcionId };
+            CobroIdSuscripcionDTO data = CobroIdSuscripcionDTO.create(cobroId, suscripcionId);
             ObtenerCobroDTO cobro = obtenerCobroPorIdInteractor.ejecutar(data);
 
             var response = CobroResponse.build(List.of("Cobro consultado correctamente"), cobro);

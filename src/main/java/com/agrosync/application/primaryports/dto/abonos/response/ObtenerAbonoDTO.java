@@ -1,7 +1,10 @@
 package com.agrosync.application.primaryports.dto.abonos.response;
 
 import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.crosscutting.helpers.NumericHelper;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
+import com.agrosync.crosscutting.helpers.TextHelper;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,29 +18,32 @@ public class ObtenerAbonoDTO {
     private BigDecimal monto;
     private LocalDateTime fechaPago;
     private MetodoPagoEnum metodoPago;
+    private String concepto;
 
     public ObtenerAbonoDTO() {
-        setId(null);
-        setIdCuentaPagar(null);
-        setNumeroCuentaPagar(null);
+        setId(UUIDHelper.getDefault());
+        setIdCuentaPagar(UUIDHelper.getDefault());
+        setNumeroCuentaPagar(TextHelper.EMPTY);
         setMonto(BigDecimal.ZERO);
-        setFechaPago(null);
-        setMetodoPago(MetodoPagoEnum.OTRO);
+        setFechaPago(LocalDateTime.now());
+        setMetodoPago(null);
+        setConcepto(TextHelper.EMPTY);
     }
 
     public ObtenerAbonoDTO(UUID id, UUID idCuentaPagar, String numeroCuentaPagar, BigDecimal monto,
-            LocalDateTime fechaPago, MetodoPagoEnum metodoPago) {
+            LocalDateTime fechaPago, MetodoPagoEnum metodoPago, String concepto) {
         setId(id);
         setIdCuentaPagar(idCuentaPagar);
         setNumeroCuentaPagar(numeroCuentaPagar);
         setMonto(monto);
         setFechaPago(fechaPago);
         setMetodoPago(metodoPago);
+        setConcepto(concepto);
     }
 
     public static ObtenerAbonoDTO create(UUID id, UUID idCuentaPagar, String numeroCuentaPagar, BigDecimal monto,
-            LocalDateTime fechaPago, MetodoPagoEnum metodoPago) {
-        return new ObtenerAbonoDTO(id, idCuentaPagar, numeroCuentaPagar, monto, fechaPago, metodoPago);
+            LocalDateTime fechaPago, MetodoPagoEnum metodoPago, String concepto) {
+        return new ObtenerAbonoDTO(id, idCuentaPagar, numeroCuentaPagar, monto, fechaPago, metodoPago, concepto);
     }
 
     public static ObtenerAbonoDTO create() {
@@ -49,7 +55,7 @@ public class ObtenerAbonoDTO {
     }
 
     public void setId(UUID id) {
-        this.id = id;
+        this.id = UUIDHelper.getDefault(id, UUIDHelper.getDefault());
     }
 
     public UUID getIdCuentaPagar() {
@@ -57,7 +63,15 @@ public class ObtenerAbonoDTO {
     }
 
     public void setIdCuentaPagar(UUID idCuentaPagar) {
-        this.idCuentaPagar = idCuentaPagar;
+        this.idCuentaPagar = UUIDHelper.getDefault(idCuentaPagar, UUIDHelper.getDefault());
+    }
+
+    public BigDecimal getMonto() {
+        return monto;
+    }
+
+    public void setMonto(BigDecimal monto) {
+        this.monto = NumericHelper.getDefault(monto, BigDecimal.ZERO);
     }
 
     public String getNumeroCuentaPagar() {
@@ -65,15 +79,7 @@ public class ObtenerAbonoDTO {
     }
 
     public void setNumeroCuentaPagar(String numeroCuentaPagar) {
-        this.numeroCuentaPagar = numeroCuentaPagar;
-    }
-
-    public BigDecimal getMonto() {
-        return ObjectHelper.getDefault(monto, BigDecimal.ZERO);
-    }
-
-    public void setMonto(BigDecimal monto) {
-        this.monto = ObjectHelper.getDefault(monto, BigDecimal.ZERO);
+        this.numeroCuentaPagar = TextHelper.applyTrim(numeroCuentaPagar);
     }
 
     public LocalDateTime getFechaPago() {
@@ -81,14 +87,22 @@ public class ObtenerAbonoDTO {
     }
 
     public void setFechaPago(LocalDateTime fechaPago) {
-        this.fechaPago = fechaPago;
+        this.fechaPago = ObjectHelper.getDefault(fechaPago, LocalDateTime.now());
     }
 
     public MetodoPagoEnum getMetodoPago() {
-        return ObjectHelper.getDefault(metodoPago, MetodoPagoEnum.OTRO);
+        return metodoPago;
     }
 
     public void setMetodoPago(MetodoPagoEnum metodoPago) {
-        this.metodoPago = ObjectHelper.getDefault(metodoPago, MetodoPagoEnum.OTRO);
+        this.metodoPago = metodoPago;
+    }
+
+    public String getConcepto() {
+        return TextHelper.applyTrim(concepto);
+    }
+
+    public void setConcepto(String concepto) {
+        this.concepto = TextHelper.applyTrim(concepto);
     }
 }

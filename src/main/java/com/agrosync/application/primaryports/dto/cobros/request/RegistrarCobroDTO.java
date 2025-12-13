@@ -1,40 +1,46 @@
 package com.agrosync.application.primaryports.dto.cobros.request;
 
 import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.crosscutting.helpers.NumericHelper;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class RegistrarCobroDTO {
 
     private UUID idCuentaCobrar;
     private BigDecimal monto;
+    private LocalDateTime fechaCobro;
     private MetodoPagoEnum metodoPago;
     private String concepto;
     private UUID suscripcionId;
 
     public RegistrarCobroDTO() {
-        setIdCuentaCobrar(null);
+        setIdCuentaCobrar(UUIDHelper.getDefault());
         setMonto(BigDecimal.ZERO);
+        setFechaCobro(LocalDateTime.now());
         setMetodoPago(MetodoPagoEnum.OTRO);
         setConcepto(TextHelper.EMPTY);
         setSuscripcionId(null);
     }
 
-    public RegistrarCobroDTO(UUID idCuentaCobrar, BigDecimal monto, MetodoPagoEnum metodoPago, String concepto,
+    public RegistrarCobroDTO(UUID idCuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto,
             UUID suscripcionId) {
         setIdCuentaCobrar(idCuentaCobrar);
         setMonto(monto);
+        setFechaCobro(fechaCobro);
         setMetodoPago(metodoPago);
         setConcepto(concepto);
         setSuscripcionId(suscripcionId);
     }
 
-    public static RegistrarCobroDTO create(UUID idCuentaCobrar, BigDecimal monto, MetodoPagoEnum metodoPago,
+    public static RegistrarCobroDTO create(UUID idCuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago,
             String concepto, UUID suscripcionId) {
-        return new RegistrarCobroDTO(idCuentaCobrar, monto, metodoPago, concepto, suscripcionId);
+        return new RegistrarCobroDTO(idCuentaCobrar, monto, fechaCobro, metodoPago, concepto, suscripcionId);
     }
 
     public static RegistrarCobroDTO create() {
@@ -45,44 +51,47 @@ public class RegistrarCobroDTO {
         return idCuentaCobrar;
     }
 
-    public RegistrarCobroDTO setIdCuentaCobrar(UUID idCuentaCobrar) {
-        this.idCuentaCobrar = idCuentaCobrar;
-        return this;
+    public void setIdCuentaCobrar(UUID idCuentaCobrar) {
+        this.idCuentaCobrar = UUIDHelper.getDefault(idCuentaCobrar, UUIDHelper.getDefault());
     }
 
     public BigDecimal getMonto() {
-        return ObjectHelper.getDefault(monto, BigDecimal.ZERO);
+        return monto;
     }
 
-    public RegistrarCobroDTO setMonto(BigDecimal monto) {
-        this.monto = ObjectHelper.getDefault(monto, BigDecimal.ZERO);
-        return this;
+    public void setMonto(BigDecimal monto) {
+        this.monto = NumericHelper.getDefault(monto, BigDecimal.ZERO);
+    }
+
+    public LocalDateTime getFechaCobro() {
+        return fechaCobro;
+    }
+
+    public void setFechaCobro(LocalDateTime fechaCobro) {
+        this.fechaCobro = ObjectHelper.getDefault(fechaCobro, LocalDateTime.now());
     }
 
     public MetodoPagoEnum getMetodoPago() {
-        return ObjectHelper.getDefault(metodoPago, MetodoPagoEnum.OTRO);
+        return metodoPago;
     }
 
-    public RegistrarCobroDTO setMetodoPago(MetodoPagoEnum metodoPago) {
-        this.metodoPago = ObjectHelper.getDefault(metodoPago, MetodoPagoEnum.OTRO);
-        return this;
+    public void setMetodoPago(MetodoPagoEnum metodoPago) {
+        this.metodoPago = metodoPago;
     }
 
     public String getConcepto() {
-        return TextHelper.applyTrim(concepto);
+        return concepto;
     }
 
-    public RegistrarCobroDTO setConcepto(String concepto) {
+    public void setConcepto(String concepto) {
         this.concepto = TextHelper.applyTrim(concepto);
-        return this;
     }
 
     public UUID getSuscripcionId() {
         return suscripcionId;
     }
 
-    public RegistrarCobroDTO setSuscripcionId(UUID suscripcionId) {
+    public void setSuscripcionId(UUID suscripcionId) {
         this.suscripcionId = suscripcionId;
-        return this;
     }
 }

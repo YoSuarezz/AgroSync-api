@@ -33,6 +33,9 @@ public class AbonoEntity extends Auditoria {
     @Column(name = "metodo_pago")
     private MetodoPagoEnum metodoPago;
 
+    @Column(name = "concepto")
+    private String concepto;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_suscripcion")
     private SuscripcionEntity suscripcion;
@@ -43,28 +46,30 @@ public class AbonoEntity extends Auditoria {
         setMonto(BigDecimal.ZERO);
         setFechaPago(LocalDateTime.now());
         setMetodoPago(MetodoPagoEnum.OTRO);
+        setConcepto("");
         setSuscripcion(SuscripcionEntity.create());
     }
 
-    public AbonoEntity(UUID id, CuentaPagarEntity cuentaPagar, BigDecimal monto, LocalDateTime fechaPago, MetodoPagoEnum metodoPago, SuscripcionEntity suscripcion) {
+    public AbonoEntity(UUID id, CuentaPagarEntity cuentaPagar, BigDecimal monto, LocalDateTime fechaPago, MetodoPagoEnum metodoPago, String concepto, SuscripcionEntity suscripcion) {
         setId(id);
         setCuentaPagar(cuentaPagar);
         setMonto(monto);
         setFechaPago(fechaPago);
         setMetodoPago(metodoPago);
+        setConcepto(concepto);
         setSuscripcion(suscripcion);
     }
 
-    public static AbonoEntity create(UUID id, CuentaPagarEntity cuentaPagar, BigDecimal monto, LocalDateTime fechaPago, MetodoPagoEnum metodoPago, SuscripcionEntity suscripcion) {
-        return new AbonoEntity(id, cuentaPagar, monto, fechaPago, metodoPago, suscripcion);
+    public static AbonoEntity create(UUID id, CuentaPagarEntity cuentaPagar, BigDecimal monto, LocalDateTime fechaPago, MetodoPagoEnum metodoPago, String concepto, SuscripcionEntity suscripcion) {
+        return new AbonoEntity(id, cuentaPagar, monto, fechaPago, metodoPago, concepto, suscripcion);
     }
 
     public static AbonoEntity create(UUID id) {
-        return new AbonoEntity(id, CuentaPagarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, SuscripcionEntity.create());
+        return new AbonoEntity(id, CuentaPagarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, "", SuscripcionEntity.create());
     }
 
     public static AbonoEntity create() {
-        return new AbonoEntity(UUIDHelper.getDefault(), CuentaPagarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, SuscripcionEntity.create());
+        return new AbonoEntity(UUIDHelper.getDefault(), CuentaPagarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, "", SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -105,6 +110,14 @@ public class AbonoEntity extends Auditoria {
 
     public void setMetodoPago(MetodoPagoEnum metodoPago) {
         this.metodoPago = metodoPago;
+    }
+
+    public String getConcepto() {
+        return concepto;
+    }
+
+    public void setConcepto(String concepto) {
+        this.concepto = concepto;
     }
 
     public SuscripcionEntity getSuscripcion() {

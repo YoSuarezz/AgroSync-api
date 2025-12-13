@@ -20,6 +20,6 @@ public class ObtenerAnimalPorIdRulesValidatorImpl implements ObtenerAnimalPorIdR
     @Override
     public void validar(AnimalIdSuscripcionDTO data) {
         suscripcionExisteRule.validate(data.getSuscripcionId());
-        identificadorAnimalExisteRule.validate(data.getId());
+        identificadorAnimalExisteRule.validate(data);
     }
 }

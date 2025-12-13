@@ -15,18 +15,20 @@ public class CobroDomain extends BaseDomain {
     private LocalDateTime fechaCobro;
     private MetodoPagoEnum metodoPago;
     private String concepto;
+    private UUID suscripcionId;
 
     public CobroDomain() {
         super();
     }
 
-    public CobroDomain(UUID id, CuentaCobrarDomain cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto) {
+    public CobroDomain(UUID id, CuentaCobrarDomain cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto, UUID suscripcionId) {
         super(id);
         setCuentaCobrar(cuentaCobrar);
         setMonto(monto);
         setFechaCobro(fechaCobro);
         setMetodoPago(metodoPago);
         setConcepto(concepto);
+        setSuscripcionId(suscripcionId);
     }
 
     public CuentaCobrarDomain getCuentaCobrar() {
@@ -67,5 +69,13 @@ public class CobroDomain extends BaseDomain {
 
     public void setConcepto(String concepto) {
         this.concepto = concepto;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

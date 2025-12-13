@@ -3,6 +3,7 @@ package com.agrosync.application.primaryports.dto.cobros.response;
 import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,12 +20,12 @@ public class ObtenerCobroDTO {
     private String concepto;
 
     public ObtenerCobroDTO() {
-        setId(null);
-        setIdCuentaCobrar(null);
-        setNumeroCuentaCobrar(null);
+        setId(UUIDHelper.getDefault());
+        setIdCuentaCobrar(UUIDHelper.getDefault());
+        setNumeroCuentaCobrar(TextHelper.EMPTY);
         setMonto(BigDecimal.ZERO);
-        setFechaCobro(null);
-        setMetodoPago(MetodoPagoEnum.OTRO);
+        setFechaCobro(LocalDateTime.now());
+        setMetodoPago(null);
         setConcepto(TextHelper.EMPTY);
     }
 
@@ -85,7 +86,7 @@ public class ObtenerCobroDTO {
     }
 
     public void setFechaCobro(LocalDateTime fechaCobro) {
-        this.fechaCobro = fechaCobro;
+        this.fechaCobro = ObjectHelper.getDefault(fechaCobro, LocalDateTime.now());
     }
 
     public MetodoPagoEnum getMetodoPago() {
@@ -93,7 +94,7 @@ public class ObtenerCobroDTO {
     }
 
     public void setMetodoPago(MetodoPagoEnum metodoPago) {
-        this.metodoPago = ObjectHelper.getDefault(metodoPago, MetodoPagoEnum.OTRO);
+        this.metodoPago = metodoPago;
     }
 
     public String getConcepto() {

@@ -1,6 +1,5 @@
 package com.agrosync.application.usecase.cobros.impl;
 
-import com.agrosync.application.primaryports.dto.cobros.request.RegistrarCobroDTO;
 import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import com.agrosync.application.secondaryports.entity.cobros.CobroEntity;
@@ -26,79 +25,83 @@ public class RegistrarNuevoCobroImpl implements RegistrarNuevoCobro {
     private final CuentaCobrarRepository cuentaCobrarRepository;
     private final CobroRepository cobroRepository;
     private final CarteraRepository carteraRepository;
-    private final RegistrarNuevoCobroRulesValidator registrarNuevoCobroRulesValidator;
-    private final CuentaCobrarEntityMapper cuentaCobrarEntityMapper;
+    private final RegistrarNuevoCobroRulesValidator rulesValidator;
+    private final CuentaCobrarEntityMapper cuentaCobrarMapper;
 
     public RegistrarNuevoCobroImpl(
             CuentaCobrarRepository cuentaCobrarRepository,
             CobroRepository cobroRepository,
             CarteraRepository carteraRepository,
-            RegistrarNuevoCobroRulesValidator registrarNuevoCobroRulesValidator,
-            CuentaCobrarEntityMapper cuentaCobrarEntityMapper) {
+            RegistrarNuevoCobroRulesValidator rulesValidator,
+            CuentaCobrarEntityMapper cuentaCobrarMapper
+    ) {
         this.cuentaCobrarRepository = cuentaCobrarRepository;
         this.cobroRepository = cobroRepository;
         this.carteraRepository = carteraRepository;
-        this.registrarNuevoCobroRulesValidator = registrarNuevoCobroRulesValidator;
-        this.cuentaCobrarEntityMapper = cuentaCobrarEntityMapper;
+        this.rulesValidator = rulesValidator;
+        this.cuentaCobrarMapper = cuentaCobrarMapper;
     }
 
     @Override
-    public void ejecutar(RegistrarCobroDTO data) {
-        // 1. Buscar la cuenta por cobrar
-        CuentaCobrarEntity cuentaCobrarEntity = cuentaCobrarRepository
-                .findByIdAndSuscripcion_Id(data.getIdCuentaCobrar(), data.getSuscripcionId())
+    public void ejecutar(CobroDomain cobroDomain) {
+
+        // 1. Buscar cuenta por cobrar
+        var cuentaEntity = cuentaCobrarRepository
+                .findByIdAndSuscripcion_Id(
+                        cobroDomain.getCuentaCobrar().getId(),
+                        cobroDomain.getSuscripcionId()
+                )
                 .orElseThrow(IdentificadorCuentaCobrarNoExisteException::create);
 
-        // 2. Convertir a domain para validaciones
-        CuentaCobrarDomain cuentaCobrarDomain = cuentaCobrarEntityMapper.toDomain(cuentaCobrarEntity);
-
-        CobroDomain cobroDomain = new CobroDomain();
-        cobroDomain.setMonto(data.getMonto());
-        cobroDomain.setMetodoPago(data.getMetodoPago());
-        cobroDomain.setConcepto(data.getConcepto());
-        cobroDomain.setCuentaCobrar(cuentaCobrarDomain);
+        // 2. Convertir entity a dominio para validaciones
+        CuentaCobrarDomain cuentaCobrar = cuentaCobrarMapper.toDomain(cuentaEntity);
+        cobroDomain.setCuentaCobrar(cuentaCobrar);
 
         // 3. Validar reglas de negocio
-        registrarNuevoCobroRulesValidator.validar(cobroDomain);
+        rulesValidator.validar(cobroDomain);
 
         // 4. Crear y guardar el cobro
         CobroEntity cobroEntity = new CobroEntity();
-        cobroEntity.setCuentaCobrar(cuentaCobrarEntity);
-        cobroEntity.setMonto(data.getMonto());
-        cobroEntity.setFechaCobro(LocalDateTime.now());
-        cobroEntity.setMetodoPago(data.getMetodoPago());
-        cobroEntity.setConcepto(data.getConcepto());
-        cobroEntity.setSuscripcion(SuscripcionEntity.create(data.getSuscripcionId()));
+        cobroEntity.setCuentaCobrar(cuentaEntity);
+        cobroEntity.setMonto(cobroDomain.getMonto());
+        cobroEntity.setFechaCobro(cobroDomain.getFechaCobro() != null ? cobroDomain.getFechaCobro() : LocalDateTime.now());
+        cobroEntity.setMetodoPago(cobroDomain.getMetodoPago());
+        cobroEntity.setConcepto(cobroDomain.getConcepto());
+        cobroEntity.setSuscripcion(SuscripcionEntity.create(cobroDomain.getSuscripcionId()));
 
         cobroRepository.save(cobroEntity);
 
-        // 5. Actualizar saldo pendiente de la cuenta
-        BigDecimal nuevoSaldo = cuentaCobrarEntity.getSaldoPendiente().subtract(data.getMonto());
-        cuentaCobrarEntity.setSaldoPendiente(nuevoSaldo);
+        // 5. Actualizar saldo pendiente
+        BigDecimal nuevoSaldo = cuentaEntity.getSaldoPendiente()
+                .subtract(cobroDomain.getMonto());
 
-        // 6. Actualizar estado de la cuenta
+        cuentaEntity.setSaldoPendiente(nuevoSaldo);
+
+        // 6. Actualizar estado de la cuenta por cobrar
         if (nuevoSaldo.compareTo(BigDecimal.ZERO) == 0) {
-            cuentaCobrarEntity.setEstado(EstadoCuentaEnum.COBRADA);
+            cuentaEntity.setEstado(EstadoCuentaEnum.COBRADA);
         } else {
-            cuentaCobrarEntity.setEstado(EstadoCuentaEnum.PARCIALMENTE_COBRADA);
+            cuentaEntity.setEstado(EstadoCuentaEnum.PARCIALMENTE_COBRADA);
         }
 
-        cuentaCobrarRepository.save(cuentaCobrarEntity);
+        cuentaCobrarRepository.save(cuentaEntity);
 
         // 7. Actualizar cartera del cliente
-        actualizarCarteraCliente(cuentaCobrarEntity, data.getMonto());
+        actualizarCarteraCliente(cuentaEntity, cobroDomain.getMonto());
     }
 
     private void actualizarCarteraCliente(CuentaCobrarEntity cuentaCobrar, BigDecimal montoCobro) {
         CarteraEntity cartera = cuentaCobrar.getCliente().getCartera();
 
         if (cartera != null) {
-            // Reducir el total de cuentas por cobrar
-            BigDecimal nuevoTotalCuentasCobrar = cartera.getTotalCuentasCobrar().subtract(montoCobro);
+            // Reducir total de cuentas por cobrar
+            BigDecimal nuevoTotalCuentasCobrar =
+                    cartera.getTotalCuentasCobrar().subtract(montoCobro);
             cartera.setTotalCuentasCobrar(nuevoTotalCuentasCobrar);
 
-            // Recalcular saldo actual (totalCuentasCobrar - totalCuentasPagar)
-            BigDecimal saldoActual = nuevoTotalCuentasCobrar.subtract(cartera.getTotalCuentasPagar());
+            // Calcular saldo actual (cobrar - pagar)
+            BigDecimal saldoActual =
+                    nuevoTotalCuentasCobrar.subtract(cartera.getTotalCuentasPagar());
             cartera.setSaldoActual(saldoActual);
 
             carteraRepository.save(cartera);

@@ -22,13 +22,15 @@ public class CuentaPagarDomain extends BaseDomain {
     private EstadoCuentaEnum estado;
     private LocalDate fechaEmision;
     private LocalDate fechaVencimiento;
+    private UUID suscripcionId;
 
     public CuentaPagarDomain() {
         super();
     }
 
-    public CuentaPagarDomain(UUID id, String numeroCuenta, CompraDomain compra, UsuarioDomain proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoDomain> abonos, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento) {
+    public CuentaPagarDomain(UUID id, String numeroCuenta, CompraDomain compra, UsuarioDomain proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoDomain> abonos, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento, UUID suscripcionId) {
         super(id);
+        this.suscripcionId = suscripcionId;
         setNumeroCuenta(numeroCuenta);
         setCompra(compra);
         setProveedor(proveedor);
@@ -38,6 +40,7 @@ public class CuentaPagarDomain extends BaseDomain {
         setEstado(estado);
         setFechaEmision(fechaEmision);
         setFechaVencimiento(fechaVencimiento);
+        setSuscripcionId(suscripcionId);
     }
 
     public String getNumeroCuenta() {
@@ -110,5 +113,13 @@ public class CuentaPagarDomain extends BaseDomain {
 
     public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

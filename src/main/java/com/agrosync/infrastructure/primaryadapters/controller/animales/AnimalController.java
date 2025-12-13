@@ -38,7 +38,7 @@ public class AnimalController {
     @GetMapping
     public ResponseEntity<AnimalResponse<PageResponse<ObtenerAnimalDTO>>> consultarAnimales(@RequestParam(defaultValue = "0") int page,
                                                                                             @RequestParam(defaultValue = "10") int size,
-                                                                                            @RequestParam(defaultValue = "nombre") String sortBy,
+                                                                                            @RequestParam(defaultValue = "numeroAnimal") String sortBy,
                                                                                             @RequestParam(defaultValue = "ASC") String sortDirection,
                                                                                             @RequestParam(required = false) String numeroAnimal,
                                                                                             @RequestParam(required = false, name = "sexo") SexoEnum sexo,
