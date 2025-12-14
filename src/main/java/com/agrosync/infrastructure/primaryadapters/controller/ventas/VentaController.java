@@ -1,18 +1,24 @@
 package com.agrosync.infrastructure.primaryadapters.controller.ventas;
 
 import com.agrosync.application.primaryports.dto.ventas.request.RegistrarNuevaVentaDTO;
+import com.agrosync.application.primaryports.dto.ventas.request.VentaIdSuscripcionDTO;
+import com.agrosync.application.primaryports.dto.ventas.request.VentaPageDTO;
+import com.agrosync.application.primaryports.dto.ventas.response.ObtenerVentaDetalleDTO;
+import com.agrosync.application.primaryports.dto.ventas.response.ObtenerVentasDTO;
+import com.agrosync.application.primaryports.interactor.ventas.ObtenerVentaPorIdInteractor;
+import com.agrosync.application.primaryports.interactor.ventas.ObtenerVentasInteractor;
 import com.agrosync.application.primaryports.interactor.ventas.RegistrarNuevaVentaInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenericResponse;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.ventas.VentaResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,9 +27,15 @@ import java.util.UUID;
 public class VentaController {
 
     private final RegistrarNuevaVentaInteractor registrarNuevaVentaInteractor;
+    private final ObtenerVentasInteractor obtenerVentasInteractor;
+    private final ObtenerVentaPorIdInteractor obtenerVentaPorIdInteractor;
 
-    public VentaController(RegistrarNuevaVentaInteractor registrarNuevaVentaInteractor) {
+    public VentaController(RegistrarNuevaVentaInteractor registrarNuevaVentaInteractor,
+                           ObtenerVentasInteractor obtenerVentasInteractor,
+                           ObtenerVentaPorIdInteractor obtenerVentaPorIdInteractor) {
         this.registrarNuevaVentaInteractor = registrarNuevaVentaInteractor;
+        this.obtenerVentasInteractor = obtenerVentasInteractor;
+        this.obtenerVentaPorIdInteractor = obtenerVentaPorIdInteractor;
     }
 
     @PostMapping
@@ -36,9 +48,57 @@ public class VentaController {
         } catch (final AgroSyncException excepcion) {
             return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
         } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
             var userMessage = "Error al registrar la venta";
             return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<VentaResponse<PageResponse<ObtenerVentasDTO>>> consultarVentas(@RequestParam(defaultValue = "0") int page,
+                                                                                         @RequestParam(defaultValue = "10") int size,
+                                                                                         @RequestParam(defaultValue = "fechaVenta") String sortBy,
+                                                                                         @RequestParam(defaultValue = "DESC") String sortDirection,
+                                                                                         @RequestParam(required = false) String numeroVenta,
+                                                                                         @RequestParam(required = false) UUID clienteId,
+                                                                                         @RequestParam(required = false) LocalDate fechaInicio,
+                                                                                         @RequestParam(required = false) LocalDate fechaFin,
+                                                                                         @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+
+        try {
+            VentaPageDTO request = VentaPageDTO.create(page, size, sortBy, sortDirection, ObtenerVentasDTO.create(), fechaInicio, fechaFin, numeroVenta, suscripcionId, clienteId);
+
+            PageResponse<ObtenerVentasDTO> resultados = obtenerVentasInteractor.ejecutar(request);
+            VentaResponse<PageResponse<ObtenerVentasDTO>> response = VentaResponse.build(List.of("Ventas consultadas correctamente"), resultados);
+            return GenerateResponse.generateSuccessResponseWithData(response);
+
+        } catch (final AgroSyncException excepcion) {
+            var response = VentaResponse.build(List.of(excepcion.getMensajeUsuario()), PageResponse.from(Page.<ObtenerVentasDTO>empty()));
+            return GenerateResponse.generateBadRequestResponseWithData(response);
+        } catch (final IllegalArgumentException excepcion) {
+            var response = VentaResponse.build(List.of(excepcion.getMessage()), PageResponse.from(Page.<ObtenerVentasDTO>empty()));
+            return GenerateResponse.generateBadRequestResponseWithData(response);
+        } catch (final Exception excepcion) {
+            excepcion.printStackTrace();
+            var response = VentaResponse.build(List.of("Error al consultar las Ventas"), PageResponse.from(Page.<ObtenerVentasDTO>empty()));
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VentaResponse<ObtenerVentaDetalleDTO>> consultarVentaPorId(@PathVariable UUID id,
+                                                                                     @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+        try {
+            VentaIdSuscripcionDTO request = VentaIdSuscripcionDTO.create(id, suscripcionId);
+            ObtenerVentaDetalleDTO venta = obtenerVentaPorIdInteractor.ejecutar(request);
+            var ventaResponse = VentaResponse.build(List.of("Venta consultada correctamente"), venta);
+            return GenerateResponse.generateSuccessResponseWithData(ventaResponse);
+        } catch (final AgroSyncException excepcion) {
+            var ventaResponse = VentaResponse.<ObtenerVentaDetalleDTO>build(List.of(excepcion.getMensajeUsuario()), null);
+            return GenerateResponse.generateBadRequestResponseWithData(ventaResponse);
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al consultar la Venta";
+            var ventaResponse = VentaResponse.<ObtenerVentaDetalleDTO>build(List.of(userMessage), null);
+            return new ResponseEntity<>(ventaResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
