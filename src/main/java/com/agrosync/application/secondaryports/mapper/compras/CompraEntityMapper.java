@@ -61,6 +61,16 @@ public interface CompraEntityMapper {
         }
         CuentaPagarDomain domain = new CuentaPagarDomain();
         domain.setId(cuentaPagar.getId());
+        domain.setNumeroCuenta(cuentaPagar.getNumeroCuenta());
+        domain.setProveedor(mapProveedorEntityToDomain(cuentaPagar.getProveedor()));
+        domain.setMontoTotal(cuentaPagar.getMontoTotal());
+        domain.setSaldoPendiente(cuentaPagar.getSaldoPendiente());
+        domain.setEstado(cuentaPagar.getEstado());
+        domain.setFechaEmision(cuentaPagar.getFechaEmision());
+        domain.setFechaVencimiento(cuentaPagar.getFechaVencimiento());
+        if (cuentaPagar.getSuscripcion() != null) {
+            domain.setSuscripcionId(cuentaPagar.getSuscripcion().getId());
+        }
         return domain;
     }
 }

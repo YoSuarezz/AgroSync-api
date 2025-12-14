@@ -47,10 +47,8 @@ public class UsuarioController {
             registrarNuevoUsuarioInteractor.ejecutar(usuario);
             return GenerateResponse.generateSuccessResponse(List.of("Se ha registrado el usuario correctamente"));
         } catch (final AgroSyncException excepcion) {
-            excepcion.printStackTrace();
             return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
         } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
             var userMessage = "Error al registrar el usuario";
             return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -1,9 +1,12 @@
 package com.agrosync.infrastructure.primaryadapters.controller.compras;
 
+import com.agrosync.application.primaryports.dto.compras.request.CompraIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.compras.request.CompraPageDTO;
 import com.agrosync.application.primaryports.dto.compras.request.RegistrarNuevaCompraDTO;
 import com.agrosync.application.primaryports.dto.compras.response.ObtenerCompraDTO;
+import com.agrosync.application.primaryports.dto.compras.response.ObtenerCompraDetalleDTO;
 import com.agrosync.application.primaryports.interactor.compras.ObtenerComprasInteractor;
+import com.agrosync.application.primaryports.interactor.compras.ObtenerCompraPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.compras.RegistrarNuevaCompraInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
@@ -25,11 +28,14 @@ public class CompraController {
 
     private final RegistrarNuevaCompraInteractor registrarNuevaCompraInteractor;
     private final ObtenerComprasInteractor obtenerComprasInteractor;
+    private final ObtenerCompraPorIdInteractor obtenerCompraPorIdInteractor;
 
     public CompraController(RegistrarNuevaCompraInteractor registrarNuevaCompraInteractor,
-                            ObtenerComprasInteractor obtenerComprasInteractor) {
+                            ObtenerComprasInteractor obtenerComprasInteractor,
+                            ObtenerCompraPorIdInteractor obtenerCompraPorIdInteractor) {
         this.registrarNuevaCompraInteractor = registrarNuevaCompraInteractor;
         this.obtenerComprasInteractor = obtenerComprasInteractor;
+        this.obtenerCompraPorIdInteractor = obtenerCompraPorIdInteractor;
     }
 
     @PostMapping()
@@ -70,9 +76,26 @@ public class CompraController {
             var response = CompraResponse.build(List.of(excepcion.getMessage()), PageResponse.from(Page.<ObtenerCompraDTO>empty()));
             return GenerateResponse.generateBadRequestResponseWithData(response);
         } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
             var response = CompraResponse.build(List.of("Error al consultar las Compras"), PageResponse.from(Page.<ObtenerCompraDTO>empty()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CompraResponse<ObtenerCompraDetalleDTO>> consultarCompraPorId(@PathVariable UUID id,
+                                                                                        @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+        try {
+            CompraIdSuscripcionDTO request = CompraIdSuscripcionDTO.create(id, suscripcionId);
+            ObtenerCompraDetalleDTO compra = obtenerCompraPorIdInteractor.ejecutar(request);
+            var compraResponse = CompraResponse.build(List.of("Compra consultada correctamente"), compra);
+            return GenerateResponse.generateSuccessResponseWithData(compraResponse);
+        } catch (final AgroSyncException excepcion) {
+            var compraResponse = CompraResponse.<ObtenerCompraDetalleDTO>build(List.of(excepcion.getMensajeUsuario()), null);
+            return GenerateResponse.generateBadRequestResponseWithData(compraResponse);
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al consultar la Compra";
+            var compraResponse = CompraResponse.<ObtenerCompraDetalleDTO>build(List.of(userMessage), null);
+            return new ResponseEntity<>(compraResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
