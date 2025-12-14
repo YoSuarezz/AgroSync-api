@@ -3,6 +3,7 @@ package com.agrosync.application.secondaryports.mapper.lotes;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
 import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
+import com.agrosync.application.secondaryports.mapper.animales.AnimalEntityMapper;
 import com.agrosync.domain.animales.AnimalDomain;
 import com.agrosync.domain.compras.CompraDomain;
 import com.agrosync.domain.lotes.LoteDomain;
@@ -13,11 +14,11 @@ import org.mapstruct.Named;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {AnimalEntityMapper.class})
 public interface LoteEntityMapper {
 
     @Mapping(target = "compra", ignore = true)
-    @Mapping(target = "animales", ignore = true)
+    @Mapping(target = "animales", source = "animales")
     LoteEntity toEntity(LoteDomain domain);
 
     @Mapping(target = "compra", source = "compra", qualifiedByName = "mapCompraBasico")
