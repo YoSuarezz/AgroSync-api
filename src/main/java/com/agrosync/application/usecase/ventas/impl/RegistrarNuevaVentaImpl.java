@@ -3,12 +3,14 @@ package com.agrosync.application.usecase.ventas.impl;
 import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
 import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
+import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
 import com.agrosync.application.secondaryports.mapper.ventas.VentaEntityMapper;
 import com.agrosync.application.secondaryports.repository.AnimalRepository;
+import com.agrosync.application.secondaryports.repository.CarteraRepository;
 import com.agrosync.application.secondaryports.repository.VentaRepository;
 import com.agrosync.application.usecase.ventas.RegistrarNuevaVenta;
 import com.agrosync.application.usecase.ventas.rulesvalidator.RegistrarNuevaVentaRulesValidator;
@@ -24,6 +26,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,15 +35,18 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
 
     private final VentaRepository ventaRepository;
     private final AnimalRepository animalRepository;
+    private final CarteraRepository carteraRepository;
     private final RegistrarNuevaVentaRulesValidator registrarNuevaVentaRulesValidator;
     private final VentaEntityMapper ventaEntityMapper;
 
     public RegistrarNuevaVentaImpl(VentaRepository ventaRepository,
                                    AnimalRepository animalRepository,
+                                   CarteraRepository carteraRepository,
                                    RegistrarNuevaVentaRulesValidator registrarNuevaVentaRulesValidator,
                                    VentaEntityMapper ventaEntityMapper) {
         this.ventaRepository = ventaRepository;
         this.animalRepository = animalRepository;
+        this.carteraRepository = carteraRepository;
         this.registrarNuevaVentaRulesValidator = registrarNuevaVentaRulesValidator;
         this.ventaEntityMapper = ventaEntityMapper;
     }
@@ -85,6 +91,25 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
 
         VentaEntity ventaGuardada = ventaRepository.save(venta);
         asociarAnimalesAVenta(ventaGuardada, animalesVendidos, suscripcion);
+
+        // Actualizar la cartera del cliente
+        actualizarCarteraCliente(cliente.getId(), suscripcion.getId(), precioTotalVenta);
+    }
+
+    private void actualizarCarteraCliente(UUID clienteId, UUID suscripcionId, BigDecimal montoVenta) {
+        Optional<CarteraEntity> carteraOpt = carteraRepository.findByUsuario_IdAndSuscripcion_Id(clienteId, suscripcionId);
+        if (carteraOpt.isPresent()) {
+            CarteraEntity cartera = carteraOpt.get();
+            // Aumentar cuentas por pagar del cliente (él nos debe a nosotros)
+            BigDecimal totalActual = ObjectHelper.getDefault(cartera.getTotalCuentasPagar(), BigDecimal.ZERO);
+            cartera.setTotalCuentasPagar(totalActual.add(montoVenta));
+
+            // Saldo negativo para el cliente (él nos debe dinero)
+            BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
+            cartera.setSaldoActual(saldoActual.subtract(montoVenta));
+
+            carteraRepository.save(cartera);
+        }
     }
 
     private void asociarAnimalesAVenta(VentaEntity venta, List<AnimalEntity> animalesVendidos, SuscripcionEntity suscripcion) {

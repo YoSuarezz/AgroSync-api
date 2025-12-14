@@ -94,14 +94,13 @@ public class RegistrarNuevoCobroImpl implements RegistrarNuevoCobro {
         CarteraEntity cartera = cuentaCobrar.getCliente().getCartera();
 
         if (cartera != null) {
-            // Reducir total de cuentas por cobrar
-            BigDecimal nuevoTotalCuentasCobrar =
-                    cartera.getTotalCuentasCobrar().subtract(montoCobro);
-            cartera.setTotalCuentasCobrar(nuevoTotalCuentasCobrar);
+            // Reducir cuentas por pagar del cliente (nos pagó, ya no nos debe tanto)
+            BigDecimal nuevoTotalCuentasPagar =
+                    cartera.getTotalCuentasPagar().subtract(montoCobro);
+            cartera.setTotalCuentasPagar(nuevoTotalCuentasPagar);
 
-            // Calcular saldo actual (cobrar - pagar)
-            BigDecimal saldoActual =
-                    nuevoTotalCuentasCobrar.subtract(cartera.getTotalCuentasPagar());
+            // Aumentar saldo del cliente (nos debe menos, su saldo sube hacia 0)
+            BigDecimal saldoActual = cartera.getSaldoActual().add(montoCobro);
             cartera.setSaldoActual(saldoActual);
 
             carteraRepository.save(cartera);
