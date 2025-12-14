@@ -12,6 +12,7 @@ import com.agrosync.domain.usuarios.rules.UsuarioIdExisteRule;
 import com.agrosync.domain.ventas.VentaDomain;
 import com.agrosync.domain.ventas.exceptions.VentaSinAnimalesException;
 import com.agrosync.domain.ventas.rules.AnimalesVentaUnicosRule;
+import com.agrosync.domain.ventas.rules.FechaVentaValidaRule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,19 +27,22 @@ public class RegistrarNuevaVentaRulesValidatorImpl implements RegistrarNuevaVent
     private final IdentificadorAnimalValidoRule identificadorAnimalValidoRule;
     private final AnimalesVentaUnicosRule animalesVentaUnicosRule;
     private final UsuarioClienteValidoRule usuarioClienteValidoRule;
+    private final FechaVentaValidaRule fechaVentaValidaRule;
 
     public RegistrarNuevaVentaRulesValidatorImpl(UsuarioIdExisteRule usuarioIdExisteRule,
                                                  SuscripcionExisteRule suscripcionExisteRule,
                                                  PrecioVentaValidoRule precioVentaValidoRule,
                                                  IdentificadorAnimalValidoRule identificadorAnimalValidoRule,
                                                  AnimalesVentaUnicosRule animalesVentaUnicosRule,
-                                                 UsuarioClienteValidoRule usuarioClienteValidoRule) {
+                                                 UsuarioClienteValidoRule usuarioClienteValidoRule,
+                                                 FechaVentaValidaRule fechaVentaValidaRule) {
         this.usuarioIdExisteRule = usuarioIdExisteRule;
         this.suscripcionExisteRule = suscripcionExisteRule;
         this.precioVentaValidoRule = precioVentaValidoRule;
         this.identificadorAnimalValidoRule = identificadorAnimalValidoRule;
         this.animalesVentaUnicosRule = animalesVentaUnicosRule;
         this.usuarioClienteValidoRule = usuarioClienteValidoRule;
+        this.fechaVentaValidaRule = fechaVentaValidaRule;
     }
 
     @Override
@@ -47,12 +51,14 @@ public class RegistrarNuevaVentaRulesValidatorImpl implements RegistrarNuevaVent
             throw VentaSinAnimalesException.create();
         }
 
+        suscripcionExisteRule.validate(data.getSuscripcionId());
+        fechaVentaValidaRule.validate(data.getFechaVenta());
+
         UUID clienteId = ObjectHelper.isNull(data.getCliente())
                 ? UUIDHelper.getDefault()
                 : data.getCliente().getId();
         usuarioIdExisteRule.validate(clienteId);
         usuarioClienteValidoRule.validate(clienteId);
-        suscripcionExisteRule.validate(data.getSuscripcionId());
 
         List<AnimalDomain> animales = data.getAnimales();
         if (ObjectHelper.isNull(animales) || animales.isEmpty()) {
