@@ -1,20 +1,20 @@
 package com.agrosync.infrastructure.primaryadapters.controller.carteras;
 
+import com.agrosync.application.primaryports.dto.carteras.request.CarteraIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.carteras.request.CarteraPageDTO;
 import com.agrosync.application.primaryports.dto.carteras.response.ObtenerCarteraDTO;
-import com.agrosync.application.primaryports.dto.compras.response.ObtenerCompraDTO;
+import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
+import com.agrosync.application.primaryports.interactor.carteras.ObtenerCarteraPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.carteras.ObtenerCarterasInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.carteras.CarteraResponse;
-import com.agrosync.infrastructure.primaryadapters.adapter.response.compras.CompraResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,9 +23,11 @@ import java.util.UUID;
 public class CarteraController {
 
     private final ObtenerCarterasInteractor obtenerCarterasInteractor;
+    private final ObtenerCarteraPorIdInteractor obtenerCarteraPorIdInteractor;
 
-    public CarteraController(ObtenerCarterasInteractor obtenerCarterasInteractor) {
+    public CarteraController(ObtenerCarterasInteractor obtenerCarterasInteractor, ObtenerCarteraPorIdInteractor obtenerCarteraPorIdInteractor) {
         this.obtenerCarterasInteractor = obtenerCarterasInteractor;
+        this.obtenerCarteraPorIdInteractor = obtenerCarteraPorIdInteractor;
     }
 
     @GetMapping
@@ -51,6 +53,26 @@ public class CarteraController {
             excepcion.printStackTrace();
             var response = CarteraResponse.build(List.of("Error al consultar las Carteras"), PageResponse.from(Page.<ObtenerCarteraDTO>empty()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CarteraResponse<ObtenerCarteraDTO>> consultarCarteraPorId(@PathVariable UUID id,
+                                                                                    @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+
+        try {
+            CarteraIdSuscripcionDTO request = CarteraIdSuscripcionDTO.create(id, suscripcionId);
+            ObtenerCarteraDTO cartera = obtenerCarteraPorIdInteractor.ejecutar(request);
+            var carteraResponse = CarteraResponse.build(List.of("Cartera consultado correctamente"), cartera);
+            return GenerateResponse.generateSuccessResponseWithData(carteraResponse);
+
+        } catch (final AgroSyncException excepcion) {
+            var carteraResponse = CarteraResponse.<ObtenerCarteraDTO>build(List.of(excepcion.getMensajeUsuario()), null);
+            return GenerateResponse.generateBadRequestResponseWithData(carteraResponse);
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al consultar la Cartera";
+            var carteraResponse = CarteraResponse.<ObtenerCarteraDTO>build(List.of(userMessage), null);
+            return new ResponseEntity<>(carteraResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

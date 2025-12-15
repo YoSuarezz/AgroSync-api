@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface CarteraRepository extends JpaRepository<CarteraEntity, UUID>, JpaSpecificationExecutor<CarteraEntity> {
 
     Optional<CarteraEntity> findByUsuario_IdAndSuscripcion_Id(UUID usuarioId, UUID suscripcionId);
+
+    java.util.Optional<CarteraEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
 }
