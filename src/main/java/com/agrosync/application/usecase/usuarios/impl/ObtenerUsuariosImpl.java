@@ -76,7 +76,16 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
         }
 
         if (tipoFiltro != null) {
-            specs.add((root, query, cb) -> cb.equal(root.get("tipoUsuario"), tipoFiltro));
+            // Include "AMBOS" when filtering by CLIENTE or PROVEEDOR so mixed users show up in both lists
+            specs.add((root, query, cb) -> {
+                if (tipoFiltro == com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum.AMBOS) {
+                    return cb.equal(root.get("tipoUsuario"), tipoFiltro);
+                }
+                return cb.or(
+                        cb.equal(root.get("tipoUsuario"), tipoFiltro),
+                        cb.equal(root.get("tipoUsuario"), com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum.AMBOS)
+                );
+            });
         }
 
         if (data.getSuscripcionId() != null) {
