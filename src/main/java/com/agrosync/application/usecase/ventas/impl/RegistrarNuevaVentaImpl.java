@@ -2,15 +2,22 @@ package com.agrosync.application.usecase.ventas.impl;
 
 import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
 import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.application.secondaryports.entity.abonos.AbonoEntity;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
+import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
 import com.agrosync.application.secondaryports.mapper.ventas.VentaEntityMapper;
+import com.agrosync.application.secondaryports.repository.AbonoRepository;
 import com.agrosync.application.secondaryports.repository.AnimalRepository;
 import com.agrosync.application.secondaryports.repository.CarteraRepository;
+import com.agrosync.application.secondaryports.repository.CuentaPagarRepository;
+import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.secondaryports.repository.VentaRepository;
 import com.agrosync.application.usecase.ventas.RegistrarNuevaVenta;
 import com.agrosync.application.usecase.ventas.rulesvalidator.RegistrarNuevaVentaRulesValidator;
@@ -36,17 +43,26 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
     private final VentaRepository ventaRepository;
     private final AnimalRepository animalRepository;
     private final CarteraRepository carteraRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final CuentaPagarRepository cuentaPagarRepository;
+    private final AbonoRepository abonoRepository;
     private final RegistrarNuevaVentaRulesValidator registrarNuevaVentaRulesValidator;
     private final VentaEntityMapper ventaEntityMapper;
 
     public RegistrarNuevaVentaImpl(VentaRepository ventaRepository,
                                    AnimalRepository animalRepository,
                                    CarteraRepository carteraRepository,
+                                   UsuarioRepository usuarioRepository,
+                                   CuentaPagarRepository cuentaPagarRepository,
+                                   AbonoRepository abonoRepository,
                                    RegistrarNuevaVentaRulesValidator registrarNuevaVentaRulesValidator,
                                    VentaEntityMapper ventaEntityMapper) {
         this.ventaRepository = ventaRepository;
         this.animalRepository = animalRepository;
         this.carteraRepository = carteraRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.cuentaPagarRepository = cuentaPagarRepository;
+        this.abonoRepository = abonoRepository;
         this.registrarNuevaVentaRulesValidator = registrarNuevaVentaRulesValidator;
         this.ventaEntityMapper = ventaEntityMapper;
     }
@@ -92,8 +108,94 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         VentaEntity ventaGuardada = ventaRepository.save(venta);
         asociarAnimalesAVenta(ventaGuardada, animalesVendidos, suscripcion);
 
-        // Actualizar la cartera del cliente
-        actualizarCarteraCliente(cliente.getId(), suscripcion.getId(), precioTotalVenta);
+        // Obtener el usuario cliente completo
+        UsuarioEntity clienteCompleto = usuarioRepository.findByIdAndSuscripcion_Id(
+                cliente.getId(), suscripcion.getId()
+        ).orElse(null);
+
+        // Si el cliente es tipo AMBOS, verificar si tiene cuentas por pagar pendientes
+        // (cuentas donde le debemos a nosotros)
+        BigDecimal montoCompensado = BigDecimal.ZERO;
+        if (clienteCompleto != null && clienteCompleto.getTipoUsuario() == TipoUsuarioEnum.AMBOS) {
+            montoCompensado = compensarConCuentasPagar(clienteCompleto, suscripcion, precioTotalVenta, fechaVenta);
+        }
+
+        // Actualizar la cartera del cliente con el monto neto
+        BigDecimal montoNeto = precioTotalVenta.subtract(montoCompensado);
+        if (montoNeto.compareTo(BigDecimal.ZERO) > 0) {
+            actualizarCarteraCliente(cliente.getId(), suscripcion.getId(), montoNeto);
+        }
+    }
+
+    /**
+     * Compensa el monto de la venta con las cuentas por pagar pendientes del cliente
+     * (cuando el cliente también es proveedor y le debemos dinero)
+     */
+    private BigDecimal compensarConCuentasPagar(UsuarioEntity cliente, SuscripcionEntity suscripcion,
+                                                 BigDecimal montoVenta, LocalDate fechaVenta) {
+        // Buscar cuentas por pagar pendientes donde el cliente es el proveedor (le debemos)
+        List<CuentaPagarEntity> cuentasPendientes = cuentaPagarRepository
+                .findByProveedor_IdAndSuscripcion_IdAndEstadoNot(
+                        cliente.getId(),
+                        suscripcion.getId(),
+                        EstadoCuentaEnum.PAGADA
+                );
+
+        BigDecimal montoDisponible = montoVenta;
+        BigDecimal totalCompensado = BigDecimal.ZERO;
+
+        for (CuentaPagarEntity cuenta : cuentasPendientes) {
+            if (montoDisponible.compareTo(BigDecimal.ZERO) <= 0) {
+                break;
+            }
+
+            BigDecimal saldoPendiente = cuenta.getSaldoPendiente();
+            BigDecimal montoAAbonar = montoDisponible.min(saldoPendiente);
+
+            // Crear el abono automático
+            AbonoEntity abono = new AbonoEntity();
+            abono.setCuentaPagar(cuenta);
+            abono.setMonto(montoAAbonar);
+            abono.setFechaPago(fechaVenta.atStartOfDay());
+            abono.setMetodoPago(MetodoPagoEnum.OTRO);
+            abono.setConcepto("Compensación automática por venta - Cruce de cuentas");
+            abono.setSuscripcion(suscripcion);
+            abonoRepository.save(abono);
+
+            // Actualizar el saldo de la cuenta por pagar
+            BigDecimal nuevoSaldo = saldoPendiente.subtract(montoAAbonar);
+            cuenta.setSaldoPendiente(nuevoSaldo);
+
+            if (nuevoSaldo.compareTo(BigDecimal.ZERO) == 0) {
+                cuenta.setEstado(EstadoCuentaEnum.PAGADA);
+            } else {
+                cuenta.setEstado(EstadoCuentaEnum.PARCIALMENTE_PAGADA);
+            }
+            cuentaPagarRepository.save(cuenta);
+
+            // Actualizar cartera del cliente (reducir lo que le debíamos)
+            actualizarCarteraPorAbono(cliente, montoAAbonar);
+
+            montoDisponible = montoDisponible.subtract(montoAAbonar);
+            totalCompensado = totalCompensado.add(montoAAbonar);
+        }
+
+        return totalCompensado;
+    }
+
+    private void actualizarCarteraPorAbono(UsuarioEntity usuario, BigDecimal montoAbono) {
+        CarteraEntity cartera = usuario.getCartera();
+        if (cartera != null) {
+            // Reducir cuentas por cobrar del usuario (le pagamos, ya no le debemos tanto)
+            BigDecimal nuevoTotalCuentasCobrar = cartera.getTotalCuentasCobrar().subtract(montoAbono);
+            cartera.setTotalCuentasCobrar(nuevoTotalCuentasCobrar);
+
+            // Reducir saldo del usuario (le debemos menos)
+            BigDecimal saldoActual = cartera.getSaldoActual().subtract(montoAbono);
+            cartera.setSaldoActual(saldoActual);
+
+            carteraRepository.save(cartera);
+        }
     }
 
     private void actualizarCarteraCliente(UUID clienteId, UUID suscripcionId, BigDecimal montoVenta) {
