@@ -7,9 +7,8 @@ import com.agrosync.application.secondaryports.repository.LoteRepository;
 import com.agrosync.application.usecase.lotes.ObtenerLotePorId;
 import com.agrosync.application.usecase.lotes.rulesvalidator.ObtenerLotePorIdRulesValidator;
 import com.agrosync.domain.lotes.LoteDomain;
+import com.agrosync.domain.lotes.exceptions.IdentificadorLoteNoExisteException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ObtenerLotePorIdImpl implements ObtenerLotePorId {
@@ -29,7 +28,8 @@ public class ObtenerLotePorIdImpl implements ObtenerLotePorId {
     @Override
     public LoteDomain ejecutar(LoteIdSuscripcionDTO data) {
         obtenerLotePorIdRulesValidator.validar(data);
-        Optional<LoteEntity> resultado = loteRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return loteEntityMapper.toDomain(resultado.get());
+        LoteEntity resultado = loteRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
+                .orElseThrow(IdentificadorLoteNoExisteException::create);
+        return loteEntityMapper.toDomain(resultado);
     }
 }

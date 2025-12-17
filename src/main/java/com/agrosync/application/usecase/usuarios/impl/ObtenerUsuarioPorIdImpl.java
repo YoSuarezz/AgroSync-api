@@ -7,9 +7,8 @@ import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.usecase.usuarios.ObtenerUsuarioPorId;
 import com.agrosync.application.usecase.usuarios.rulesvalidator.ObtenerUsuarioPorIdRulesValidator;
 import com.agrosync.domain.usuarios.UsuarioDomain;
+import com.agrosync.domain.usuarios.exceptions.UsuarioIdNoExisteException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ObtenerUsuarioPorIdImpl implements ObtenerUsuarioPorId {
@@ -27,7 +26,8 @@ public class ObtenerUsuarioPorIdImpl implements ObtenerUsuarioPorId {
     @Override
     public UsuarioDomain ejecutar(UsuarioIdSuscripcionDTO data) {
         obtenerUsuarioPorIdRulesValidator.validar(data);
-        Optional<UsuarioEntity> resultado = usuarioRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return usuarioEntityMapper.toDomain(resultado.get());
+        UsuarioEntity resultado = usuarioRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
+                .orElseThrow(UsuarioIdNoExisteException::create);
+        return usuarioEntityMapper.toDomain(resultado);
     }
 }

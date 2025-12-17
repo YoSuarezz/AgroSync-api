@@ -2,6 +2,7 @@ package com.agrosync.application.usecase.animales.rulesvalidator.impl;
 
 import com.agrosync.application.primaryports.dto.animales.request.AnimalIdSuscripcionDTO;
 import com.agrosync.application.usecase.animales.rulesvalidator.ObtenerAnimalPorIdRulesValidator;
+import com.agrosync.domain.IdConSuscripcion;
 import com.agrosync.domain.animales.rules.IdentificadorAnimalExisteRule;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,6 @@ public class ObtenerAnimalPorIdRulesValidatorImpl implements ObtenerAnimalPorIdR
     @Override
     public void validar(AnimalIdSuscripcionDTO data) {
         suscripcionExisteRule.validate(data.getSuscripcionId());
-        identificadorAnimalExisteRule.validate(data);
+        identificadorAnimalExisteRule.validate(IdConSuscripcion.of(data.getId(), data.getSuscripcionId()));
     }
 }

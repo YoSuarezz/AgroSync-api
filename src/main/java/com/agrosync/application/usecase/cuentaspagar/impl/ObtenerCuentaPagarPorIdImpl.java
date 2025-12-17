@@ -7,9 +7,8 @@ import com.agrosync.application.secondaryports.repository.CuentaPagarRepository;
 import com.agrosync.application.usecase.cuentaspagar.ObtenerCuentaPagarPorId;
 import com.agrosync.application.usecase.cuentaspagar.rulesvalidator.ObtenerCuentaPagarPorIdRulesValidator;
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
+import com.agrosync.domain.cuentaspagar.exceptions.IdentificadorCuentaPagarNoExisteException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ObtenerCuentaPagarPorIdImpl implements ObtenerCuentaPagarPorId {
@@ -29,7 +28,8 @@ public class ObtenerCuentaPagarPorIdImpl implements ObtenerCuentaPagarPorId {
     @Override
     public CuentaPagarDomain ejecutar(CuentaPagarIdSuscripcionDTO data) {
         obtenerCuentaPagarPorIdRulesValidator.validar(data);
-        Optional<CuentaPagarEntity> resultado = cuentaPagarRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return cuentaPagarEntityMapper.toDomain(resultado.get());
+        CuentaPagarEntity resultado = cuentaPagarRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
+                .orElseThrow(IdentificadorCuentaPagarNoExisteException::create);
+        return cuentaPagarEntityMapper.toDomain(resultado);
     }
 }

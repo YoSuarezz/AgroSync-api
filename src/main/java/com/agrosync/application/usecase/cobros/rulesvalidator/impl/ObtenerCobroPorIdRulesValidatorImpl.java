@@ -2,6 +2,7 @@ package com.agrosync.application.usecase.cobros.rulesvalidator.impl;
 
 import com.agrosync.application.primaryports.dto.cobros.request.CobroIdSuscripcionDTO;
 import com.agrosync.application.usecase.cobros.rulesvalidator.ObtenerCobroPorIdRulesValidator;
+import com.agrosync.domain.IdConSuscripcion;
 import com.agrosync.domain.cobros.rules.CobroExisteRule;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class ObtenerCobroPorIdRulesValidatorImpl implements ObtenerCobroPorIdRul
     @Override
     public void validar(CobroIdSuscripcionDTO data) {
         suscripcionExisteRule.validate(data.getSuscripcionId());
-        cobroExisteRule.validate(data);
+        cobroExisteRule.validate(IdConSuscripcion.of(data.getId(), data.getSuscripcionId()));
     }
 }
 

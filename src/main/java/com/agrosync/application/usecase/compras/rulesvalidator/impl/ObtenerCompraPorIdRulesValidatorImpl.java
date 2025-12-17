@@ -2,6 +2,7 @@ package com.agrosync.application.usecase.compras.rulesvalidator.impl;
 
 import com.agrosync.application.primaryports.dto.compras.request.CompraIdSuscripcionDTO;
 import com.agrosync.application.usecase.compras.rulesvalidator.ObtenerCompraPorIdRulesValidator;
+import com.agrosync.domain.IdConSuscripcion;
 import com.agrosync.domain.compras.rules.IdentificadorCompraExisteRule;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,6 @@ public class ObtenerCompraPorIdRulesValidatorImpl implements ObtenerCompraPorIdR
     @Override
     public void validar(CompraIdSuscripcionDTO data) {
         suscripcionExisteRule.validate(data.getSuscripcionId());
-        identificadorCompraExisteRule.validate(data);
+        identificadorCompraExisteRule.validate(IdConSuscripcion.of(data.getId(), data.getSuscripcionId()));
     }
 }

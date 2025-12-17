@@ -8,8 +8,10 @@ import com.agrosync.application.usecase.usuarios.rulesvalidator.ActualizarUsuari
 import com.agrosync.domain.usuarios.UsuarioDomain;
 import com.agrosync.domain.usuarios.exceptions.UsuarioIdNoExisteException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ActualizarUsuarioImpl implements ActualizarUsuario {
 
     private final UsuarioRepository usuarioRepository;

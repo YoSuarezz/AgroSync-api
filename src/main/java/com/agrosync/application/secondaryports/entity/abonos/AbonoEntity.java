@@ -1,6 +1,6 @@
 package com.agrosync.application.secondaryports.entity.abonos;
 
-import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;

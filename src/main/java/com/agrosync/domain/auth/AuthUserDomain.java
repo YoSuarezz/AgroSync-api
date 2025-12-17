@@ -1,6 +1,6 @@
 package com.agrosync.domain.auth;
 
-import com.agrosync.application.primaryports.enums.auth.RolEnum;
+import com.agrosync.domain.enums.auth.RolEnum;
 import com.agrosync.domain.BaseDomain;
 
 import java.util.UUID;

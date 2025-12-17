@@ -1,7 +1,7 @@
 package com.agrosync.domain.cobros.rules;
 
-import com.agrosync.application.primaryports.dto.cobros.request.CobroIdSuscripcionDTO;
 import com.agrosync.domain.DomainRule;
+import com.agrosync.domain.IdConSuscripcion;
 
-public interface CobroExisteRule extends DomainRule<CobroIdSuscripcionDTO> {
+public interface CobroExisteRule extends DomainRule<IdConSuscripcion> {
 }

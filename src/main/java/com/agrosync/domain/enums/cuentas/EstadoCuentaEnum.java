@@ -1,4 +1,4 @@
-package com.agrosync.application.primaryports.enums.cuentas;
+package com.agrosync.domain.enums.cuentas;
 
 public enum EstadoCuentaEnum {
     PENDIENTE,
@@ -8,3 +8,4 @@ public enum EstadoCuentaEnum {
     COBRADA,
     ANULADA
 }
+

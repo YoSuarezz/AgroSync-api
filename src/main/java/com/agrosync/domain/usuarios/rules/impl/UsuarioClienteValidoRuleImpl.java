@@ -1,8 +1,8 @@
 package com.agrosync.domain.usuarios.rules.impl;
 
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.domain.usuarios.exceptions.UsuarioNoEsClienteException;
 import com.agrosync.domain.usuarios.rules.UsuarioClienteValidoRule;
 import org.springframework.stereotype.Service;
@@ -29,3 +29,4 @@ public class UsuarioClienteValidoRuleImpl implements UsuarioClienteValidoRule {
         }
     }
 }
+

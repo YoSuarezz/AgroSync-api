@@ -24,3 +24,4 @@ public class SuscripcionExisteRuleImpl implements SuscripcionExisteRule {
         }
     }
 }
+

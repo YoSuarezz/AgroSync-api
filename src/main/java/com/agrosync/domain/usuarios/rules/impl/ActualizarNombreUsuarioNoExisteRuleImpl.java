@@ -22,3 +22,4 @@ public class ActualizarNombreUsuarioNoExisteRuleImpl implements ActualizarNombre
         }
     }
 }
+

@@ -22,3 +22,4 @@ public class NombreUsuarioNoExisteRuleImpl implements NombreUsuarioNoExisteRule 
         }
     }
 }
+

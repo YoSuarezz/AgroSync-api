@@ -1,8 +1,8 @@
 package com.agrosync.application.primaryports.dto.animales.request;
 
 import com.agrosync.application.primaryports.dto.animales.response.ObtenerAnimalDTO;
-import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
-import com.agrosync.application.primaryports.enums.animales.SexoEnum;
+import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
+import com.agrosync.domain.enums.animales.SexoEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 
 import java.util.UUID;

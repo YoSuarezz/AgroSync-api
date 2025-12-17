@@ -7,9 +7,8 @@ import com.agrosync.application.secondaryports.repository.AbonoRepository;
 import com.agrosync.application.usecase.abonos.ObtenerAbonoPorId;
 import com.agrosync.application.usecase.abonos.rulesvalidator.ObtenerAbonoPorIdRulesValidator;
 import com.agrosync.domain.abonos.AbonoDomain;
+import com.agrosync.domain.abonos.exceptions.AbonoNoExisteException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ObtenerAbonoPorIdImpl implements ObtenerAbonoPorId {
@@ -29,7 +28,8 @@ public class ObtenerAbonoPorIdImpl implements ObtenerAbonoPorId {
     @Override
     public AbonoDomain ejecutar(AbonoIdSuscripcionDTO data) {
         obtenerAbonoPorIdRulesValidator.validar(data);
-        Optional<AbonoEntity> resultado = abonoRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return abonoEntityMapper.toDomain(resultado.get());
+        AbonoEntity resultado = abonoRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
+                .orElseThrow(AbonoNoExisteException::create);
+        return abonoEntityMapper.toDomain(resultado);
     }
 }

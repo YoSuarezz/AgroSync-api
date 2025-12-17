@@ -8,8 +8,8 @@ import com.agrosync.application.primaryports.dto.cuentaspagar.request.CuentaPaga
 import com.agrosync.application.primaryports.dto.cuentaspagar.request.CuentaPagarPageDTO;
 import com.agrosync.application.primaryports.dto.cuentaspagar.response.ObtenerCuentaPagarDTO;
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
-import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.application.primaryports.interactor.abonos.ObtenerAbonoPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.abonos.ObtenerAbonosInteractor;
 import com.agrosync.application.primaryports.interactor.abonos.ObtenerAbonosPorCuentaPagarInteractor;

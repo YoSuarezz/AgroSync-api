@@ -9,7 +9,7 @@ import com.agrosync.application.primaryports.interactor.usuarios.ActualizarUsuar
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuarioPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.ObtenerUsuariosInteractor;
 import com.agrosync.application.primaryports.interactor.usuarios.RegistrarNuevoUsuarioInteractor;
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenericResponse;

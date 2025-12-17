@@ -7,8 +7,10 @@ import com.agrosync.application.usecase.usuarios.RegistrarNuevoUsuario;
 import com.agrosync.application.usecase.usuarios.rulesvalidator.RegistrarNuevoUsuarioRulesValidator;
 import com.agrosync.domain.usuarios.UsuarioDomain;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class RegistrarNuevoUsuarioImpl implements RegistrarNuevoUsuario {
 
     private final UsuarioRepository usuarioRepository;

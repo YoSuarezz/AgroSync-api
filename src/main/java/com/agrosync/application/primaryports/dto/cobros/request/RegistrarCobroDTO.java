@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.dto.cobros.request;
 
-import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.crosscutting.helpers.NumericHelper;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;

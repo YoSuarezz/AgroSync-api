@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.dto.auth;
 
-import com.agrosync.application.primaryports.enums.auth.RolEnum;
+import com.agrosync.domain.enums.auth.RolEnum;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 
