@@ -22,8 +22,5 @@ public class ObtenerCarterasRulesValidatorImpl implements ObtenerCarterasRulesVa
     @Override
     public void validar(CarteraPageDTO data) {
         suscripcionExisteRule.validate(data.getSuscripcionId());
-        if (data.getUsuarioId() != null && !UUIDHelper.isDefault(data.getUsuarioId())) {
-            usuarioIdExisteRule.validate(data.getUsuarioId());
-        }
     }
 }
