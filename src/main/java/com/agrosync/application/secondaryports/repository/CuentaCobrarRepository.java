@@ -15,5 +15,9 @@ public interface CuentaCobrarRepository extends JpaRepository<CuentaCobrarEntity
 
     Optional<CuentaCobrarEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
 
-    List<CuentaCobrarEntity> findByCliente_IdAndSuscripcion_IdAndEstadoNot(UUID clienteId, UUID suscripcionId, EstadoCuentaEnum estado);
+    /**
+     * Busca cuentas por cobrar pendientes o parcialmente cobradas ordenadas por fecha de emisión (FIFO).
+     */
+    List<CuentaCobrarEntity> findByCliente_IdAndSuscripcion_IdAndEstadoInOrderByFechaEmisionAsc(
+            UUID clienteId, UUID suscripcionId, List<EstadoCuentaEnum> estados);
 }

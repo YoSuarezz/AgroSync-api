@@ -86,21 +86,26 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         BigDecimal precioTotalVenta = calcularPrecioTotal(animalesVendidos);
         venta.setPrecioTotalVenta(precioTotalVenta);
 
-        // 5. Configurar cuenta por cobrar
-        configurarCuentaCobrar(venta, suscripcion, precioTotalVenta, fechaVenta, data);
+        // 5. Procesar compensación PRIMERO (antes de crear la cuenta por cobrar)
+        BigDecimal saldoParaCuenta = procesarCompensacionYObtenerSaldo(
+                venta.getCliente(), suscripcion, precioTotalVenta, fechaVenta, venta.getNumeroVenta(), data);
 
-        // 6. Guardar venta
+        // 6. Configurar cuenta por cobrar con el saldo restante después de compensación
+        configurarCuentaCobrar(venta, suscripcion, precioTotalVenta, saldoParaCuenta, fechaVenta, data);
+
+        // 7. Guardar venta
         VentaEntity ventaGuardada = ventaRepository.save(venta);
 
-        // 7. Asociar animales a la venta
+        // 8. Asociar animales a la venta
         asociarAnimalesAVenta(ventaGuardada, animalesVendidos, suscripcion);
 
-        // 8. Procesar compensación y actualizar cartera
-        procesarCompensacionYCartera(venta.getCliente(), suscripcion, precioTotalVenta, fechaVenta, venta.getNumeroVenta());
+        // 9. Actualizar cartera si hay saldo pendiente
+        actualizarCarteraSiCorresponde(venta.getCliente(), suscripcion, saldoParaCuenta);
     }
 
     private void configurarCuentaCobrar(VentaEntity venta, SuscripcionEntity suscripcion,
-                                        BigDecimal precioTotalVenta, LocalDate fechaVenta, VentaDomain data) {
+                                        BigDecimal montoTotal, BigDecimal saldoPendiente,
+                                        LocalDate fechaVenta, VentaDomain data) {
         CuentaCobrarEntity cuentaCobrar = ObjectHelper.getDefault(venta.getCuentaCobrar(), new CuentaCobrarEntity());
         venta.setCuentaCobrar(cuentaCobrar);
         cuentaCobrar.setVenta(venta);
@@ -110,9 +115,18 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
                 : venta.getCliente();
         cuentaCobrar.setCliente(cliente);
         cuentaCobrar.setSuscripcion(suscripcion);
-        cuentaCobrar.setMontoTotal(precioTotalVenta);
-        cuentaCobrar.setSaldoPendiente(precioTotalVenta);
-        cuentaCobrar.setEstado(EstadoCuentaEnum.PENDIENTE);
+        cuentaCobrar.setMontoTotal(montoTotal);
+        cuentaCobrar.setSaldoPendiente(saldoPendiente);
+
+        // Determinar estado según saldo pendiente
+        if (saldoPendiente.compareTo(BigDecimal.ZERO) <= 0) {
+            cuentaCobrar.setEstado(EstadoCuentaEnum.COBRADA);
+        } else if (saldoPendiente.compareTo(montoTotal) < 0) {
+            cuentaCobrar.setEstado(EstadoCuentaEnum.PARCIALMENTE_COBRADA);
+        } else {
+            cuentaCobrar.setEstado(EstadoCuentaEnum.PENDIENTE);
+        }
+
         cuentaCobrar.setFechaEmision(fechaVenta);
         cuentaCobrar.setFechaVencimiento(fechaVenta);
 
@@ -121,26 +135,38 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         }
     }
 
-    private void procesarCompensacionYCartera(UsuarioEntity cliente, SuscripcionEntity suscripcion,
-                                               BigDecimal precioTotalVenta, LocalDate fechaVenta, String numeroVenta) {
+    private BigDecimal procesarCompensacionYObtenerSaldo(UsuarioEntity cliente, SuscripcionEntity suscripcion,
+                                                          BigDecimal precioTotalVenta, LocalDate fechaVenta,
+                                                          String numeroVenta, VentaDomain data) {
         UUID clienteId = cliente != null ? cliente.getId() : null;
         if (ObjectHelper.isNull(clienteId)) {
-            return;
+            return precioTotalVenta;
         }
 
         UsuarioEntity clienteCompleto = usuarioRepository.findByIdAndSuscripcion_Id(clienteId, suscripcion.getId())
                 .orElse(null);
 
-        BigDecimal montoCompensado = BigDecimal.ZERO;
+        // Si el cliente es AMBOS, intentar compensar con sus cuentas por pagar (como proveedor)
         if (clienteCompleto != null && clienteCompleto.getTipoUsuario() == TipoUsuarioEnum.AMBOS) {
-            montoCompensado = compensarCuentas.compensarCuentasPagarConVenta(
+            CompensarCuentas.ResultadoCompensacion resultado = compensarCuentas.compensarCuentasPagarConVenta(
                     clienteCompleto, suscripcion, precioTotalVenta, fechaVenta, numeroVenta
             );
+            return resultado.saldoRestante();
         }
 
-        BigDecimal montoNeto = precioTotalVenta.subtract(montoCompensado);
-        if (montoNeto.compareTo(BigDecimal.ZERO) > 0) {
-            actualizarCartera.incrementarCuentasPagar(clienteId, suscripcion.getId(), montoNeto);
+        return precioTotalVenta;
+    }
+
+    private void actualizarCarteraSiCorresponde(UsuarioEntity cliente, SuscripcionEntity suscripcion,
+                                                 BigDecimal saldoPendiente) {
+        UUID clienteId = cliente != null ? cliente.getId() : null;
+        if (ObjectHelper.isNull(clienteId)) {
+            return;
+        }
+
+        // Solo actualizar cartera si hay saldo pendiente por cobrar
+        if (saldoPendiente.compareTo(BigDecimal.ZERO) > 0) {
+            actualizarCartera.incrementarCuentasCobrar(clienteId, suscripcion.getId(), saldoPendiente);
         }
     }
 

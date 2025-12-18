@@ -6,6 +6,7 @@ import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.mapper.usuarios.UsuarioEntityMapper;
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.usecase.usuarios.ObtenerUsuarios;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.domain.usuarios.UsuarioDomain;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.Page;
@@ -78,12 +79,12 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
         if (tipoFiltro != null) {
             // Include "AMBOS" when filtering by CLIENTE or PROVEEDOR so mixed users show up in both lists
             specs.add((root, query, cb) -> {
-                if (tipoFiltro == com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum.AMBOS) {
+                if (tipoFiltro == TipoUsuarioEnum.AMBOS) {
                     return cb.equal(root.get("tipoUsuario"), tipoFiltro);
                 }
                 return cb.or(
                         cb.equal(root.get("tipoUsuario"), tipoFiltro),
-                        cb.equal(root.get("tipoUsuario"), com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum.AMBOS)
+                        cb.equal(root.get("tipoUsuario"), TipoUsuarioEnum.AMBOS)
                 );
             });
         }

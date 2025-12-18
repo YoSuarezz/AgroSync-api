@@ -107,6 +107,26 @@ public final class GenerarNumeroHelper {
     }
 
     /**
+     * Genera un número de cuenta por pagar de saldo a favor (cuando sobra dinero de una compensación).
+     * Formato: CXP-SF-{4 dígitos aleatorios}
+     *
+     * @return número de cuenta por pagar de saldo a favor generado
+     */
+    public static String generarNumeroCuentaPagarSaldoFavor() {
+        return String.format("CXP-SF-%s", generarDigitosAleatorios(4));
+    }
+
+    /**
+     * Genera un número de cuenta por cobrar de saldo a favor (cuando sobra dinero de una compensación).
+     * Formato: CXC-SF-{4 dígitos aleatorios}
+     *
+     * @return número de cuenta por cobrar de saldo a favor generado
+     */
+    public static String generarNumeroCuentaCobrarSaldoFavor() {
+        return String.format("CXC-SF-%s", generarDigitosAleatorios(4));
+    }
+
+    /**
      * Genera una cadena de dígitos aleatorios de la longitud especificada
      *
      * @param cantidad cantidad de dígitos

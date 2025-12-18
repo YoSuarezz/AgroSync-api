@@ -15,5 +15,9 @@ public interface CuentaPagarRepository extends JpaRepository<CuentaPagarEntity, 
 
     Optional<CuentaPagarEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
 
-    List<CuentaPagarEntity> findByProveedor_IdAndSuscripcion_IdAndEstadoNot(UUID proveedorId, UUID suscripcionId, EstadoCuentaEnum estado);
+    /**
+     * Busca cuentas por pagar pendientes o parcialmente pagadas ordenadas por fecha de emisión (FIFO).
+     */
+    List<CuentaPagarEntity> findByProveedor_IdAndSuscripcion_IdAndEstadoInOrderByFechaEmisionAsc(
+            UUID proveedorId, UUID suscripcionId, List<EstadoCuentaEnum> estados);
 }
