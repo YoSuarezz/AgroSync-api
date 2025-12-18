@@ -33,8 +33,9 @@ public class ActualizarCarteraImpl implements ActualizarCartera {
             BigDecimal totalActual = ObjectHelper.getDefault(cartera.getTotalCuentasCobrar(), BigDecimal.ZERO);
             cartera.setTotalCuentasCobrar(totalActual.add(monto));
 
+            // Cuando hay cuenta por cobrar, el usuario NOS DEBE (saldo negativo para él)
             BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
-            cartera.setSaldoActual(saldoActual.add(monto));
+            cartera.setSaldoActual(saldoActual.subtract(monto));
 
             carteraRepository.save(cartera);
         }
@@ -52,8 +53,9 @@ public class ActualizarCarteraImpl implements ActualizarCartera {
             BigDecimal totalActual = ObjectHelper.getDefault(cartera.getTotalCuentasPagar(), BigDecimal.ZERO);
             cartera.setTotalCuentasPagar(totalActual.add(monto));
 
+            // Cuando hay cuenta por pagar, NOSOTROS LE DEBEMOS (saldo positivo para él)
             BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
-            cartera.setSaldoActual(saldoActual.subtract(monto));
+            cartera.setSaldoActual(saldoActual.add(monto));
 
             carteraRepository.save(cartera);
         }
@@ -69,10 +71,12 @@ public class ActualizarCarteraImpl implements ActualizarCartera {
         if (carteraOpt.isPresent()) {
             CarteraEntity cartera = carteraOpt.get();
 
-            BigDecimal totalCuentasPagar = ObjectHelper.getDefault(cartera.getTotalCuentasPagar(), BigDecimal.ZERO);
-            BigDecimal nuevoTotal = totalCuentasPagar.subtract(montoCobro);
-            cartera.setTotalCuentasPagar(nuevoTotal.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : nuevoTotal);
+            // Reducir total de cuentas por cobrar
+            BigDecimal totalCuentasCobrar = ObjectHelper.getDefault(cartera.getTotalCuentasCobrar(), BigDecimal.ZERO);
+            BigDecimal nuevoTotal = totalCuentasCobrar.subtract(montoCobro);
+            cartera.setTotalCuentasCobrar(nuevoTotal.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : nuevoTotal);
 
+            // Al cobrar, el usuario nos pagó, su deuda disminuye (saldo sube hacia 0)
             BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
             cartera.setSaldoActual(saldoActual.add(montoCobro));
 
@@ -90,10 +94,12 @@ public class ActualizarCarteraImpl implements ActualizarCartera {
         if (carteraOpt.isPresent()) {
             CarteraEntity cartera = carteraOpt.get();
 
-            BigDecimal totalCuentasCobrar = ObjectHelper.getDefault(cartera.getTotalCuentasCobrar(), BigDecimal.ZERO);
-            BigDecimal nuevoTotal = totalCuentasCobrar.subtract(montoAbono);
-            cartera.setTotalCuentasCobrar(nuevoTotal.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : nuevoTotal);
+            // Reducir total de cuentas por pagar
+            BigDecimal totalCuentasPagar = ObjectHelper.getDefault(cartera.getTotalCuentasPagar(), BigDecimal.ZERO);
+            BigDecimal nuevoTotal = totalCuentasPagar.subtract(montoAbono);
+            cartera.setTotalCuentasPagar(nuevoTotal.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : nuevoTotal);
 
+            // Al abonar, nosotros le pagamos, su saldo a favor disminuye (saldo baja hacia 0)
             BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
             cartera.setSaldoActual(saldoActual.subtract(montoAbono));
 

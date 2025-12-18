@@ -93,13 +93,23 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
         lote.setPesoTotal(pesoTotal);
         compra.setPrecioTotalCompra(precioTotalCompra);
 
-        configurarCuentaPagar(compra, suscripcion, precioTotalCompra, fechaCompra);
+        // Generar número de compra ANTES de la compensación (se necesita para el concepto)
+        if (TextHelper.isEmpty(compra.getNumeroCompra())) {
+            compra.setNumeroCompra(GenerarNumeroHelper.generarNumeroCompra(lote.getContramarca()));
+        }
 
-        // 6. Guardar compra
+        // 6. Procesar compensación PRIMERO (antes de crear la cuenta por pagar)
+        BigDecimal saldoParaCuenta = procesarCompensacionYObtenerSaldo(
+                compra.getProveedor(), suscripcion, precioTotalCompra, fechaCompra, compra.getNumeroCompra());
+
+        // 7. Configurar cuenta por pagar con el saldo restante después de compensación
+        configurarCuentaPagar(compra, suscripcion, precioTotalCompra, saldoParaCuenta, fechaCompra);
+
+        // 8. Guardar compra
         compraRepository.save(compra);
 
-        // 7. Procesar compensación y actualizar cartera
-        procesarCompensacionYCartera(compra, suscripcion, precioTotalCompra, fechaCompra);
+        // 9. Actualizar cartera si hay saldo pendiente
+        actualizarCarteraSiCorresponde(compra.getProveedor(), suscripcion, saldoParaCuenta);
     }
 
     private void validarAnimales(CompraDomain data) {
@@ -160,11 +170,7 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
     }
 
     private void configurarCuentaPagar(CompraEntity compra, SuscripcionEntity suscripcion,
-                                       BigDecimal precioTotalCompra, LocalDate fechaCompra) {
-        if (TextHelper.isEmpty(compra.getNumeroCompra())) {
-            compra.setNumeroCompra(GenerarNumeroHelper.generarNumeroCompra(compra.getLote().getContramarca()));
-        }
-
+                                       BigDecimal montoTotal, BigDecimal saldoPendiente, LocalDate fechaCompra) {
         CuentaPagarEntity cuentaPagar = compra.getCuentaPagar();
         if (ObjectHelper.isNull(cuentaPagar)) {
             cuentaPagar = new CuentaPagarEntity();
@@ -174,9 +180,18 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
         cuentaPagar.setCompra(compra);
         cuentaPagar.setProveedor(compra.getProveedor());
         cuentaPagar.setSuscripcion(suscripcion);
-        cuentaPagar.setMontoTotal(precioTotalCompra);
-        cuentaPagar.setSaldoPendiente(precioTotalCompra);
-        cuentaPagar.setEstado(EstadoCuentaEnum.PENDIENTE);
+        cuentaPagar.setMontoTotal(montoTotal);
+        cuentaPagar.setSaldoPendiente(saldoPendiente);
+
+        // Determinar estado según saldo pendiente
+        if (saldoPendiente.compareTo(BigDecimal.ZERO) <= 0) {
+            cuentaPagar.setEstado(EstadoCuentaEnum.PAGADA);
+        } else if (saldoPendiente.compareTo(montoTotal) < 0) {
+            cuentaPagar.setEstado(EstadoCuentaEnum.PARCIALMENTE_PAGADA);
+        } else {
+            cuentaPagar.setEstado(EstadoCuentaEnum.PENDIENTE);
+        }
+
         cuentaPagar.setFechaEmision(fechaCompra);
         cuentaPagar.setFechaVencimiento(fechaCompra);
 
@@ -185,26 +200,38 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
         }
     }
 
-    private void procesarCompensacionYCartera(CompraEntity compra, SuscripcionEntity suscripcion,
-                                               BigDecimal precioTotalCompra, LocalDate fechaCompra) {
-        UUID proveedorId = compra.getProveedor() != null ? compra.getProveedor().getId() : null;
+    private BigDecimal procesarCompensacionYObtenerSaldo(UsuarioEntity proveedor, SuscripcionEntity suscripcion,
+                                                          BigDecimal precioTotalCompra, LocalDate fechaCompra,
+                                                          String numeroCompra) {
+        UUID proveedorId = proveedor != null ? proveedor.getId() : null;
+        if (ObjectHelper.isNull(proveedorId)) {
+            return precioTotalCompra;
+        }
+
+        UsuarioEntity proveedorCompleto = usuarioRepository.findByIdAndSuscripcion_Id(proveedorId, suscripcion.getId())
+                .orElse(null);
+
+        // Si el proveedor es AMBOS, intentar compensar con sus cuentas por cobrar (como cliente)
+        if (proveedorCompleto != null && proveedorCompleto.getTipoUsuario() == TipoUsuarioEnum.AMBOS) {
+            CompensarCuentas.ResultadoCompensacion resultado = compensarCuentas.compensarCuentasCobrarConCompra(
+                    proveedorCompleto, suscripcion, precioTotalCompra, fechaCompra, numeroCompra
+            );
+            return resultado.saldoRestante();
+        }
+
+        return precioTotalCompra;
+    }
+
+    private void actualizarCarteraSiCorresponde(UsuarioEntity proveedor, SuscripcionEntity suscripcion,
+                                                 BigDecimal saldoPendiente) {
+        UUID proveedorId = proveedor != null ? proveedor.getId() : null;
         if (ObjectHelper.isNull(proveedorId)) {
             return;
         }
 
-        UsuarioEntity proveedor = usuarioRepository.findByIdAndSuscripcion_Id(proveedorId, suscripcion.getId())
-                .orElse(null);
-
-        BigDecimal montoCompensado = BigDecimal.ZERO;
-        if (proveedor != null && proveedor.getTipoUsuario() == TipoUsuarioEnum.AMBOS) {
-            montoCompensado = compensarCuentas.compensarCuentasCobrarConCompra(
-                    proveedor, suscripcion, precioTotalCompra, fechaCompra, compra.getNumeroCompra()
-            );
-        }
-
-        BigDecimal montoNeto = precioTotalCompra.subtract(montoCompensado);
-        if (montoNeto.compareTo(BigDecimal.ZERO) > 0) {
-            actualizarCartera.incrementarCuentasCobrar(proveedorId, suscripcion.getId(), montoNeto);
+        // Solo actualizar cartera si hay saldo pendiente por pagar
+        if (saldoPendiente.compareTo(BigDecimal.ZERO) > 0) {
+            actualizarCartera.incrementarCuentasPagar(proveedorId, suscripcion.getId(), saldoPendiente);
         }
     }
 }

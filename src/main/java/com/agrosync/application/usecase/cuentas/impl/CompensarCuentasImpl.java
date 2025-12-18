@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -31,6 +32,16 @@ public class CompensarCuentasImpl implements CompensarCuentas {
     private final AbonoRepository abonoRepository;
     private final CobroRepository cobroRepository;
     private final ActualizarCartera actualizarCartera;
+
+    private static final List<EstadoCuentaEnum> ESTADOS_PENDIENTES_PAGAR = Arrays.asList(
+            EstadoCuentaEnum.PENDIENTE,
+            EstadoCuentaEnum.PARCIALMENTE_PAGADA
+    );
+
+    private static final List<EstadoCuentaEnum> ESTADOS_PENDIENTES_COBRAR = Arrays.asList(
+            EstadoCuentaEnum.PENDIENTE,
+            EstadoCuentaEnum.PARCIALMENTE_COBRADA
+    );
 
     public CompensarCuentasImpl(CuentaPagarRepository cuentaPagarRepository,
                                  CuentaCobrarRepository cuentaCobrarRepository,
@@ -45,28 +56,31 @@ public class CompensarCuentasImpl implements CompensarCuentas {
     }
 
     @Override
-    public BigDecimal compensarCuentasPagarConVenta(UsuarioEntity usuario, SuscripcionEntity suscripcion,
+    public ResultadoCompensacion compensarCuentasPagarConVenta(UsuarioEntity usuario, SuscripcionEntity suscripcion,
                                                      BigDecimal montoDisponible, LocalDate fecha,
                                                      String numeroOperacion) {
         if (ObjectHelper.isNull(usuario) || ObjectHelper.isNull(usuario.getId())) {
-            return BigDecimal.ZERO;
+            return ResultadoCompensacion.sinCompensacion(montoDisponible);
         }
 
+        // Buscar cuentas por pagar pendientes donde el usuario es PROVEEDOR (le debemos)
         List<CuentaPagarEntity> cuentasPendientes = cuentaPagarRepository
-                .findByProveedor_IdAndSuscripcion_IdAndEstadoNot(
+                .findByProveedor_IdAndSuscripcion_IdAndEstadoInOrderByFechaEmisionAsc(
                         usuario.getId(),
                         suscripcion.getId(),
-                        EstadoCuentaEnum.PAGADA
+                        ESTADOS_PENDIENTES_PAGAR
                 );
 
         if (ObjectHelper.isNull(cuentasPendientes) || cuentasPendientes.isEmpty()) {
-            return BigDecimal.ZERO;
+            // No hay cuentas por pagar pendientes, todo el monto va a la cuenta por cobrar
+            return ResultadoCompensacion.sinCompensacion(montoDisponible);
         }
 
         BigDecimal saldoDisponible = ObjectHelper.getDefault(montoDisponible, BigDecimal.ZERO);
         BigDecimal totalCompensado = BigDecimal.ZERO;
         String nombreUsuario = ObjectHelper.getDefault(usuario.getNombre(), "Usuario");
 
+        // Compensar cada cuenta pendiente (FIFO - más antigua primero)
         for (CuentaPagarEntity cuenta : cuentasPendientes) {
             if (saldoDisponible.compareTo(BigDecimal.ZERO) <= 0) {
                 break;
@@ -80,48 +94,53 @@ public class CompensarCuentasImpl implements CompensarCuentas {
             BigDecimal montoAAbonar = saldoDisponible.min(saldoPendiente);
             BigDecimal nuevoSaldo = saldoPendiente.subtract(montoAAbonar);
 
+            // Crear abono automático
             AbonoEntity abono = crearAbonoAutomatico(
                     cuenta, suscripcion, montoAAbonar, fecha,
-                    generarConceptoAbono(montoAAbonar, cuenta.getNumeroCuenta(), nombreUsuario,
-                            numeroOperacion, saldoPendiente, nuevoSaldo)
+                    generarConceptoAbono(nombreUsuario, cuenta.getNumeroCuenta(), montoAAbonar, numeroOperacion)
             );
             abonoRepository.save(abono);
 
+            // Actualizar cuenta por pagar
             actualizarCuentaPagar(cuenta, nuevoSaldo);
             cuentaPagarRepository.save(cuenta);
 
+            // Actualizar cartera del proveedor
             actualizarCartera.reducirCuentasPagarPorAbono(usuario.getId(), suscripcion.getId(), montoAAbonar);
 
             saldoDisponible = saldoDisponible.subtract(montoAAbonar);
             totalCompensado = totalCompensado.add(montoAAbonar);
         }
 
-        return totalCompensado;
+        return new ResultadoCompensacion(totalCompensado, saldoDisponible);
     }
 
     @Override
-    public BigDecimal compensarCuentasCobrarConCompra(UsuarioEntity usuario, SuscripcionEntity suscripcion,
+    public ResultadoCompensacion compensarCuentasCobrarConCompra(UsuarioEntity usuario, SuscripcionEntity suscripcion,
                                                        BigDecimal montoDisponible, LocalDate fecha,
                                                        String numeroOperacion) {
         if (ObjectHelper.isNull(usuario) || ObjectHelper.isNull(usuario.getId())) {
-            return BigDecimal.ZERO;
+            return ResultadoCompensacion.sinCompensacion(montoDisponible);
         }
 
+        // Buscar cuentas por cobrar pendientes donde el usuario es CLIENTE (nos debe)
         List<CuentaCobrarEntity> cuentasPendientes = cuentaCobrarRepository
-                .findByCliente_IdAndSuscripcion_IdAndEstadoNot(
+                .findByCliente_IdAndSuscripcion_IdAndEstadoInOrderByFechaEmisionAsc(
                         usuario.getId(),
                         suscripcion.getId(),
-                        EstadoCuentaEnum.COBRADA
+                        ESTADOS_PENDIENTES_COBRAR
                 );
 
         if (ObjectHelper.isNull(cuentasPendientes) || cuentasPendientes.isEmpty()) {
-            return BigDecimal.ZERO;
+            // No hay cuentas por cobrar pendientes, todo el monto va a la cuenta por pagar
+            return ResultadoCompensacion.sinCompensacion(montoDisponible);
         }
 
         BigDecimal saldoDisponible = ObjectHelper.getDefault(montoDisponible, BigDecimal.ZERO);
         BigDecimal totalCompensado = BigDecimal.ZERO;
         String nombreUsuario = ObjectHelper.getDefault(usuario.getNombre(), "Usuario");
 
+        // Compensar cada cuenta pendiente (FIFO - más antigua primero)
         for (CuentaCobrarEntity cuenta : cuentasPendientes) {
             if (saldoDisponible.compareTo(BigDecimal.ZERO) <= 0) {
                 break;
@@ -135,23 +154,25 @@ public class CompensarCuentasImpl implements CompensarCuentas {
             BigDecimal montoACobrar = saldoDisponible.min(saldoPendiente);
             BigDecimal nuevoSaldo = saldoPendiente.subtract(montoACobrar);
 
+            // Crear cobro automático
             CobroEntity cobro = crearCobroAutomatico(
                     cuenta, suscripcion, montoACobrar, fecha,
-                    generarConceptoCobro(montoACobrar, cuenta.getNumeroCuenta(), nombreUsuario,
-                            numeroOperacion, saldoPendiente, nuevoSaldo)
+                    generarConceptoCobro(nombreUsuario, cuenta.getNumeroCuenta(), montoACobrar, numeroOperacion)
             );
             cobroRepository.save(cobro);
 
+            // Actualizar cuenta por cobrar
             actualizarCuentaCobrar(cuenta, nuevoSaldo);
             cuentaCobrarRepository.save(cuenta);
 
+            // Actualizar cartera del cliente
             actualizarCartera.reducirCuentasCobrarPorCobro(usuario.getId(), suscripcion.getId(), montoACobrar);
 
             saldoDisponible = saldoDisponible.subtract(montoACobrar);
             totalCompensado = totalCompensado.add(montoACobrar);
         }
 
-        return totalCompensado;
+        return new ResultadoCompensacion(totalCompensado, saldoDisponible);
     }
 
     private AbonoEntity crearAbonoAutomatico(CuentaPagarEntity cuenta, SuscripcionEntity suscripcion,
@@ -196,32 +217,31 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         }
     }
 
-    private String generarConceptoAbono(BigDecimal monto, String numeroCuenta, String nombreUsuario,
-                                         String numeroOperacion, BigDecimal saldoAnterior, BigDecimal saldoNuevo) {
+    /**
+     * Genera concepto simplificado para abono automático por cruce de cuentas.
+     */
+    private String generarConceptoAbono(String nombreUsuario, String numeroCuentaPagar,
+                                         BigDecimal monto, String numeroVenta) {
         return String.format(
-                "Cruce de cuentas automático: Abono de $%s a cuenta por pagar %s del usuario %s, " +
-                "originado por venta %s. Saldo anterior: $%s, Saldo después del abono: $%s",
+                "Cruce de cuentas: Pago de $%s a %s por venta %s (Cuenta %s)",
                 monto.toPlainString(),
-                ObjectHelper.getDefault(numeroCuenta, "N/A"),
                 nombreUsuario,
-                numeroOperacion,
-                saldoAnterior.toPlainString(),
-                saldoNuevo.toPlainString()
+                numeroVenta,
+                ObjectHelper.getDefault(numeroCuentaPagar, "N/A")
         );
     }
 
-    private String generarConceptoCobro(BigDecimal monto, String numeroCuenta, String nombreUsuario,
-                                         String numeroOperacion, BigDecimal saldoAnterior, BigDecimal saldoNuevo) {
+    /**
+     * Genera concepto simplificado para cobro automático por cruce de cuentas.
+     */
+    private String generarConceptoCobro(String nombreUsuario, String numeroCuentaCobrar,
+                                         BigDecimal monto, String numeroCompra) {
         return String.format(
-                "Cruce de cuentas automático: Cobro de $%s a cuenta por cobrar %s del usuario %s, " +
-                "originado por compra %s. Saldo anterior: $%s, Saldo después del cobro: $%s",
+                "Cruce de cuentas: Cobro de $%s a %s por compra %s (Cuenta %s)",
                 monto.toPlainString(),
-                ObjectHelper.getDefault(numeroCuenta, "N/A"),
                 nombreUsuario,
-                numeroOperacion,
-                saldoAnterior.toPlainString(),
-                saldoNuevo.toPlainString()
+                numeroCompra,
+                ObjectHelper.getDefault(numeroCuentaCobrar, "N/A")
         );
     }
 }
-
