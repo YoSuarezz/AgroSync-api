@@ -1,6 +1,7 @@
 package com.agrosync.application.primaryports.dto.carteras.request;
 
 import com.agrosync.application.primaryports.dto.carteras.response.ObtenerCarteraDTO;
+import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -11,25 +12,25 @@ public class CarteraPageDTO {
     private int size;
     private String sortBy;
     private String sortDirection;
-    private UUID usuarioId;
+    private ObtenerUsuarioDTO usuario;
     private UUID suscripcionId;
 
     public CarteraPageDTO() {
     }
 
     public CarteraPageDTO(int page, int size, String sortBy, String sortDirection,
-                          UUID usuarioId, UUID suscripcionId) {
+                          ObtenerUsuarioDTO usuario, UUID suscripcionId) {
         setPage(page);
         setSize(size);
         setSortBy(sortBy);
         setSortDirection(sortDirection);
-        setUsuarioId(usuarioId);
+        setUsuario(usuario);
         setSuscripcionId(suscripcionId);
     }
 
     public static CarteraPageDTO create(int page, int size, String sortBy, String sortDirection,
-                                        UUID usuarioId, UUID suscripcionId) {
-        return new CarteraPageDTO(page, size, sortBy, sortDirection, usuarioId, suscripcionId);
+                                        ObtenerUsuarioDTO usuario, UUID suscripcionId) {
+        return new CarteraPageDTO(page, size, sortBy, sortDirection, usuario, suscripcionId);
     }
 
     public int getPage() {
@@ -64,12 +65,12 @@ public class CarteraPageDTO {
         this.sortDirection = sortDirection;
     }
 
-    public UUID getUsuarioId() {
-        return usuarioId;
+    public ObtenerUsuarioDTO getUsuario() {
+        return usuario;
     }
 
-    public void setUsuarioId(UUID usuarioId) {
-        this.usuarioId = usuarioId;
+    public void setUsuario(ObtenerUsuarioDTO usuario) {
+        this.usuario = usuario;
     }
 
     public UUID getSuscripcionId() {

@@ -2,6 +2,7 @@ package com.agrosync.application.usecase.carteras.impl;
 
 import com.agrosync.application.primaryports.dto.carteras.request.CarteraPageDTO;
 import com.agrosync.application.primaryports.dto.compras.request.CompraPageDTO;
+import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
 import com.agrosync.application.secondaryports.mapper.carteras.CarteraEntityMapper;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,13 +60,27 @@ public class ObtenerCarterasImpl implements ObtenerCarteras {
     private Specification<CarteraEntity> buildSpecification(CarteraPageDTO data) {
         List<Specification<CarteraEntity>> specs = new ArrayList<>();
 
+        ObtenerUsuarioDTO usuarioFiltro = data.getUsuario();
+
         if (data.getSuscripcionId() != null) {
             specs.add((root, query, cb) -> cb.equal(root.get("suscripcion").get("id"), data.getSuscripcionId()));
         }
 
-        UUID usuarioId = data.getUsuarioId();
-        if (usuarioId != null && !UUIDHelper.isDefault(usuarioId)) {
-            specs.add((root, query, cb) -> cb.equal(root.get("proveedor").get("id"), usuarioId));
+        System.out.println(usuarioFiltro.getNombre());
+        if (usuarioFiltro != null && StringUtils.hasText(usuarioFiltro.getNombre())) {
+            List<String> palabrasNombre = Arrays.stream(usuarioFiltro.getNombre().trim().split("\\s+"))
+                    .filter(StringUtils::hasText)
+                    .map(String::toLowerCase)
+                    .toList();
+
+            for (String palabra : palabrasNombre) {
+                specs.add((root, query, cb) ->
+                        cb.like(
+                                cb.lower(root.get("usuario").get("nombre")),
+                                "%" + palabra.toLowerCase() + "%"
+                        )
+                );
+            }
         }
 
         return Specification.allOf(specs);

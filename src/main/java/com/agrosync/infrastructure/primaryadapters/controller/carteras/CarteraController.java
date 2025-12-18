@@ -35,10 +35,11 @@ public class CarteraController {
                                                                                              @RequestParam(defaultValue = "10") int size,
                                                                                              @RequestParam(defaultValue = "saldoActual") String sortBy,
                                                                                              @RequestParam(defaultValue = "DESC") String sortDirection,
-                                                                                             @RequestParam(required = false) UUID usuarioId,
+                                                                                             @RequestParam(required = false) String nombreUsuario,
                                                                                              @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
-            CarteraPageDTO request = CarteraPageDTO.create(page, size, sortBy, sortDirection, usuarioId, suscripcionId);
+            ObtenerUsuarioDTO filtro = ObtenerUsuarioDTO.create(null, nombreUsuario, null, null);
+            CarteraPageDTO request = CarteraPageDTO.create(page, size, sortBy, sortDirection, filtro, suscripcionId);
             PageResponse<ObtenerCarteraDTO> resultados = obtenerCarterasInteractor.ejecutar(request);
 
             CarteraResponse<PageResponse<ObtenerCarteraDTO>> response = CarteraResponse.build(List.of("Carteras consultadas correctamente"), resultados);
