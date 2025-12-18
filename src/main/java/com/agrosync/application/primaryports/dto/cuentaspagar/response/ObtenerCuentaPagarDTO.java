@@ -1,7 +1,7 @@
 package com.agrosync.application.primaryports.dto.cuentaspagar.response;
 
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.crosscutting.helpers.*;
 
 import java.math.BigDecimal;

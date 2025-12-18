@@ -1,7 +1,7 @@
 package com.agrosync.application.primaryports.dto.usuarios.request;
 
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 
 import java.util.UUID;

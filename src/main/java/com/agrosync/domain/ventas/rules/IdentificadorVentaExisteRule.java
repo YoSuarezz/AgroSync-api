@@ -1,7 +1,7 @@
 package com.agrosync.domain.ventas.rules;
 
-import com.agrosync.application.primaryports.dto.ventas.request.VentaIdSuscripcionDTO;
 import com.agrosync.domain.DomainRule;
+import com.agrosync.domain.IdConSuscripcion;
 
-public interface IdentificadorVentaExisteRule extends DomainRule<VentaIdSuscripcionDTO> {
+public interface IdentificadorVentaExisteRule extends DomainRule<IdConSuscripcion> {
 }

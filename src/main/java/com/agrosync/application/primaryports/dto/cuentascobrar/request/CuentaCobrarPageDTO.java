@@ -1,7 +1,7 @@
 package com.agrosync.application.primaryports.dto.cuentascobrar.request;
 
 import com.agrosync.application.primaryports.dto.cuentascobrar.response.ObtenerCuentaCobrarDTO;
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 
 import java.util.UUID;
 

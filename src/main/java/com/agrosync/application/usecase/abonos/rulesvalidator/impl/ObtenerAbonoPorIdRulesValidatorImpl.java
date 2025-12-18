@@ -2,6 +2,7 @@ package com.agrosync.application.usecase.abonos.rulesvalidator.impl;
 
 import com.agrosync.application.primaryports.dto.abonos.request.AbonoIdSuscripcionDTO;
 import com.agrosync.application.usecase.abonos.rulesvalidator.ObtenerAbonoPorIdRulesValidator;
+import com.agrosync.domain.IdConSuscripcion;
 import com.agrosync.domain.abonos.rules.AbonoExisteRule;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class ObtenerAbonoPorIdRulesValidatorImpl implements ObtenerAbonoPorIdRul
     @Override
     public void validar(AbonoIdSuscripcionDTO data) {
         suscripcionExisteRule.validate(data.getSuscripcionId());
-        abonoExisteRule.validate(data);
+        abonoExisteRule.validate(IdConSuscripcion.of(data.getId(), data.getSuscripcionId()));
     }
 }
 

@@ -1,4 +1,4 @@
-package com.agrosync.application.primaryports.enums.cuentas;
+package com.agrosync.domain.enums.cuentas;
 
 public enum MetodoPagoEnum {
     EFECTIVO,
@@ -7,3 +7,4 @@ public enum MetodoPagoEnum {
     TARJETA_DEBITO,
     OTRO
 }
+

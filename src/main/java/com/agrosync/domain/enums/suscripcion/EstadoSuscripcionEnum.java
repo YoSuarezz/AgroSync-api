@@ -1,7 +1,8 @@
-package com.agrosync.application.primaryports.enums.suscripcion;
+package com.agrosync.domain.enums.suscripcion;
 
 public enum EstadoSuscripcionEnum {
     ACTIVA,
     PENDIENTE_PAGO,
     SUSPENDIDA
 }
+

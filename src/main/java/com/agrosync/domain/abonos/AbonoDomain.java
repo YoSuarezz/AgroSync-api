@@ -1,6 +1,6 @@
 package com.agrosync.domain.abonos;
 
-import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
 

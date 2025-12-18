@@ -1,6 +1,6 @@
 package com.agrosync.domain.cobros.rules.impl;
 
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.cobros.exceptions.CuentaCobrarNoDisponibleParaCobroException;
 import com.agrosync.domain.cobros.rules.CuentaCobrarDisponibleParaCobroRule;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.agrosync.application.primaryports.dto.animales.response;
 
-import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
-import com.agrosync.application.primaryports.enums.animales.SexoEnum;
+import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
+import com.agrosync.domain.enums.animales.SexoEnum;
 import com.agrosync.crosscutting.helpers.NumericHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;

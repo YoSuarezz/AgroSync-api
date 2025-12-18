@@ -1,7 +1,7 @@
 package com.agrosync.domain.lotes.rules.impl;
 
-import com.agrosync.application.primaryports.dto.lotes.request.LoteIdSuscripcionDTO;
 import com.agrosync.application.secondaryports.repository.LoteRepository;
+import com.agrosync.domain.IdConSuscripcion;
 import com.agrosync.domain.lotes.exceptions.IdentificadorLoteNoExisteException;
 import com.agrosync.domain.lotes.rules.IdentificadorLoteExisteRule;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,11 @@ public class IdentificadorLoteExisteRuleImpl implements IdentificadorLoteExisteR
     }
 
     @Override
-    public void validate(LoteIdSuscripcionDTO data) {
+    public void validate(IdConSuscripcion data) {
         boolean exists = loteRepository.existsByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
         if (!exists) {
             throw IdentificadorLoteNoExisteException.create();
         }
     }
 }
+

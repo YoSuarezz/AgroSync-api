@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.dto.animales.request;
 
-import com.agrosync.application.primaryports.enums.animales.SexoEnum;
+import com.agrosync.domain.enums.animales.SexoEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;

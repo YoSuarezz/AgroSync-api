@@ -1,7 +1,7 @@
 package com.agrosync.domain.usuarios;
 
-import com.agrosync.application.primaryports.enums.usuarios.EstadoUsuarioEnum;
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.domain.enums.usuarios.EstadoUsuarioEnum;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.BaseDomain;

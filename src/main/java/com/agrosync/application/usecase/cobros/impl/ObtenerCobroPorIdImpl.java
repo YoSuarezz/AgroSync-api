@@ -7,9 +7,8 @@ import com.agrosync.application.secondaryports.repository.CobroRepository;
 import com.agrosync.application.usecase.cobros.ObtenerCobroPorId;
 import com.agrosync.application.usecase.cobros.rulesvalidator.ObtenerCobroPorIdRulesValidator;
 import com.agrosync.domain.cobros.CobroDomain;
+import com.agrosync.domain.cobros.exceptions.CobroNoExisteException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ObtenerCobroPorIdImpl implements ObtenerCobroPorId {
@@ -29,7 +28,8 @@ public class ObtenerCobroPorIdImpl implements ObtenerCobroPorId {
     @Override
     public CobroDomain ejecutar(CobroIdSuscripcionDTO data) {
         obtenerCobroPorIdRulesValidator.validar(data);
-        Optional<CobroEntity> resultado = cobroRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return cobroEntityMapper.toDomain(resultado.get());
+        CobroEntity resultado = cobroRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
+                .orElseThrow(CobroNoExisteException::create);
+        return cobroEntityMapper.toDomain(resultado);
     }
 }

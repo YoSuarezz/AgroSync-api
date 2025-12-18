@@ -1,6 +1,6 @@
 package com.agrosync.infrastructure.primaryadapters.adapter.response.auth;
 
-import com.agrosync.application.primaryports.enums.suscripcion.EstadoSuscripcionEnum;
+import com.agrosync.domain.enums.suscripcion.EstadoSuscripcionEnum;
 
 import java.util.ArrayList;
 import java.util.List;

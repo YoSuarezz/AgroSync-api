@@ -7,9 +7,8 @@ import com.agrosync.application.secondaryports.repository.AnimalRepository;
 import com.agrosync.application.usecase.animales.ObtenerAnimalPorId;
 import com.agrosync.application.usecase.animales.rulesvalidator.ObtenerAnimalPorIdRulesValidator;
 import com.agrosync.domain.animales.AnimalDomain;
+import com.agrosync.domain.animales.exceptions.IdentificadorAnimalNoExisteException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ObtenerAnimalPorIdImpl implements ObtenerAnimalPorId {
@@ -27,7 +26,8 @@ public class ObtenerAnimalPorIdImpl implements ObtenerAnimalPorId {
     @Override
     public AnimalDomain ejecutar(AnimalIdSuscripcionDTO data) {
         obtenerAnimalPorIdRulesValidator.validar(data);
-        Optional<AnimalEntity> resultado = animalRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return animalEntityMapper.toDomain(resultado.get());
+        AnimalEntity resultado = animalRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
+                .orElseThrow(IdentificadorAnimalNoExisteException::create);
+        return animalEntityMapper.toDomain(resultado);
     }
 }

@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.dto.usuarios.request;
 
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;

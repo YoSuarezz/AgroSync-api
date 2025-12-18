@@ -1,7 +1,7 @@
 package com.agrosync.domain.compras.rules.impl;
 
-import com.agrosync.application.primaryports.dto.compras.request.CompraIdSuscripcionDTO;
 import com.agrosync.application.secondaryports.repository.CompraRepository;
+import com.agrosync.domain.IdConSuscripcion;
 import com.agrosync.domain.compras.exceptions.IdentificadorCompraNoExisteException;
 import com.agrosync.domain.compras.rules.IdentificadorCompraExisteRule;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,11 @@ public class IdentificadorCompraExisteRuleImpl implements IdentificadorCompraExi
     }
 
     @Override
-    public void validate(CompraIdSuscripcionDTO data) {
+    public void validate(IdConSuscripcion data) {
         boolean exists = compraRepository.existsByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
         if (!exists) {
             throw IdentificadorCompraNoExisteException.create();
         }
     }
 }
+

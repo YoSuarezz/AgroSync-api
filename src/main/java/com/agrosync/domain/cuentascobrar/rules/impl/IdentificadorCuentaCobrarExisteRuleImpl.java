@@ -1,6 +1,5 @@
 package com.agrosync.domain.cuentascobrar.rules.impl;
 
-
 import com.agrosync.application.secondaryports.repository.CuentaCobrarRepository;
 import com.agrosync.domain.cuentascobrar.exceptions.IdentificadorCuentaCobrarNoExisteException;
 import com.agrosync.domain.cuentascobrar.rules.IdentificadorCuentaCobrarExisteRule;
@@ -25,3 +24,4 @@ public class IdentificadorCuentaCobrarExisteRuleImpl implements IdentificadorCue
         }
     }
 }
+

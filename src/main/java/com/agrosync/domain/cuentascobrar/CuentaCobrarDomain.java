@@ -1,6 +1,6 @@
 package com.agrosync.domain.cuentascobrar;
 
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.cobros.CobroDomain;
 import com.agrosync.domain.usuarios.UsuarioDomain;

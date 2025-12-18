@@ -20,7 +20,6 @@ public class ContramarcaSemanalUnicaRuleImpl implements ContramarcaSemanalUnicaR
 
     @Override
     public void validate(LoteDomain lote) {
-
         WeekFields weekFields = WeekFields.of(DayOfWeek.MONDAY, 4);
         int weekNumber = lote.getFecha().get(weekFields.weekOfWeekBasedYear());
         int year = lote.getFecha().getYear();
@@ -34,3 +33,4 @@ public class ContramarcaSemanalUnicaRuleImpl implements ContramarcaSemanalUnicaR
         }
     }
 }
+

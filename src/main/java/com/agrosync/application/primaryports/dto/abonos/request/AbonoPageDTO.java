@@ -1,7 +1,7 @@
 package com.agrosync.application.primaryports.dto.abonos.request;
 
 import com.agrosync.application.primaryports.dto.abonos.response.ObtenerAbonoDTO;
-import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 
 import java.util.UUID;

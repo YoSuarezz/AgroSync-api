@@ -7,9 +7,8 @@ import com.agrosync.application.secondaryports.repository.CarteraRepository;
 import com.agrosync.application.usecase.carteras.ObtenerCarteraPorId;
 import com.agrosync.application.usecase.carteras.rulesvalidator.ObtenerCarteraPorIdRulesValidator;
 import com.agrosync.domain.carteras.CarteraDomain;
+import com.agrosync.domain.carteras.exceptions.CarteraIdNoExisteException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ObtenerCarteraPorIdImpl implements ObtenerCarteraPorId {
@@ -28,7 +27,8 @@ public class ObtenerCarteraPorIdImpl implements ObtenerCarteraPorId {
     @Override
     public CarteraDomain ejecutar(CarteraIdSuscripcionDTO data) {
         obtenerCarteraPorIdRulesValidator.validar(data);
-        Optional<CarteraEntity> resultado = carteraRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return carteraEntityMapper.toDomain(resultado.get());
+        CarteraEntity resultado = carteraRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
+                .orElseThrow(CarteraIdNoExisteException::create);
+        return carteraEntityMapper.toDomain(resultado);
     }
 }

@@ -1,7 +1,7 @@
 package com.agrosync.domain.animales;
 
-import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
-import com.agrosync.application.primaryports.enums.animales.SexoEnum;
+import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
+import com.agrosync.domain.enums.animales.SexoEnum;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.lotes.LoteDomain;
 import com.agrosync.domain.ventas.VentaDomain;

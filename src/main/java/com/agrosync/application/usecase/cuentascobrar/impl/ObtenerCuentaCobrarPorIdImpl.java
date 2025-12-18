@@ -7,9 +7,8 @@ import com.agrosync.application.secondaryports.repository.CuentaCobrarRepository
 import com.agrosync.application.usecase.cuentascobrar.ObtenerCuentaCobrarPorId;
 import com.agrosync.application.usecase.cuentascobrar.rulesvalidator.ObtenerCuentaCobrarPorIdRulesValidator;
 import com.agrosync.domain.cuentascobrar.CuentaCobrarDomain;
+import com.agrosync.domain.cuentascobrar.exceptions.IdentificadorCuentaCobrarNoExisteException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ObtenerCuentaCobrarPorIdImpl implements ObtenerCuentaCobrarPorId {
@@ -29,7 +28,8 @@ public class ObtenerCuentaCobrarPorIdImpl implements ObtenerCuentaCobrarPorId {
     @Override
     public CuentaCobrarDomain ejecutar(CuentaCobrarIdSuscripcionDTO data) {
         obtenerCuentaCobrarPorIdRulesValidator.validar(data);
-        Optional<CuentaCobrarEntity> resultado = cuentaCobrarRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId());
-        return cuentaCobrarEntityMapper.toDomain(resultado.get());
+        CuentaCobrarEntity resultado = cuentaCobrarRepository.findByIdAndSuscripcion_Id(data.getId(), data.getSuscripcionId())
+                .orElseThrow(IdentificadorCuentaCobrarNoExisteException::create);
+        return cuentaCobrarEntityMapper.toDomain(resultado);
     }
 }

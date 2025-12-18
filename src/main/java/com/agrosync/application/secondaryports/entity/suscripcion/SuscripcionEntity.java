@@ -1,6 +1,6 @@
 package com.agrosync.application.secondaryports.entity.suscripcion;
 
-import com.agrosync.application.primaryports.enums.suscripcion.EstadoSuscripcionEnum;
+import com.agrosync.domain.enums.suscripcion.EstadoSuscripcionEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.auth.AuthUserEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;

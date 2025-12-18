@@ -1,6 +1,6 @@
 package com.agrosync.application.primaryports.dto.suscripcion.response;
 
-import com.agrosync.application.primaryports.enums.suscripcion.EstadoSuscripcionEnum;
+import com.agrosync.domain.enums.suscripcion.EstadoSuscripcionEnum;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 
