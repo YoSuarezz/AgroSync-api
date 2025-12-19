@@ -63,6 +63,7 @@ public class CuentasCobrarController {
             @RequestParam(required = false) String numeroCuenta,
             @RequestParam(required = false, name = "clienteId") UUID clienteId,
             @RequestParam(required = false, name = "estado") EstadoCuentaEnum estado,
+            @RequestParam(required = false, name = "soloConSaldoPendiente") Boolean soloConSaldoPendiente,
             @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
@@ -81,6 +82,7 @@ public class CuentasCobrarController {
 
             CuentaCobrarPageDTO request = new CuentaCobrarPageDTO(page, size, sortBy, sortDirection, filtro, estado,
                     suscripcionId);
+            request.setSoloConSaldoPendiente(soloConSaldoPendiente);
 
             PageResponse<ObtenerCuentaCobrarDTO> resultado = obtenerCuentasCobrarInteractor.ejecutar(request);
 
@@ -160,7 +162,8 @@ public class CuentasCobrarController {
             @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
-            CobroPageDTO request = new CobroPageDTO(page, size, sortBy, sortDirection, null, metodoPago, cuentaCobrarId, suscripcionId);
+            CobroPageDTO request = new CobroPageDTO(page, size, sortBy, sortDirection, null, metodoPago, cuentaCobrarId,
+                    suscripcionId);
 
             PageResponse<ObtenerCobroDTO> resultado = obtenerCobrosInteractor.ejecutar(request);
 
