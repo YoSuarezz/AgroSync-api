@@ -64,6 +64,7 @@ public class CuentasPagarController {
             @RequestParam(required = false) String numeroCuenta,
             @RequestParam(required = false, name = "proveedorId") UUID proveedorId,
             @RequestParam(required = false, name = "estado") EstadoCuentaEnum estado,
+            @RequestParam(required = false, name = "soloConSaldoPendiente") Boolean soloConSaldoPendiente,
             @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
@@ -83,6 +84,7 @@ public class CuentasPagarController {
 
             CuentaPagarPageDTO request = new CuentaPagarPageDTO(page, size, sortBy, sortDirection, filtro, estado,
                     suscripcionId);
+            request.setSoloConSaldoPendiente(soloConSaldoPendiente);
 
             PageResponse<ObtenerCuentaPagarDTO> resultado = obtenerCuentasPagarInteractor.ejecutar(request);
 
@@ -161,7 +163,8 @@ public class CuentasPagarController {
             @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
-            AbonoPageDTO request = new AbonoPageDTO(page, size, sortBy, sortDirection, null, metodoPago, cuentaPagarId, suscripcionId);
+            AbonoPageDTO request = new AbonoPageDTO(page, size, sortBy, sortDirection, null, metodoPago, cuentaPagarId,
+                    suscripcionId);
 
             PageResponse<ObtenerAbonoDTO> resultado = obtenerAbonosInteractor.ejecutar(request);
 
@@ -219,20 +222,17 @@ public class CuentasPagarController {
             registrarNuevoAbonoInteractor.ejecutar(abonoDTO);
 
             return GenerateResponse.generateSuccessResponse(
-                    List.of("Abono registrado correctamente")
-            );
+                    List.of("Abono registrado correctamente"));
 
         } catch (final AgroSyncException excepcion) {
             return GenerateResponse.generateBadRequestResponse(
-                    List.of(excepcion.getMensajeUsuario())
-            );
+                    List.of(excepcion.getMensajeUsuario()));
 
         } catch (final Exception excepcion) {
             var userMessage = "Error al registrar el abono";
             return new ResponseEntity<>(
                     GenericResponse.build(List.of(userMessage)),
-                    HttpStatus.INTERNAL_SERVER_ERROR
-            );
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

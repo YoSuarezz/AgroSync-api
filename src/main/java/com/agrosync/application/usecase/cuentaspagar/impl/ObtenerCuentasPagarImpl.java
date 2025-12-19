@@ -65,6 +65,13 @@ public class ObtenerCuentasPagarImpl implements ObtenerCuentasPagar {
             specs.add((root, query, cb) -> cb.equal(root.get("estado"), data.getEstado()));
         }
 
+        // Filtrar por cuentas con saldo pendiente (PENDIENTE o PARCIALMENTE_PAGADA)
+        if (Boolean.TRUE.equals(data.getSoloConSaldoPendiente())) {
+            specs.add((root, query, cb) -> root.get("estado").in(
+                    com.agrosync.domain.enums.cuentas.EstadoCuentaEnum.PENDIENTE,
+                    com.agrosync.domain.enums.cuentas.EstadoCuentaEnum.PARCIALMENTE_PAGADA));
+        }
+
         if (filtro != null) {
 
             if (StringUtils.hasText(filtro.getNumeroCuenta())) {

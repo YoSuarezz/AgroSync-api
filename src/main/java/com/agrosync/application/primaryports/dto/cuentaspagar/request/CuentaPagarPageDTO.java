@@ -14,11 +14,13 @@ public class CuentaPagarPageDTO {
     private ObtenerCuentaPagarDTO obtenerCuentaPagar;
     private EstadoCuentaEnum estado;
     private UUID suscripcionId;
+    private Boolean soloConSaldoPendiente;
 
     public CuentaPagarPageDTO() {
     }
 
-    public CuentaPagarPageDTO(int page, int size, String sortBy, String sortDirection, ObtenerCuentaPagarDTO obtenerCuentaPagar, EstadoCuentaEnum estado, UUID suscripcionId) {
+    public CuentaPagarPageDTO(int page, int size, String sortBy, String sortDirection,
+            ObtenerCuentaPagarDTO obtenerCuentaPagar, EstadoCuentaEnum estado, UUID suscripcionId) {
         setPage(page);
         setSize(size);
         setSortBy(sortBy);
@@ -82,5 +84,13 @@ public class CuentaPagarPageDTO {
 
     public void setEstado(EstadoCuentaEnum estado) {
         this.estado = estado;
+    }
+
+    public Boolean getSoloConSaldoPendiente() {
+        return soloConSaldoPendiente;
+    }
+
+    public void setSoloConSaldoPendiente(Boolean soloConSaldoPendiente) {
+        this.soloConSaldoPendiente = soloConSaldoPendiente;
     }
 }
