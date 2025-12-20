@@ -2,6 +2,7 @@ package com.agrosync.infrastructure.primaryadapters.controller.cuentaspagar;
 
 import com.agrosync.application.primaryports.dto.abonos.request.AbonoIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.abonos.request.AbonoPageDTO;
+import com.agrosync.application.primaryports.dto.abonos.request.AnularAbonoDTO;
 import com.agrosync.application.primaryports.dto.abonos.request.RegistrarAbonoDTO;
 import com.agrosync.application.primaryports.dto.abonos.response.ObtenerAbonoDTO;
 import com.agrosync.application.primaryports.dto.cuentaspagar.request.CuentaPagarIdSuscripcionDTO;
@@ -10,6 +11,7 @@ import com.agrosync.application.primaryports.dto.cuentaspagar.response.ObtenerCu
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.application.primaryports.interactor.abonos.AnularAbonoInteractor;
 import com.agrosync.application.primaryports.interactor.abonos.ObtenerAbonoPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.abonos.ObtenerAbonosInteractor;
 import com.agrosync.application.primaryports.interactor.abonos.ObtenerAbonosPorCuentaPagarInteractor;
@@ -37,6 +39,7 @@ public class CuentasPagarController {
     private final ObtenerCuentasPagarInteractor obtenerCuentasPagarInteractor;
     private final ObtenerCuentaPagarPorIdInteractor obtenerCuentaPagarPorIdInteractor;
     private final RegistrarNuevoAbonoInteractor registrarNuevoAbonoInteractor;
+    private final AnularAbonoInteractor anularAbonoInteractor;
     private final ObtenerAbonosPorCuentaPagarInteractor obtenerAbonosPorCuentaPagarInteractor;
     private final ObtenerAbonoPorIdInteractor obtenerAbonoPorIdInteractor;
     private final ObtenerAbonosInteractor obtenerAbonosInteractor;
@@ -44,12 +47,14 @@ public class CuentasPagarController {
     public CuentasPagarController(ObtenerCuentasPagarInteractor obtenerCuentasPagarInteractor,
             ObtenerCuentaPagarPorIdInteractor obtenerCuentaPagarPorIdInteractor,
             RegistrarNuevoAbonoInteractor registrarNuevoAbonoInteractor,
+            AnularAbonoInteractor anularAbonoInteractor,
             ObtenerAbonosPorCuentaPagarInteractor obtenerAbonosPorCuentaPagarInteractor,
             ObtenerAbonoPorIdInteractor obtenerAbonoPorIdInteractor,
             ObtenerAbonosInteractor obtenerAbonosInteractor) {
         this.obtenerCuentasPagarInteractor = obtenerCuentasPagarInteractor;
         this.obtenerCuentaPagarPorIdInteractor = obtenerCuentaPagarPorIdInteractor;
         this.registrarNuevoAbonoInteractor = registrarNuevoAbonoInteractor;
+        this.anularAbonoInteractor = anularAbonoInteractor;
         this.obtenerAbonosPorCuentaPagarInteractor = obtenerAbonosPorCuentaPagarInteractor;
         this.obtenerAbonoPorIdInteractor = obtenerAbonoPorIdInteractor;
         this.obtenerAbonosInteractor = obtenerAbonosInteractor;
@@ -230,6 +235,35 @@ public class CuentasPagarController {
 
         } catch (final Exception excepcion) {
             var userMessage = "Error al registrar el abono";
+            return new ResponseEntity<>(
+                    GenericResponse.build(List.of(userMessage)),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{cuentaId}/abonos/{abonoId}/anular")
+    public ResponseEntity<GenericResponse> anularAbono(
+            @PathVariable UUID cuentaId,
+            @PathVariable UUID abonoId,
+            @RequestBody AnularAbonoDTO anularAbonoDTO,
+            @RequestHeader(value = "x-suscripcion-id") UUID suscripcionId) {
+
+        try {
+            anularAbonoDTO.setAbonoId(abonoId);
+            anularAbonoDTO.setCuentaPagarId(cuentaId);
+            anularAbonoDTO.setSuscripcionId(suscripcionId);
+
+            anularAbonoInteractor.ejecutar(anularAbonoDTO);
+
+            return GenerateResponse.generateSuccessResponse(
+                    List.of("El abono ha sido anulado correctamente"));
+
+        } catch (final AgroSyncException excepcion) {
+            return GenerateResponse.generateBadRequestResponse(
+                    List.of(excepcion.getMensajeUsuario()));
+
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al anular el abono";
             return new ResponseEntity<>(
                     GenericResponse.build(List.of(userMessage)),
                     HttpStatus.INTERNAL_SERVER_ERROR);

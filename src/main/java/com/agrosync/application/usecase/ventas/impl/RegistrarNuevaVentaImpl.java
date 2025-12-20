@@ -3,6 +3,7 @@ package com.agrosync.application.usecase.ventas.impl;
 import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.domain.enums.ventas.EstadoVentaEnum;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
@@ -70,6 +71,7 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         VentaEntity venta = ventaEntityMapper.toEntity(data);
         SuscripcionEntity suscripcion = SuscripcionEntity.create(data.getSuscripcionId());
         venta.setSuscripcion(suscripcion);
+        venta.setEstado(EstadoVentaEnum.ACTIVA);
 
         LocalDate fechaVenta = ObjectHelper.getDefault(data.getFechaVenta(), LocalDate.now());
         venta.setFechaVenta(fechaVenta);

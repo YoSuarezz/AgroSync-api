@@ -4,7 +4,8 @@ public enum EstadoAnimalEnum {
     MUERTO,
     VENDIDO,
     NO_DISPONIBLE,
-    DISPONIBLE
+    DISPONIBLE,
+    ANULADO
 }
 
 

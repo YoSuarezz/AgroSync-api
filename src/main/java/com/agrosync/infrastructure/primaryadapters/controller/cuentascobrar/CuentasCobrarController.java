@@ -1,5 +1,6 @@
 package com.agrosync.infrastructure.primaryadapters.controller.cuentascobrar;
 
+import com.agrosync.application.primaryports.dto.cobros.request.AnularCobroDTO;
 import com.agrosync.application.primaryports.dto.cobros.request.CobroIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.cobros.request.CobroPageDTO;
 import com.agrosync.application.primaryports.dto.cobros.request.RegistrarCobroDTO;
@@ -10,6 +11,7 @@ import com.agrosync.application.primaryports.dto.cuentascobrar.response.ObtenerC
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.application.primaryports.interactor.cobros.AnularCobroInteractor;
 import com.agrosync.application.primaryports.interactor.cobros.ObtenerCobroPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.cobros.ObtenerCobrosInteractor;
 import com.agrosync.application.primaryports.interactor.cobros.ObtenerCobrosPorCuentaCobrarInteractor;
@@ -18,6 +20,7 @@ import com.agrosync.application.primaryports.interactor.cuentascobrar.ObtenerCue
 import com.agrosync.application.primaryports.interactor.cuentascobrar.ObtenerCuentasCobrarInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.GenericResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.cobros.CobroResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.cuentascobrar.CuentaCobrarResponse;
@@ -36,6 +39,7 @@ public class CuentasCobrarController {
     private final ObtenerCuentasCobrarInteractor obtenerCuentasCobrarInteractor;
     private final ObtenerCuentaCobrarPorIdInteractor obtenerCuentaCobrarPorIdInteractor;
     private final RegistrarNuevoCobroInteractor registrarNuevoCobroInteractor;
+    private final AnularCobroInteractor anularCobroInteractor;
     private final ObtenerCobrosPorCuentaCobrarInteractor obtenerCobrosPorCuentaCobrarInteractor;
     private final ObtenerCobroPorIdInteractor obtenerCobroPorIdInteractor;
     private final ObtenerCobrosInteractor obtenerCobrosInteractor;
@@ -43,12 +47,14 @@ public class CuentasCobrarController {
     public CuentasCobrarController(ObtenerCuentasCobrarInteractor obtenerCuentasCobrarInteractor,
             ObtenerCuentaCobrarPorIdInteractor obtenerCuentaCobrarPorIdInteractor,
             RegistrarNuevoCobroInteractor registrarNuevoCobroInteractor,
+            AnularCobroInteractor anularCobroInteractor,
             ObtenerCobrosPorCuentaCobrarInteractor obtenerCobrosPorCuentaCobrarInteractor,
             ObtenerCobroPorIdInteractor obtenerCobroPorIdInteractor,
             ObtenerCobrosInteractor obtenerCobrosInteractor) {
         this.obtenerCuentasCobrarInteractor = obtenerCuentasCobrarInteractor;
         this.obtenerCuentaCobrarPorIdInteractor = obtenerCuentaCobrarPorIdInteractor;
         this.registrarNuevoCobroInteractor = registrarNuevoCobroInteractor;
+        this.anularCobroInteractor = anularCobroInteractor;
         this.obtenerCobrosPorCuentaCobrarInteractor = obtenerCobrosPorCuentaCobrarInteractor;
         this.obtenerCobroPorIdInteractor = obtenerCobroPorIdInteractor;
         this.obtenerCobrosInteractor = obtenerCobrosInteractor;
@@ -229,6 +235,35 @@ public class CuentasCobrarController {
             var userMessage = "Error al registrar el cobro";
             var response = CobroResponse.<Void>build(List.of(userMessage), null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{cuentaId}/cobros/{cobroId}/anular")
+    public ResponseEntity<GenericResponse> anularCobro(
+            @PathVariable UUID cuentaId,
+            @PathVariable UUID cobroId,
+            @RequestBody AnularCobroDTO anularCobroDTO,
+            @RequestHeader(value = "x-suscripcion-id") UUID suscripcionId) {
+
+        try {
+            anularCobroDTO.setCobroId(cobroId);
+            anularCobroDTO.setCuentaCobrarId(cuentaId);
+            anularCobroDTO.setSuscripcionId(suscripcionId);
+
+            anularCobroInteractor.ejecutar(anularCobroDTO);
+
+            return GenerateResponse.generateSuccessResponse(
+                    List.of("El cobro ha sido anulado correctamente"));
+
+        } catch (final AgroSyncException excepcion) {
+            return GenerateResponse.generateBadRequestResponse(
+                    List.of(excepcion.getMensajeUsuario()));
+
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al anular el cobro";
+            return new ResponseEntity<>(
+                    GenericResponse.build(List.of(userMessage)),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

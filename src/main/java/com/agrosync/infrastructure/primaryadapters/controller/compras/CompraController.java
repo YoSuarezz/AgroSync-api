@@ -1,10 +1,12 @@
 package com.agrosync.infrastructure.primaryadapters.controller.compras;
 
+import com.agrosync.application.primaryports.dto.compras.request.AnularCompraDTO;
 import com.agrosync.application.primaryports.dto.compras.request.CompraIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.compras.request.CompraPageDTO;
 import com.agrosync.application.primaryports.dto.compras.request.RegistrarNuevaCompraDTO;
 import com.agrosync.application.primaryports.dto.compras.response.ObtenerCompraDTO;
 import com.agrosync.application.primaryports.dto.compras.response.ObtenerCompraDetalleDTO;
+import com.agrosync.application.primaryports.interactor.compras.AnularCompraInteractor;
 import com.agrosync.application.primaryports.interactor.compras.ObtenerComprasInteractor;
 import com.agrosync.application.primaryports.interactor.compras.ObtenerCompraPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.compras.RegistrarNuevaCompraInteractor;
@@ -29,13 +31,16 @@ public class CompraController {
     private final RegistrarNuevaCompraInteractor registrarNuevaCompraInteractor;
     private final ObtenerComprasInteractor obtenerComprasInteractor;
     private final ObtenerCompraPorIdInteractor obtenerCompraPorIdInteractor;
+    private final AnularCompraInteractor anularCompraInteractor;
 
     public CompraController(RegistrarNuevaCompraInteractor registrarNuevaCompraInteractor,
                             ObtenerComprasInteractor obtenerComprasInteractor,
-                            ObtenerCompraPorIdInteractor obtenerCompraPorIdInteractor) {
+                            ObtenerCompraPorIdInteractor obtenerCompraPorIdInteractor,
+                            AnularCompraInteractor anularCompraInteractor) {
         this.registrarNuevaCompraInteractor = registrarNuevaCompraInteractor;
         this.obtenerComprasInteractor = obtenerComprasInteractor;
         this.obtenerCompraPorIdInteractor = obtenerCompraPorIdInteractor;
+        this.anularCompraInteractor = anularCompraInteractor;
     }
 
     @PostMapping()
@@ -96,6 +101,23 @@ public class CompraController {
             var userMessage = "Error al consultar la Compra";
             var compraResponse = CompraResponse.<ObtenerCompraDetalleDTO>build(List.of(userMessage), null);
             return new ResponseEntity<>(compraResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}/anular")
+    public ResponseEntity<GenericResponse> anularCompra(@PathVariable UUID id,
+                                                        @RequestBody AnularCompraDTO anularCompraDTO,
+                                                        @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+        try {
+            anularCompraDTO.setCompraId(id);
+            anularCompraDTO.setSuscripcionId(suscripcionId);
+            anularCompraInteractor.ejecutar(anularCompraDTO);
+            return GenerateResponse.generateSuccessResponse(List.of("La compra ha sido anulada correctamente"));
+        } catch (final AgroSyncException excepcion) {
+            return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al anular la compra";
+            return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

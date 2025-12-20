@@ -13,6 +13,8 @@ import com.agrosync.application.secondaryports.repository.CuentaPagarRepository;
 import com.agrosync.application.usecase.carteras.ActualizarCartera;
 import com.agrosync.application.usecase.cuentas.CompensarCuentas;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
+import com.agrosync.domain.enums.abonos.EstadoAbonoEnum;
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import org.springframework.stereotype.Service;
@@ -184,6 +186,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         abono.setMetodoPago(MetodoPagoEnum.OTRO);
         abono.setConcepto(concepto);
         abono.setSuscripcion(suscripcion);
+        abono.setEstado(EstadoAbonoEnum.ACTIVO);
         return abono;
     }
 
@@ -196,6 +199,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         cobro.setMetodoPago(MetodoPagoEnum.OTRO);
         cobro.setConcepto(concepto);
         cobro.setSuscripcion(suscripcion);
+        cobro.setEstado(EstadoCobroEnum.ACTIVO);
         return cobro;
     }
 

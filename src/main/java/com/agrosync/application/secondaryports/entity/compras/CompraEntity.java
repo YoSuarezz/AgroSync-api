@@ -8,10 +8,12 @@ import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
+import com.agrosync.domain.enums.compras.EstadoCompraEnum;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -35,6 +37,16 @@ public class CompraEntity extends Auditoria {
     @Column(name = "precio_total_compra")
     private BigDecimal precioTotalCompra;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado")
+    private EstadoCompraEnum estado;
+
+    @Column(name = "motivo_anulacion")
+    private String motivoAnulacion;
+
+    @Column(name = "fecha_anulacion")
+    private LocalDateTime fechaAnulacion;
+
     @OneToOne(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)
     private LoteEntity lote;
 
@@ -51,32 +63,34 @@ public class CompraEntity extends Auditoria {
         setProveedor(UsuarioEntity.create());
         setFechaCompra(LocalDate.now());
         setPrecioTotalCompra(BigDecimal.ZERO);
+        setEstado(EstadoCompraEnum.ACTIVA);
         setLote(LoteEntity.create());
         setCuentaPagar(CuentaPagarEntity.create());
         setSuscripcion(SuscripcionEntity.create());
     }
 
-    public CompraEntity(UUID id, String numeroCompra, UsuarioEntity proveedor, LocalDate fechaCompra, BigDecimal precioTotalCompra, LoteEntity lote, CuentaPagarEntity cuentaPagar, SuscripcionEntity suscripcion) {
+    public CompraEntity(UUID id, String numeroCompra, UsuarioEntity proveedor, LocalDate fechaCompra, BigDecimal precioTotalCompra, EstadoCompraEnum estado, LoteEntity lote, CuentaPagarEntity cuentaPagar, SuscripcionEntity suscripcion) {
         setId(id);
         setNumeroCompra(numeroCompra);
         setProveedor(proveedor);
         setFechaCompra(fechaCompra);
         setPrecioTotalCompra(precioTotalCompra);
+        setEstado(estado);
         setLote(lote);
         setCuentaPagar(cuentaPagar);
         setSuscripcion(suscripcion);
     }
 
-    public static CompraEntity create(UUID id, String numeroCompra, UsuarioEntity proveedor, LocalDate fechaCompra, BigDecimal precioTotalCompra, LoteEntity lote, CuentaPagarEntity cuentaPagar, SuscripcionEntity suscripcion) {
-        return new CompraEntity(id, numeroCompra, proveedor, fechaCompra, precioTotalCompra, lote, cuentaPagar, suscripcion);
+    public static CompraEntity create(UUID id, String numeroCompra, UsuarioEntity proveedor, LocalDate fechaCompra, BigDecimal precioTotalCompra, EstadoCompraEnum estado, LoteEntity lote, CuentaPagarEntity cuentaPagar, SuscripcionEntity suscripcion) {
+        return new CompraEntity(id, numeroCompra, proveedor, fechaCompra, precioTotalCompra, estado, lote, cuentaPagar, suscripcion);
     }
 
     public static CompraEntity create(UUID id) {
-        return new CompraEntity(id, TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, LoteEntity.create(), CuentaPagarEntity.create(), SuscripcionEntity.create());
+        return new CompraEntity(id, TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, EstadoCompraEnum.ACTIVA, LoteEntity.create(), CuentaPagarEntity.create(), SuscripcionEntity.create());
     }
 
     public static CompraEntity create() {
-        return new CompraEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, LoteEntity.create(), CuentaPagarEntity.create(), SuscripcionEntity.create());
+        return new CompraEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, EstadoCompraEnum.ACTIVA, LoteEntity.create(), CuentaPagarEntity.create(), SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -141,5 +155,29 @@ public class CompraEntity extends Auditoria {
 
     public void setSuscripcion(SuscripcionEntity suscripcion) {
         this.suscripcion = suscripcion;
+    }
+
+    public EstadoCompraEnum getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoCompraEnum estado) {
+        this.estado = ObjectHelper.getDefault(estado, EstadoCompraEnum.ACTIVA);
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
+    }
+
+    public LocalDateTime getFechaAnulacion() {
+        return fechaAnulacion;
+    }
+
+    public void setFechaAnulacion(LocalDateTime fechaAnulacion) {
+        this.fechaAnulacion = fechaAnulacion;
     }
 }

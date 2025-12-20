@@ -106,5 +106,49 @@ public class ActualizarCarteraImpl implements ActualizarCartera {
             carteraRepository.save(cartera);
         }
     }
+
+    @Override
+    public void revertirAbono(UUID usuarioId, UUID suscripcionId, BigDecimal montoAbono) {
+        if (ObjectHelper.isNull(usuarioId) || ObjectHelper.isNull(suscripcionId) || ObjectHelper.isNull(montoAbono)) {
+            return;
+        }
+
+        Optional<CarteraEntity> carteraOpt = carteraRepository.findByUsuario_IdAndSuscripcion_Id(usuarioId, suscripcionId);
+        if (carteraOpt.isPresent()) {
+            CarteraEntity cartera = carteraOpt.get();
+
+            // Incrementar total de cuentas por pagar (se revierte el abono)
+            BigDecimal totalCuentasPagar = ObjectHelper.getDefault(cartera.getTotalCuentasPagar(), BigDecimal.ZERO);
+            cartera.setTotalCuentasPagar(totalCuentasPagar.add(montoAbono));
+
+            // Al revertir abono, el proveedor vuelve a tener saldo a favor (saldo sube)
+            BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
+            cartera.setSaldoActual(saldoActual.add(montoAbono));
+
+            carteraRepository.save(cartera);
+        }
+    }
+
+    @Override
+    public void revertirCobro(UUID usuarioId, UUID suscripcionId, BigDecimal montoCobro) {
+        if (ObjectHelper.isNull(usuarioId) || ObjectHelper.isNull(suscripcionId) || ObjectHelper.isNull(montoCobro)) {
+            return;
+        }
+
+        Optional<CarteraEntity> carteraOpt = carteraRepository.findByUsuario_IdAndSuscripcion_Id(usuarioId, suscripcionId);
+        if (carteraOpt.isPresent()) {
+            CarteraEntity cartera = carteraOpt.get();
+
+            // Incrementar total de cuentas por cobrar (se revierte el cobro)
+            BigDecimal totalCuentasCobrar = ObjectHelper.getDefault(cartera.getTotalCuentasCobrar(), BigDecimal.ZERO);
+            cartera.setTotalCuentasCobrar(totalCuentasCobrar.add(montoCobro));
+
+            // Al revertir cobro, el cliente vuelve a deber (saldo baja)
+            BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
+            cartera.setSaldoActual(saldoActual.subtract(montoCobro));
+
+            carteraRepository.save(cartera);
+        }
+    }
 }
 

@@ -32,5 +32,17 @@ public interface ActualizarCartera {
      * El saldo actual disminuye porque pagamos una deuda.
      */
     void reducirCuentasPagarPorAbono(UUID usuarioId, UUID suscripcionId, BigDecimal montoAbono);
+
+    /**
+     * Revierte el efecto de un abono anulado.
+     * Incrementa las cuentas por pagar y el saldo del proveedor.
+     */
+    void revertirAbono(UUID usuarioId, UUID suscripcionId, BigDecimal montoAbono);
+
+    /**
+     * Revierte el efecto de un cobro anulado.
+     * Incrementa las cuentas por cobrar y reduce el saldo del cliente.
+     */
+    void revertirCobro(UUID usuarioId, UUID suscripcionId, BigDecimal montoCobro);
 }
 
