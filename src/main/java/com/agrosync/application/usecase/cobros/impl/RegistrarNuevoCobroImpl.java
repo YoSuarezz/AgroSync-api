@@ -1,14 +1,15 @@
 package com.agrosync.application.usecase.cobros.impl;
 
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
-import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import com.agrosync.application.secondaryports.entity.cobros.CobroEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.mapper.cobros.CobroEntityMapper;
 import com.agrosync.application.secondaryports.mapper.cuentascobrar.CuentaCobrarEntityMapper;
-import com.agrosync.application.secondaryports.repository.CarteraRepository;
 import com.agrosync.application.secondaryports.repository.CobroRepository;
 import com.agrosync.application.secondaryports.repository.CuentaCobrarRepository;
+import com.agrosync.application.usecase.carteras.ActualizarCartera;
 import com.agrosync.application.usecase.cobros.RegistrarNuevoCobro;
 import com.agrosync.application.usecase.cobros.rulesvalidator.RegistrarNuevoCobroRulesValidator;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
@@ -28,7 +29,7 @@ public class RegistrarNuevoCobroImpl implements RegistrarNuevoCobro {
 
     private final CuentaCobrarRepository cuentaCobrarRepository;
     private final CobroRepository cobroRepository;
-    private final CarteraRepository carteraRepository;
+    private final ActualizarCartera actualizarCartera;
     private final RegistrarNuevoCobroRulesValidator rulesValidator;
     private final CuentaCobrarEntityMapper cuentaCobrarMapper;
     private final CobroEntityMapper cobroEntityMapper;
@@ -36,14 +37,14 @@ public class RegistrarNuevoCobroImpl implements RegistrarNuevoCobro {
     public RegistrarNuevoCobroImpl(
             CuentaCobrarRepository cuentaCobrarRepository,
             CobroRepository cobroRepository,
-            CarteraRepository carteraRepository,
+            ActualizarCartera actualizarCartera,
             RegistrarNuevoCobroRulesValidator rulesValidator,
             CuentaCobrarEntityMapper cuentaCobrarMapper,
             CobroEntityMapper cobroEntityMapper
     ) {
         this.cuentaCobrarRepository = cuentaCobrarRepository;
         this.cobroRepository = cobroRepository;
-        this.carteraRepository = carteraRepository;
+        this.actualizarCartera = actualizarCartera;
         this.rulesValidator = rulesValidator;
         this.cuentaCobrarMapper = cuentaCobrarMapper;
         this.cobroEntityMapper = cobroEntityMapper;
@@ -75,6 +76,8 @@ public class RegistrarNuevoCobroImpl implements RegistrarNuevoCobro {
         // 5. Crear y guardar el cobro usando el mapper
         CobroEntity cobroEntity = cobroEntityMapper.toEntity(cobroDomain);
         cobroEntity.setCuentaCobrar(cuentaEntity);
+        cobroEntity.setSuscripcion(SuscripcionEntity.create(cobroDomain.getSuscripcionId()));
+        cobroEntity.setEstado(EstadoCobroEnum.ACTIVO);
 
         cobroRepository.save(cobroEntity);
 
@@ -93,24 +96,11 @@ public class RegistrarNuevoCobroImpl implements RegistrarNuevoCobro {
 
         cuentaCobrarRepository.save(cuentaEntity);
 
-        // 8. Actualizar cartera del cliente
-        actualizarCarteraCliente(cuentaEntity, cobroDomain.getMonto());
-    }
-
-    private void actualizarCarteraCliente(CuentaCobrarEntity cuentaCobrar, BigDecimal montoCobro) {
-        CarteraEntity cartera = cuentaCobrar.getCliente().getCartera();
-
-        if (cartera != null) {
-            // Reducir cuentas por cobrar del cliente (nos pagó, ya no nos debe tanto)
-            BigDecimal totalCuentasCobrar = ObjectHelper.getDefault(cartera.getTotalCuentasCobrar(), BigDecimal.ZERO);
-            BigDecimal nuevoTotalCuentasCobrar = totalCuentasCobrar.subtract(montoCobro);
-            cartera.setTotalCuentasCobrar(nuevoTotalCuentasCobrar.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : nuevoTotalCuentasCobrar);
-
-            // Aumentar saldo del cliente (nos debe menos, su saldo negativo sube hacia 0)
-            BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
-            cartera.setSaldoActual(saldoActual.add(montoCobro));
-
-            carteraRepository.save(cartera);
-        }
+        // 8. Actualizar cartera del cliente usando el servicio centralizado
+        actualizarCartera.reducirCuentasCobrarPorCobro(
+                cuentaEntity.getCliente().getId(),
+                cobroDomain.getSuscripcionId(),
+                cobroDomain.getMonto()
+        );
     }
 }

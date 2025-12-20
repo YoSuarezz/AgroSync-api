@@ -1,10 +1,12 @@
 package com.agrosync.infrastructure.primaryadapters.controller.ventas;
 
+import com.agrosync.application.primaryports.dto.ventas.request.AnularVentaDTO;
 import com.agrosync.application.primaryports.dto.ventas.request.RegistrarNuevaVentaDTO;
 import com.agrosync.application.primaryports.dto.ventas.request.VentaIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.ventas.request.VentaPageDTO;
 import com.agrosync.application.primaryports.dto.ventas.response.ObtenerVentaDetalleDTO;
 import com.agrosync.application.primaryports.dto.ventas.response.ObtenerVentasDTO;
+import com.agrosync.application.primaryports.interactor.ventas.AnularVentaInteractor;
 import com.agrosync.application.primaryports.interactor.ventas.ObtenerVentaPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.ventas.ObtenerVentasInteractor;
 import com.agrosync.application.primaryports.interactor.ventas.RegistrarNuevaVentaInteractor;
@@ -29,13 +31,16 @@ public class VentaController {
     private final RegistrarNuevaVentaInteractor registrarNuevaVentaInteractor;
     private final ObtenerVentasInteractor obtenerVentasInteractor;
     private final ObtenerVentaPorIdInteractor obtenerVentaPorIdInteractor;
+    private final AnularVentaInteractor anularVentaInteractor;
 
     public VentaController(RegistrarNuevaVentaInteractor registrarNuevaVentaInteractor,
                            ObtenerVentasInteractor obtenerVentasInteractor,
-                           ObtenerVentaPorIdInteractor obtenerVentaPorIdInteractor) {
+                           ObtenerVentaPorIdInteractor obtenerVentaPorIdInteractor,
+                           AnularVentaInteractor anularVentaInteractor) {
         this.registrarNuevaVentaInteractor = registrarNuevaVentaInteractor;
         this.obtenerVentasInteractor = obtenerVentasInteractor;
         this.obtenerVentaPorIdInteractor = obtenerVentaPorIdInteractor;
+        this.anularVentaInteractor = anularVentaInteractor;
     }
 
     @PostMapping
@@ -78,7 +83,6 @@ public class VentaController {
             var response = VentaResponse.build(List.of(excepcion.getMessage()), PageResponse.from(Page.<ObtenerVentasDTO>empty()));
             return GenerateResponse.generateBadRequestResponseWithData(response);
         } catch (final Exception excepcion) {
-            excepcion.printStackTrace();
             var response = VentaResponse.build(List.of("Error al consultar las Ventas"), PageResponse.from(Page.<ObtenerVentasDTO>empty()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -99,6 +103,23 @@ public class VentaController {
             var userMessage = "Error al consultar la Venta";
             var ventaResponse = VentaResponse.<ObtenerVentaDetalleDTO>build(List.of(userMessage), null);
             return new ResponseEntity<>(ventaResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}/anular")
+    public ResponseEntity<GenericResponse> anularVenta(@PathVariable UUID id,
+                                                       @RequestBody AnularVentaDTO anularVentaDTO,
+                                                       @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+        try {
+            anularVentaDTO.setVentaId(id);
+            anularVentaDTO.setSuscripcionId(suscripcionId);
+            anularVentaInteractor.ejecutar(anularVentaDTO);
+            return GenerateResponse.generateSuccessResponse(List.of("La venta ha sido anulada correctamente"));
+        } catch (final AgroSyncException excepcion) {
+            return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al anular la venta";
+            return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

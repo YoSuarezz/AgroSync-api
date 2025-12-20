@@ -1,16 +1,17 @@
 package com.agrosync.application.usecase.abonos.impl;
 
+import com.agrosync.domain.enums.abonos.EstadoAbonoEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.application.secondaryports.entity.abonos.AbonoEntity;
-import com.agrosync.application.secondaryports.entity.carteras.CarteraEntity;
 import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.mapper.abonos.AbonoEntityMapper;
 import com.agrosync.application.secondaryports.mapper.cuentaspagar.CuentaPagarEntityMapper;
 import com.agrosync.application.secondaryports.repository.AbonoRepository;
-import com.agrosync.application.secondaryports.repository.CarteraRepository;
 import com.agrosync.application.secondaryports.repository.CuentaPagarRepository;
 import com.agrosync.application.usecase.abonos.RegistrarNuevoAbono;
 import com.agrosync.application.usecase.abonos.rulesvalidator.RegistrarNuevoAbonoRulesValidator;
+import com.agrosync.application.usecase.carteras.ActualizarCartera;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.domain.abonos.AbonoDomain;
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
@@ -28,7 +29,7 @@ public class RegistrarNuevoAbonoImpl implements RegistrarNuevoAbono {
 
     private final CuentaPagarRepository cuentaPagarRepository;
     private final AbonoRepository abonoRepository;
-    private final CarteraRepository carteraRepository;
+    private final ActualizarCartera actualizarCartera;
     private final RegistrarNuevoAbonoRulesValidator rulesValidator;
     private final CuentaPagarEntityMapper cuentaPagarMapper;
     private final AbonoEntityMapper abonoEntityMapper;
@@ -36,14 +37,14 @@ public class RegistrarNuevoAbonoImpl implements RegistrarNuevoAbono {
     public RegistrarNuevoAbonoImpl(
             CuentaPagarRepository cuentaPagarRepository,
             AbonoRepository abonoRepository,
-            CarteraRepository carteraRepository,
+            ActualizarCartera actualizarCartera,
             RegistrarNuevoAbonoRulesValidator rulesValidator,
             CuentaPagarEntityMapper cuentaPagarMapper,
             AbonoEntityMapper abonoEntityMapper
     ) {
         this.cuentaPagarRepository = cuentaPagarRepository;
         this.abonoRepository = abonoRepository;
-        this.carteraRepository = carteraRepository;
+        this.actualizarCartera = actualizarCartera;
         this.rulesValidator = rulesValidator;
         this.cuentaPagarMapper = cuentaPagarMapper;
         this.abonoEntityMapper = abonoEntityMapper;
@@ -75,6 +76,8 @@ public class RegistrarNuevoAbonoImpl implements RegistrarNuevoAbono {
         // 5. Crear y guardar el abono usando el mapper
         AbonoEntity abonoEntity = abonoEntityMapper.toEntity(abonoDomain);
         abonoEntity.setCuentaPagar(cuentaEntity);
+        abonoEntity.setSuscripcion(SuscripcionEntity.create(abonoDomain.getSuscripcionId()));
+        abonoEntity.setEstado(EstadoAbonoEnum.ACTIVO);
 
         abonoRepository.save(abonoEntity);
 
@@ -93,24 +96,11 @@ public class RegistrarNuevoAbonoImpl implements RegistrarNuevoAbono {
 
         cuentaPagarRepository.save(cuentaEntity);
 
-        // 8. Actualizar cartera del proveedor
-        actualizarCarteraProveedor(cuentaEntity, abonoDomain.getMonto());
-    }
-
-    private void actualizarCarteraProveedor(CuentaPagarEntity cuentaPagar, BigDecimal montoAbono) {
-        CarteraEntity cartera = cuentaPagar.getProveedor().getCartera();
-
-        if (cartera != null) {
-            // Reducir cuentas por pagar del proveedor (le pagamos, ya no le debemos tanto)
-            BigDecimal totalCuentasPagar = ObjectHelper.getDefault(cartera.getTotalCuentasPagar(), BigDecimal.ZERO);
-            BigDecimal nuevoTotalCuentasPagar = totalCuentasPagar.subtract(montoAbono);
-            cartera.setTotalCuentasPagar(nuevoTotalCuentasPagar.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : nuevoTotalCuentasPagar);
-
-            // Reducir saldo del proveedor (le debemos menos, su saldo a favor baja hacia 0)
-            BigDecimal saldoActual = ObjectHelper.getDefault(cartera.getSaldoActual(), BigDecimal.ZERO);
-            cartera.setSaldoActual(saldoActual.subtract(montoAbono));
-
-            carteraRepository.save(cartera);
-        }
+        // 8. Actualizar cartera del proveedor usando el servicio centralizado
+        actualizarCartera.reducirCuentasPagarPorAbono(
+                cuentaEntity.getProveedor().getId(),
+                abonoDomain.getSuscripcionId(),
+                abonoDomain.getMonto()
+        );
     }
 }

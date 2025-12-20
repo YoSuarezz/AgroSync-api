@@ -16,6 +16,7 @@ public class CobroDomain extends BaseDomain {
     private MetodoPagoEnum metodoPago;
     private String concepto;
     private UUID suscripcionId;
+    private String motivoAnulacion;
 
     public CobroDomain() {
         super();
@@ -77,5 +78,13 @@ public class CobroDomain extends BaseDomain {
 
     public void setSuscripcionId(UUID suscripcionId) {
         this.suscripcionId = suscripcionId;
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
     }
 }

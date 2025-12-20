@@ -18,6 +18,7 @@ public class CompraDomain extends BaseDomain {
     private LoteDomain lote;
     private CuentaPagarDomain cuentaPagar;
     private UUID suscripcionId;
+    private String motivoAnulacion;
 
     public CompraDomain() {
         super();
@@ -88,5 +89,13 @@ public class CompraDomain extends BaseDomain {
 
     public void setSuscripcionId(UUID suscripcionId) {
         this.suscripcionId = suscripcionId;
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
     }
 }

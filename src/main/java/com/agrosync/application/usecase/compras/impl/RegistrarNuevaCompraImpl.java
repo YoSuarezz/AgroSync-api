@@ -1,6 +1,7 @@
 package com.agrosync.application.usecase.compras.impl;
 
 import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.domain.enums.compras.EstadoCompraEnum;
 import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
@@ -126,6 +127,7 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
     private void configurarCompra(CompraEntity compra, SuscripcionEntity suscripcion, LocalDate fechaCompra) {
         compra.setSuscripcion(suscripcion);
         compra.setFechaCompra(fechaCompra);
+        compra.setEstado(EstadoCompraEnum.ACTIVA);
     }
 
     private void configurarLote(LoteEntity lote, CompraEntity compra, SuscripcionEntity suscripcion, LocalDate fechaCompra) {

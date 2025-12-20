@@ -19,6 +19,7 @@ public class VentaDomain extends BaseDomain {
     private List<AnimalDomain> animales;
     private CuentaCobrarDomain cuentaCobrar;
     private UUID suscripcionId;
+    private String motivoAnulacion;
 
     public VentaDomain() {
         super();
@@ -89,5 +90,13 @@ public class VentaDomain extends BaseDomain {
 
     public void setSuscripcionId(UUID suscripcionId) {
         this.suscripcionId = suscripcionId;
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
     }
 }

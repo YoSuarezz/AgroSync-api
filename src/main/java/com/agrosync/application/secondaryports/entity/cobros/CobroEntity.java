@@ -1,5 +1,6 @@
 package com.agrosync.application.secondaryports.entity.cobros;
 
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
@@ -38,6 +39,16 @@ public class CobroEntity extends Auditoria {
     @Column(name = "concepto")
     private String concepto;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado")
+    private EstadoCobroEnum estado;
+
+    @Column(name = "motivo_anulacion")
+    private String motivoAnulacion;
+
+    @Column(name = "fecha_anulacion")
+    private LocalDateTime fechaAnulacion;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_suscripcion")
     private SuscripcionEntity suscripcion;
@@ -49,29 +60,31 @@ public class CobroEntity extends Auditoria {
         setFechaCobro(LocalDateTime.now());
         setMetodoPago(MetodoPagoEnum.OTRO);
         setConcepto(TextHelper.EMPTY);
+        setEstado(EstadoCobroEnum.ACTIVO);
         setSuscripcion(SuscripcionEntity.create());
     }
 
-    public CobroEntity(UUID id, CuentaCobrarEntity cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto, SuscripcionEntity suscripcion) {
+    public CobroEntity(UUID id, CuentaCobrarEntity cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto, EstadoCobroEnum estado, SuscripcionEntity suscripcion) {
         setId(id);
         setCuentaCobrar(cuentaCobrar);
         setMonto(monto);
         setFechaCobro(fechaCobro);
         setMetodoPago(metodoPago);
         setConcepto(concepto);
+        setEstado(estado);
         setSuscripcion(suscripcion);
     }
 
-    public static CobroEntity create(UUID id, CuentaCobrarEntity cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto, SuscripcionEntity suscripcion) {
-        return new CobroEntity(id, cuentaCobrar, monto, fechaCobro, metodoPago, concepto, suscripcion);
+    public static CobroEntity create(UUID id, CuentaCobrarEntity cuentaCobrar, BigDecimal monto, LocalDateTime fechaCobro, MetodoPagoEnum metodoPago, String concepto, EstadoCobroEnum estado, SuscripcionEntity suscripcion) {
+        return new CobroEntity(id, cuentaCobrar, monto, fechaCobro, metodoPago, concepto, estado, suscripcion);
     }
 
     public static CobroEntity create(UUID id) {
-        return new CobroEntity(id, CuentaCobrarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, TextHelper.EMPTY, SuscripcionEntity.create());
+        return new CobroEntity(id, CuentaCobrarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, TextHelper.EMPTY, EstadoCobroEnum.ACTIVO, SuscripcionEntity.create());
     }
 
     public static CobroEntity create() {
-        return new CobroEntity(UUIDHelper.getDefault(), CuentaCobrarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, TextHelper.EMPTY, SuscripcionEntity.create());
+        return new CobroEntity(UUIDHelper.getDefault(), CuentaCobrarEntity.create(), BigDecimal.ZERO, LocalDateTime.now(), MetodoPagoEnum.OTRO, TextHelper.EMPTY, EstadoCobroEnum.ACTIVO, SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -128,5 +141,29 @@ public class CobroEntity extends Auditoria {
 
     public void setSuscripcion(SuscripcionEntity suscripcion) {
         this.suscripcion = suscripcion;
+    }
+
+    public EstadoCobroEnum getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoCobroEnum estado) {
+        this.estado = ObjectHelper.getDefault(estado, EstadoCobroEnum.ACTIVO);
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
+    }
+
+    public LocalDateTime getFechaAnulacion() {
+        return fechaAnulacion;
+    }
+
+    public void setFechaAnulacion(LocalDateTime fechaAnulacion) {
+        this.fechaAnulacion = fechaAnulacion;
     }
 }
