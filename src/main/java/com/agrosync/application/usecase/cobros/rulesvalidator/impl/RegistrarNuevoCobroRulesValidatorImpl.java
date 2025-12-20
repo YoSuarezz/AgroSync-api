@@ -3,7 +3,6 @@ package com.agrosync.application.usecase.cobros.rulesvalidator.impl;
 import com.agrosync.application.usecase.cobros.rulesvalidator.RegistrarNuevoCobroRulesValidator;
 import com.agrosync.domain.cobros.CobroDomain;
 import com.agrosync.domain.cobros.rules.CuentaCobrarDisponibleParaCobroRule;
-import com.agrosync.domain.cobros.rules.FechaCobroValidaRule;
 import com.agrosync.domain.cobros.rules.MontoCobroMayorACeroRule;
 import com.agrosync.domain.cobros.rules.MontoCobroNoExcedeSaldoRule;
 import com.agrosync.domain.cuentascobrar.CuentaCobrarDomain;
@@ -18,7 +17,6 @@ public class RegistrarNuevoCobroRulesValidatorImpl implements RegistrarNuevoCobr
     private final IdentificadorCuentaCobrarExisteRule identificadorCuentaCobrarExisteRule;
     private final MontoCobroNoExcedeSaldoRule montoCobroNoExcedeSaldoRule;
     private final CuentaCobrarDisponibleParaCobroRule cuentaCobrarDisponibleParaCobroRule;
-    private final FechaCobroValidaRule fechaCobroValidaRule;
     private final SuscripcionExisteRule suscripcionExisteRule;
 
     public RegistrarNuevoCobroRulesValidatorImpl(
@@ -26,13 +24,11 @@ public class RegistrarNuevoCobroRulesValidatorImpl implements RegistrarNuevoCobr
             IdentificadorCuentaCobrarExisteRule identificadorCuentaCobrarExisteRule,
             MontoCobroNoExcedeSaldoRule montoCobroNoExcedeSaldoRule,
             CuentaCobrarDisponibleParaCobroRule cuentaCobrarDisponibleParaCobroRule,
-            FechaCobroValidaRule fechaCobroValidaRule,
             SuscripcionExisteRule suscripcionExisteRule) {
         this.montoCobroMayorACeroRule = montoCobroMayorACeroRule;
         this.identificadorCuentaCobrarExisteRule = identificadorCuentaCobrarExisteRule;
         this.montoCobroNoExcedeSaldoRule = montoCobroNoExcedeSaldoRule;
         this.cuentaCobrarDisponibleParaCobroRule = cuentaCobrarDisponibleParaCobroRule;
-        this.fechaCobroValidaRule = fechaCobroValidaRule;
         this.suscripcionExisteRule = suscripcionExisteRule;
     }
 
@@ -51,8 +47,6 @@ public class RegistrarNuevoCobroRulesValidatorImpl implements RegistrarNuevoCobr
         montoCobroMayorACeroRule.validate(data.getMonto());
         montoCobroNoExcedeSaldoRule.validate(data);
 
-        // --- Validación de fecha ---
-        fechaCobroValidaRule.validate(data.getFechaCobro());
 
         // --- Validación del estado ---
         cuentaCobrarDisponibleParaCobroRule.validate(cuentaCobrar.getEstado());
