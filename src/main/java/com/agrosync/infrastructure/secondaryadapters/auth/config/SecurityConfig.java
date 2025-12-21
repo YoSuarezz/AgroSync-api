@@ -50,7 +50,8 @@ public class SecurityConfig {
                         })
                 )
                 .authorizeHttpRequests(http -> {
-                    http.requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/health").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/health").permitAll();
                     http.anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtHelper), BasicAuthenticationFilter.class)
