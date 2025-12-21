@@ -51,6 +51,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(http -> {
                     http.requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/health").permitAll();
                     http.anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtHelper), BasicAuthenticationFilter.class)
@@ -63,6 +64,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("https://agrosyncapp.vercel.app");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         source.registerCorsConfiguration("/**", config);
