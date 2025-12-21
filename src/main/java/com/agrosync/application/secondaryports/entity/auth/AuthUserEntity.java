@@ -1,6 +1,7 @@
 package com.agrosync.application.secondaryports.entity.auth;
 
-import com.agrosync.application.primaryports.enums.auth.RolEnum;
+import com.agrosync.domain.enums.auth.RolEnum;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import jakarta.persistence.*;
 
@@ -24,23 +25,29 @@ public class AuthUserEntity {
     @Column(name = "rol", nullable = false)
     private RolEnum rol;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
+
     public AuthUserEntity() {
         this.id = UUIDHelper.getDefault();
+        this.suscripcion = null;
     }
 
-    public AuthUserEntity(UUID id, String email, String password, RolEnum rol) {
+    public AuthUserEntity(UUID id, String email, String password, RolEnum rol, SuscripcionEntity suscripcion) {
         this.id = UUIDHelper.getDefault(id, UUIDHelper.getDefault());
         this.email = email;
         this.password = password;
         this.rol = rol;
+        this.suscripcion = suscripcion;
     }
 
     public static AuthUserEntity create(UUID id, String email, String password, RolEnum rol) {
-        return new AuthUserEntity(id, email, password, rol);
+        return new AuthUserEntity(id, email, password, rol, null);
     }
 
     public static AuthUserEntity create() {
-        return new AuthUserEntity(UUIDHelper.getDefault(), null, null, RolEnum.EMPLEADO);
+        return new AuthUserEntity(UUIDHelper.getDefault(), null, null, RolEnum.EMPLEADO, null);
     }
 
     public UUID getId() {
@@ -76,6 +83,15 @@ public class AuthUserEntity {
 
     public AuthUserEntity setRol(RolEnum rol) {
         this.rol = rol;
+        return this;
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public AuthUserEntity setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = suscripcion;
         return this;
     }
 }

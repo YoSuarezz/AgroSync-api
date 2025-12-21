@@ -3,6 +3,7 @@ package com.agrosync.application.secondaryports.entity.lotes;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import jakarta.persistence.*;
@@ -40,6 +41,10 @@ public class LoteEntity extends Auditoria {
     @OneToMany(mappedBy = "lote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnimalEntity> animales;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
+
     public LoteEntity() {
         setId(UUIDHelper.getDefault());
         setCompra(null);
@@ -48,9 +53,10 @@ public class LoteEntity extends Auditoria {
         setFecha(LocalDate.now());
         setPesoTotal(BigDecimal.ZERO);
         setAnimales(new ArrayList<>());
+        setSuscripcion(SuscripcionEntity.create());
     }
 
-    public LoteEntity(UUID id, CompraEntity compra, String numeroLote, String contramarca, LocalDate fecha, BigDecimal pesoTotal, List<AnimalEntity> animales) {
+    public LoteEntity(UUID id, CompraEntity compra, String numeroLote, String contramarca, LocalDate fecha, BigDecimal pesoTotal, List<AnimalEntity> animales, SuscripcionEntity suscripcion) {
         setId(id);
         setCompra(compra);
         setNumeroLote(numeroLote);
@@ -58,18 +64,19 @@ public class LoteEntity extends Auditoria {
         setFecha(fecha);
         setPesoTotal(pesoTotal);
         setAnimales(animales);
+        setSuscripcion(suscripcion);
     }
 
-    public static LoteEntity create(UUID id, CompraEntity compra, String numeroLote, String contramarca, LocalDate fecha, BigDecimal pesoTotal, List<AnimalEntity> animales) {
-        return new LoteEntity(id, compra, numeroLote, contramarca, fecha, pesoTotal, animales);
+    public static LoteEntity create(UUID id, CompraEntity compra, String numeroLote, String contramarca, LocalDate fecha, BigDecimal pesoTotal, List<AnimalEntity> animales, SuscripcionEntity suscripcion) {
+        return new LoteEntity(id, compra, numeroLote, contramarca, fecha, pesoTotal, animales, suscripcion);
     }
 
     public static LoteEntity create(UUID id) {
-        return new LoteEntity(id, null, TextHelper.EMPTY, TextHelper.EMPTY, LocalDate.now(), BigDecimal.ZERO, new ArrayList<>());
+        return new LoteEntity(id, null, TextHelper.EMPTY, TextHelper.EMPTY, LocalDate.now(), BigDecimal.ZERO, new ArrayList<>(), SuscripcionEntity.create());
     }
 
     public static LoteEntity create() {
-        return new LoteEntity(UUIDHelper.getDefault(), null, TextHelper.EMPTY, TextHelper.EMPTY, LocalDate.now(), BigDecimal.ZERO, new ArrayList<>());
+        return new LoteEntity(UUIDHelper.getDefault(), null, TextHelper.EMPTY, TextHelper.EMPTY, LocalDate.now(), BigDecimal.ZERO, new ArrayList<>(), SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -126,5 +133,13 @@ public class LoteEntity extends Auditoria {
 
     public void setAnimales(List<AnimalEntity> animales) {
         this.animales = animales;
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public void setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = suscripcion;
     }
 }

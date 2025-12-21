@@ -1,8 +1,10 @@
 package com.agrosync.application.primaryports.dto.usuarios.request;
 
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
+
+import java.util.UUID;
 
 public class UsuarioPageDTO {
 
@@ -12,21 +14,23 @@ public class UsuarioPageDTO {
     private String sortDirection;
     private ObtenerUsuarioDTO usuario;
     private TipoUsuarioEnum tipoUsuario;
+    private UUID suscripcionId;
 
     public UsuarioPageDTO() {
     }
 
-    public UsuarioPageDTO(int page, int size, String sortBy, String sortDirection, ObtenerUsuarioDTO usuario, TipoUsuarioEnum tipoUsuario) {
+    public UsuarioPageDTO(int page, int size, String sortBy, String sortDirection, ObtenerUsuarioDTO usuario, TipoUsuarioEnum tipoUsuario, UUID suscripcionId) {
         setPage(page);
         setSize(size);
         setSortBy(sortBy);
         setSortDirection(sortDirection);
         setUsuario(usuario);
         setTipoUsuario(tipoUsuario);
+        setSuscripcionId(suscripcionId);
     }
 
-    public static UsuarioPageDTO create(int page, int size, String sortBy, String sortDirection, ObtenerUsuarioDTO usuario, TipoUsuarioEnum tipoUsuario) {
-        return new UsuarioPageDTO(page, size, sortBy, sortDirection, usuario, tipoUsuario);
+    public static UsuarioPageDTO create(int page, int size, String sortBy, String sortDirection, ObtenerUsuarioDTO usuario, TipoUsuarioEnum tipoUsuario, UUID suscripcionId) {
+        return new UsuarioPageDTO(page, size, sortBy, sortDirection, usuario, tipoUsuario, suscripcionId);
     }
 
     public int getPage() {
@@ -75,5 +79,13 @@ public class UsuarioPageDTO {
 
     public void setTipoUsuario(TipoUsuarioEnum tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

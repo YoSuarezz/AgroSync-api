@@ -2,12 +2,13 @@ package com.agrosync.application.usecase.usuarios.impl;
 
 import com.agrosync.application.primaryports.dto.usuarios.request.UsuarioPageDTO;
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.mapper.usuarios.UsuarioEntityMapper;
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.usecase.usuarios.ObtenerUsuarios;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.domain.usuarios.UsuarioDomain;
+import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,19 +21,23 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ObtenerUsuariosImpl implements ObtenerUsuarios {
 
     private final UsuarioRepository usuarioRepository;
+    private final SuscripcionExisteRule suscripcionExisteRule;
+    private final UsuarioEntityMapper usuarioEntityMapper;
 
-    public ObtenerUsuariosImpl(UsuarioRepository usuarioRepository) {
+    public ObtenerUsuariosImpl(UsuarioRepository usuarioRepository, SuscripcionExisteRule suscripcionExisteRule, UsuarioEntityMapper usuarioEntityMapper) {
         this.usuarioRepository = usuarioRepository;
+        this.suscripcionExisteRule = suscripcionExisteRule;
+        this.usuarioEntityMapper = usuarioEntityMapper;
     }
 
     @Override
     public Page<UsuarioDomain> ejecutar(UsuarioPageDTO data) {
+        suscripcionExisteRule.validate(data.getSuscripcionId());
         String sortBy = StringUtils.hasText(data.getSortBy()) ? data.getSortBy() : "nombre";
         String sortDirection = StringUtils.hasText(data.getSortDirection()) ? data.getSortDirection() : "ASC";
 
@@ -44,7 +49,7 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
         Page<UsuarioEntity> entities = usuarioRepository.findAll(spec, pageable);
 
         return new PageImpl<>(
-                UsuarioEntityMapper.INSTANCE.toDomainCollection(entities.getContent()),
+                usuarioEntityMapper.toDomainCollection(entities.getContent()),
                 pageable,
                 entities.getTotalElements()
         );
@@ -60,7 +65,7 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
             List<String> palabrasNombre = Arrays.stream(usuarioFiltro.getNombre().trim().split("\\s+"))
                     .filter(StringUtils::hasText)
                     .map(String::toLowerCase)
-                    .collect(Collectors.toList());
+                    .toList();
 
             for (String palabra : palabrasNombre) {
                 specs.add((root, query, cb) -> cb.like(cb.lower(root.get("nombre")), "%" + palabra + "%"));
@@ -72,7 +77,20 @@ public class ObtenerUsuariosImpl implements ObtenerUsuarios {
         }
 
         if (tipoFiltro != null) {
-            specs.add((root, query, cb) -> cb.equal(root.get("tipoUsuario"), tipoFiltro));
+            // Include "AMBOS" when filtering by CLIENTE or PROVEEDOR so mixed users show up in both lists
+            specs.add((root, query, cb) -> {
+                if (tipoFiltro == TipoUsuarioEnum.AMBOS) {
+                    return cb.equal(root.get("tipoUsuario"), tipoFiltro);
+                }
+                return cb.or(
+                        cb.equal(root.get("tipoUsuario"), tipoFiltro),
+                        cb.equal(root.get("tipoUsuario"), TipoUsuarioEnum.AMBOS)
+                );
+            });
+        }
+
+        if (data.getSuscripcionId() != null) {
+            specs.add((root, query, cb) -> cb.equal(root.get("suscripcion").get("id"), data.getSuscripcionId()));
         }
 
         return Specification.allOf(specs);

@@ -22,6 +22,7 @@ public class RegisterInteractorImpl implements RegisterInteractor {
         domain.setEmail(data.getEmail());
         domain.setPassword(data.getPassword());
         domain.setRol(data.getRol());
+        domain.setSuscripcionId(data.getSuscripcionId());
         return registerAuth.ejecutar(domain);
     }
 }

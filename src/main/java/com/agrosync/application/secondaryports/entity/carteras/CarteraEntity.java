@@ -1,6 +1,7 @@
 package com.agrosync.application.secondaryports.entity.carteras;
 
 import com.agrosync.application.secondaryports.entity.Auditoria;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import jakarta.persistence.*;
@@ -29,32 +30,38 @@ public class CarteraEntity extends Auditoria {
     @Column(name = "total_cuentas_cobrar")
     private BigDecimal totalCuentasCobrar;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
+
     public CarteraEntity() {
         setId(UUIDHelper.getDefault());
         setUsuario(null);
         setSaldoActual(BigDecimal.ZERO);
         setTotalCuentasPagar(BigDecimal.ZERO);
         setTotalCuentasCobrar(BigDecimal.ZERO);
+        setSuscripcion(SuscripcionEntity.create());
     }
 
-    public CarteraEntity(UUID id, UsuarioEntity usuario, BigDecimal saldoActual, BigDecimal totalCuentasPagar, BigDecimal totalCuentasCobrar) {
+    public CarteraEntity(UUID id, UsuarioEntity usuario, BigDecimal saldoActual, BigDecimal totalCuentasPagar, BigDecimal totalCuentasCobrar, SuscripcionEntity suscripcion) {
         setId(id);
         setUsuario(usuario);
         setSaldoActual(saldoActual);
         setTotalCuentasPagar(totalCuentasPagar);
         setTotalCuentasCobrar(totalCuentasCobrar);
+        setSuscripcion(suscripcion);
     }
 
-    public static CarteraEntity create(UUID id, UsuarioEntity usuario, BigDecimal saldoActual, BigDecimal totalCuentasPagar, BigDecimal totalCuentasCobrar) {
-        return new CarteraEntity(id, usuario, saldoActual, totalCuentasPagar, totalCuentasCobrar);
+    public static CarteraEntity create(UUID id, UsuarioEntity usuario, BigDecimal saldoActual, BigDecimal totalCuentasPagar, BigDecimal totalCuentasCobrar, SuscripcionEntity suscripcion) {
+        return new CarteraEntity(id, usuario, saldoActual, totalCuentasPagar, totalCuentasCobrar, suscripcion);
     }
 
     public static CarteraEntity create(UUID id) {
-        return new CarteraEntity(id, null, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+        return new CarteraEntity(id, null, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, SuscripcionEntity.create());
     }
 
     public static CarteraEntity create() {
-        return new CarteraEntity(UUIDHelper.getDefault(), null, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+        return new CarteraEntity(UUIDHelper.getDefault(), null, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -95,5 +102,13 @@ public class CarteraEntity extends Auditoria {
 
     public void setTotalCuentasCobrar(BigDecimal totalCuentasCobrar) {
         this.totalCuentasCobrar = totalCuentasCobrar;
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public void setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = suscripcion;
     }
 }

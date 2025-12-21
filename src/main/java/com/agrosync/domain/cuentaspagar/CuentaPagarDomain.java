@@ -1,6 +1,6 @@
 package com.agrosync.domain.cuentaspagar;
 
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuenta;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.abonos.AbonoDomain;
 import com.agrosync.domain.compras.CompraDomain;
@@ -19,16 +19,18 @@ public class CuentaPagarDomain extends BaseDomain {
     private BigDecimal montoTotal;
     private BigDecimal saldoPendiente;
     private List<AbonoDomain> abonos;
-    private EstadoCuenta estado;
+    private EstadoCuentaEnum estado;
     private LocalDate fechaEmision;
     private LocalDate fechaVencimiento;
+    private UUID suscripcionId;
 
     public CuentaPagarDomain() {
         super();
     }
 
-    public CuentaPagarDomain(UUID id, String numeroCuenta, CompraDomain compra, UsuarioDomain proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoDomain> abonos, EstadoCuenta estado, LocalDate fechaEmision, LocalDate fechaVencimiento) {
+    public CuentaPagarDomain(UUID id, String numeroCuenta, CompraDomain compra, UsuarioDomain proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoDomain> abonos, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento, UUID suscripcionId) {
         super(id);
+        this.suscripcionId = suscripcionId;
         setNumeroCuenta(numeroCuenta);
         setCompra(compra);
         setProveedor(proveedor);
@@ -38,6 +40,7 @@ public class CuentaPagarDomain extends BaseDomain {
         setEstado(estado);
         setFechaEmision(fechaEmision);
         setFechaVencimiento(fechaVencimiento);
+        setSuscripcionId(suscripcionId);
     }
 
     public String getNumeroCuenta() {
@@ -88,11 +91,11 @@ public class CuentaPagarDomain extends BaseDomain {
         this.abonos = abonos;
     }
 
-    public EstadoCuenta getEstado() {
+    public EstadoCuentaEnum getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoCuenta estado) {
+    public void setEstado(EstadoCuentaEnum estado) {
         this.estado = estado;
     }
 
@@ -110,5 +113,13 @@ public class CuentaPagarDomain extends BaseDomain {
 
     public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

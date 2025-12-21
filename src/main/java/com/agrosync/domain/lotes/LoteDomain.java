@@ -17,12 +17,13 @@ public class LoteDomain extends BaseDomain {
     private LocalDate fecha;
     private BigDecimal pesoTotal;
     private List<AnimalDomain> animales;
+    private UUID suscripcionId;
 
     public LoteDomain() {
         super();
     }
 
-    public LoteDomain(UUID id, CompraDomain compra, String numeroLote, String contramarca, LocalDate fecha, BigDecimal pesoTotal, List<AnimalDomain> animales) {
+    public LoteDomain(UUID id, CompraDomain compra, String numeroLote, String contramarca, LocalDate fecha, BigDecimal pesoTotal, List<AnimalDomain> animales, UUID suscripcionId) {
         super(id);
         setCompra(compra);
         setNumeroLote(numeroLote);
@@ -30,6 +31,7 @@ public class LoteDomain extends BaseDomain {
         setFecha(fecha);
         setPesoTotal(pesoTotal);
         setAnimales(animales);
+        setSuscripcionId(suscripcionId);
     }
 
     public CompraDomain getCompra() {
@@ -78,5 +80,13 @@ public class LoteDomain extends BaseDomain {
 
     public void setAnimales(List<AnimalDomain> animales) {
         this.animales = animales;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

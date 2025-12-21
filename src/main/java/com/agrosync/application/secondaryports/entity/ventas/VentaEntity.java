@@ -3,13 +3,17 @@ package com.agrosync.application.secondaryports.entity.ventas;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
+import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
+import com.agrosync.domain.enums.ventas.EstadoVentaEnum;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +27,7 @@ public class VentaEntity extends Auditoria {
     private UUID id;
 
     @Column(name = "numero_venta")
-    private String numeroVenta; // VE - contramarcaLote - 4 digitos aleatorios
+    private String numeroVenta;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente")
@@ -35,11 +39,25 @@ public class VentaEntity extends Auditoria {
     @Column(name = "precio_total_venta")
     private BigDecimal precioTotalVenta;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado")
+    private EstadoVentaEnum estado;
+
+    @Column(name = "motivo_anulacion")
+    private String motivoAnulacion;
+
+    @Column(name = "fecha_anulacion")
+    private LocalDateTime fechaAnulacion;
+
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnimalEntity> animales;
 
     @OneToOne(mappedBy = "venta", cascade = CascadeType.ALL)
     private CuentaCobrarEntity cuentaCobrar;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
 
     public VentaEntity() {
         setId(UUIDHelper.getDefault());
@@ -47,30 +65,34 @@ public class VentaEntity extends Auditoria {
         setCliente(UsuarioEntity.create());
         setFechaVenta(LocalDate.now());
         setPrecioTotalVenta(BigDecimal.ZERO);
+        setEstado(EstadoVentaEnum.ACTIVA);
         setAnimales(new ArrayList<>());
         setCuentaCobrar(null);
+        setSuscripcion(SuscripcionEntity.create());
     }
 
-    public VentaEntity(UUID id, String numeroVenta, UsuarioEntity cliente, LocalDate fechaVenta, BigDecimal precioTotalVenta, List<AnimalEntity> animales, CuentaCobrarEntity cuentaCobrar) {
+    public VentaEntity(UUID id, String numeroVenta, UsuarioEntity cliente, LocalDate fechaVenta, BigDecimal precioTotalVenta, EstadoVentaEnum estado, List<AnimalEntity> animales, CuentaCobrarEntity cuentaCobrar, SuscripcionEntity suscripcion) {
         setId(id);
         setNumeroVenta(numeroVenta);
         setCliente(cliente);
         setFechaVenta(fechaVenta);
         setPrecioTotalVenta(precioTotalVenta);
+        setEstado(estado);
         setAnimales(animales);
         setCuentaCobrar(cuentaCobrar);
+        setSuscripcion(suscripcion);
     }
 
-    public static VentaEntity create(UUID id, String numeroVenta, UsuarioEntity cliente, LocalDate fechaVenta, BigDecimal precioTotalVenta, List<AnimalEntity> animales, CuentaCobrarEntity cuentaCobrar) {
-        return new VentaEntity(id, numeroVenta, cliente, fechaVenta, precioTotalVenta, animales, cuentaCobrar);
+    public static VentaEntity create(UUID id, String numeroVenta, UsuarioEntity cliente, LocalDate fechaVenta, BigDecimal precioTotalVenta, EstadoVentaEnum estado, List<AnimalEntity> animales, CuentaCobrarEntity cuentaCobrar, SuscripcionEntity suscripcion) {
+        return new VentaEntity(id, numeroVenta, cliente, fechaVenta, precioTotalVenta, estado, animales, cuentaCobrar, suscripcion);
     }
 
     public static VentaEntity create(UUID id) {
-        return new VentaEntity(id, TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, new ArrayList<>(), null);
+        return new VentaEntity(id, TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, EstadoVentaEnum.ACTIVA, new ArrayList<>(), null, SuscripcionEntity.create());
     }
 
     public static VentaEntity create() {
-        return new VentaEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, new ArrayList<>(), null);
+        return new VentaEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, UsuarioEntity.create(), LocalDate.now(), BigDecimal.ZERO, EstadoVentaEnum.ACTIVA, new ArrayList<>(), null, SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -127,5 +149,37 @@ public class VentaEntity extends Auditoria {
 
     public void setCuentaCobrar(CuentaCobrarEntity cuentaCobrar) {
         this.cuentaCobrar = cuentaCobrar;
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public void setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = suscripcion;
+    }
+
+    public EstadoVentaEnum getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoVentaEnum estado) {
+        this.estado = ObjectHelper.getDefault(estado, EstadoVentaEnum.ACTIVA);
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
+    }
+
+    public LocalDateTime getFechaAnulacion() {
+        return fechaAnulacion;
+    }
+
+    public void setFechaAnulacion(LocalDateTime fechaAnulacion) {
+        this.fechaAnulacion = fechaAnulacion;
     }
 }

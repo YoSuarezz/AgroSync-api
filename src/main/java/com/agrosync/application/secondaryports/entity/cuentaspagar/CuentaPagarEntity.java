@@ -1,9 +1,10 @@
 package com.agrosync.application.secondaryports.entity.cuentaspagar;
 
-import com.agrosync.application.primaryports.enums.cuentas.EstadoCuenta;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.application.secondaryports.entity.Auditoria;
 import com.agrosync.application.secondaryports.entity.abonos.AbonoEntity;
 import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
@@ -45,13 +46,17 @@ public class CuentaPagarEntity extends Auditoria {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
-    private EstadoCuenta estado;
+    private EstadoCuentaEnum estado;
 
     @Column(name = "fecha_emision")
     private LocalDate fechaEmision;
 
     @Column(name = "fecha_vencimiento")
     private LocalDate fechaVencimiento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
 
     public CuentaPagarEntity() {
         setId(UUIDHelper.getDefault());
@@ -61,12 +66,13 @@ public class CuentaPagarEntity extends Auditoria {
         setMontoTotal(BigDecimal.ZERO);
         setSaldoPendiente(BigDecimal.ZERO);
         setAbonos(new ArrayList<>());
-        setEstado(EstadoCuenta.ANULADA);
+        setEstado(EstadoCuentaEnum.ANULADA);
         setFechaEmision(LocalDate.now());
         setFechaVencimiento(LocalDate.now());
+        setSuscripcion(SuscripcionEntity.create());
     }
 
-    public CuentaPagarEntity(UUID id, String numeroCuenta, CompraEntity compra, UsuarioEntity proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoEntity> abonos, EstadoCuenta estado, LocalDate fechaEmision, LocalDate fechaVencimiento) {
+    public CuentaPagarEntity(UUID id, String numeroCuenta, CompraEntity compra, UsuarioEntity proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoEntity> abonos, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento, SuscripcionEntity suscripcion) {
         setId(id);
         setNumeroCuenta(numeroCuenta);
         setCompra(compra);
@@ -77,18 +83,19 @@ public class CuentaPagarEntity extends Auditoria {
         setEstado(estado);
         setFechaEmision(fechaEmision);
         setFechaVencimiento(fechaVencimiento);
+        setSuscripcion(suscripcion);
     }
 
-    public static CuentaPagarEntity create(UUID id, String numeroCuenta, CompraEntity compra, UsuarioEntity proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoEntity> abonos, EstadoCuenta estado, LocalDate fechaEmision, LocalDate fechaVencimiento) {
-        return new CuentaPagarEntity(id, numeroCuenta, compra, proveedor, montoTotal, saldoPendiente, abonos, estado, fechaEmision, fechaVencimiento);
+    public static CuentaPagarEntity create(UUID id, String numeroCuenta, CompraEntity compra, UsuarioEntity proveedor, BigDecimal montoTotal, BigDecimal saldoPendiente, List<AbonoEntity> abonos, EstadoCuentaEnum estado, LocalDate fechaEmision, LocalDate fechaVencimiento, SuscripcionEntity suscripcion) {
+        return new CuentaPagarEntity(id, numeroCuenta, compra, proveedor, montoTotal, saldoPendiente, abonos, estado, fechaEmision, fechaVencimiento, suscripcion);
     }
 
     public static CuentaPagarEntity create(UUID id) {
-        return new CuentaPagarEntity(id, TextHelper.EMPTY, null, UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
+        return new CuentaPagarEntity(id, TextHelper.EMPTY, null, UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuentaEnum.ANULADA, LocalDate.now(), LocalDate.now(), SuscripcionEntity.create());
     }
 
     public static CuentaPagarEntity create() {
-        return new CuentaPagarEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, null, UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuenta.ANULADA, LocalDate.now(), LocalDate.now());
+        return new CuentaPagarEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, null, UsuarioEntity.create(), BigDecimal.ZERO, BigDecimal.ZERO, new ArrayList<>(), EstadoCuentaEnum.ANULADA, LocalDate.now(), LocalDate.now(), SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -147,11 +154,11 @@ public class CuentaPagarEntity extends Auditoria {
         this.abonos = abonos;
     }
 
-    public EstadoCuenta getEstado() {
+    public EstadoCuentaEnum getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoCuenta estado) {
+    public void setEstado(EstadoCuentaEnum estado) {
         this.estado = estado;
     }
 
@@ -169,5 +176,13 @@ public class CuentaPagarEntity extends Auditoria {
 
     public void setFechaVencimiento(LocalDate fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public void setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = suscripcion;
     }
 }

@@ -18,12 +18,14 @@ public class VentaDomain extends BaseDomain {
     private BigDecimal precioTotalVenta;
     private List<AnimalDomain> animales;
     private CuentaCobrarDomain cuentaCobrar;
+    private UUID suscripcionId;
+    private String motivoAnulacion;
 
     public VentaDomain() {
         super();
     }
 
-    public VentaDomain(UUID id, String numeroVenta, UsuarioDomain cliente, LocalDate fechaVenta, BigDecimal precioTotalVenta, List<AnimalDomain> animales, CuentaCobrarDomain cuentaCobrar) {
+    public VentaDomain(UUID id, String numeroVenta, UsuarioDomain cliente, LocalDate fechaVenta, BigDecimal precioTotalVenta, List<AnimalDomain> animales, CuentaCobrarDomain cuentaCobrar, UUID suscripcionId) {
         super(id);
         setNumeroVenta(numeroVenta);
         setCliente(cliente);
@@ -31,6 +33,7 @@ public class VentaDomain extends BaseDomain {
         setPrecioTotalVenta(precioTotalVenta);
         setAnimales(animales);
         setCuentaCobrar(cuentaCobrar);
+        setSuscripcionId(suscripcionId);
     }
 
     public String getNumeroVenta() {
@@ -79,5 +82,21 @@ public class VentaDomain extends BaseDomain {
 
     public void setCuentaCobrar(CuentaCobrarDomain cuentaCobrar) {
         this.cuentaCobrar = cuentaCobrar;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
     }
 }

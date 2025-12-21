@@ -1,9 +1,11 @@
 package com.agrosync.infrastructure.secondaryadapters.auth.service;
 
-import com.agrosync.application.primaryports.enums.auth.RolEnum;
+import com.agrosync.domain.enums.auth.RolEnum;
 import com.agrosync.application.secondaryports.entity.auth.AuthUserEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.repository.AuthUserRepository;
 import com.agrosync.crosscutting.helpers.JwtHelper;
+import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.auth.AuthResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AuthUserDetailsService implements UserDetailsService {
@@ -25,13 +28,16 @@ public class AuthUserDetailsService implements UserDetailsService {
     private final AuthUserRepository authUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtHelper jwtHelper;
+    private final SuscripcionExisteRule suscripcionExisteRule;
 
     public AuthUserDetailsService(AuthUserRepository authUserRepository,
                                   PasswordEncoder passwordEncoder,
-                                  JwtHelper jwtHelper) {
+                                  JwtHelper jwtHelper,
+                                  SuscripcionExisteRule suscripcionExisteRule) {
         this.authUserRepository = authUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtHelper = jwtHelper;
+        this.suscripcionExisteRule = suscripcionExisteRule;
     }
 
     @Override
@@ -45,16 +51,22 @@ public class AuthUserDetailsService implements UserDetailsService {
         return new User(user.getEmail(), user.getPassword(), authorities);
     }
 
-    public AuthResponse register(String email, String password, RolEnum rol) {
+    public AuthResponse register(String email, String password, RolEnum rol, UUID suscripcionId) {
         if (authUserRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("El email ya se encuentra registrado");
         }
+
+        suscripcionExisteRule.validate(suscripcionId);
 
         RolEnum rolAsignado = rol != null ? rol : RolEnum.EMPLEADO;
         AuthUserEntity entity = AuthUserEntity.create()
                 .setEmail(email)
                 .setPassword(passwordEncoder.encode(password))
                 .setRol(rolAsignado);
+
+        if (suscripcionId != null) {
+            entity.setSuscripcion(SuscripcionEntity.create(suscripcionId));
+        }
 
         authUserRepository.save(entity);
 
@@ -94,7 +106,6 @@ public class AuthUserDetailsService implements UserDetailsService {
         AuthResponse authResponse = new AuthResponse();
         authResponse.setToken(token);
         authResponse.setRol(user.getRol().name());
-        authResponse.getMensajes().add("Operación exitosa");
         return authResponse;
     }
 }

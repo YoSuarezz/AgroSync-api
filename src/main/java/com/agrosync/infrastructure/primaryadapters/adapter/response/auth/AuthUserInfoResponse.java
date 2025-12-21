@@ -1,26 +1,26 @@
 package com.agrosync.infrastructure.primaryadapters.adapter.response.auth;
 
+import com.agrosync.domain.enums.suscripcion.EstadoSuscripcionEnum;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class AuthUserInfoResponse {
 
-    private UUID id;
+    private List<String> mensajes;
+    private UUID userId;
     private String email;
     private String rol;
-    private List<String> mensajes;
+    private UUID suscripcionId;
+    private EstadoSuscripcionEnum estadoSuscripcionEnum;
 
     public AuthUserInfoResponse() {
         this.mensajes = new ArrayList<>();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
+    public UUID getUserId() {
+        return userId;
     }
 
     public String getEmail() {
@@ -45,5 +45,25 @@ public class AuthUserInfoResponse {
 
     public void setMensajes(List<String> mensajes) {
         this.mensajes = mensajes;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
+    }
+
+    public EstadoSuscripcionEnum getEstadoSuscripcionEnum() {
+        return estadoSuscripcionEnum;
+    }
+
+    public void setEstadoSuscripcionEnum(EstadoSuscripcionEnum estadoSuscripcionEnum) {
+        this.estadoSuscripcionEnum = estadoSuscripcionEnum;
     }
 }

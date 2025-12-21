@@ -39,7 +39,7 @@ public final class MessageCatalogBase implements MessageCatalog {
     @Override
     public final Mensaje obtenerMensaje(final CodigoMensaje codigo, final String... parametros) {
 
-        if (ObjectHelper.getObjectHelper().isNull(codigo)) {
+        if (ObjectHelper.isNull(codigo)) {
             var mensajeUsuario = obtenerContenidoMensaje(CodigoMensaje.M00002);
             var mensajeTecnico = obtenerContenidoMensaje(CodigoMensaje.M00001);
             throw new CrosscuttingAgroSyncException(mensajeTecnico, mensajeUsuario);

@@ -5,8 +5,9 @@ import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
 import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
-import com.agrosync.application.primaryports.enums.usuarios.EstadoUsuarioEnum;
-import com.agrosync.application.primaryports.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.domain.enums.usuarios.EstadoUsuarioEnum;
+import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
@@ -53,6 +54,10 @@ public class UsuarioEntity {
     @Column(name = "estado")
     private EstadoUsuarioEnum estado;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_suscripcion")
+    private SuscripcionEntity suscripcion;
+
     public UsuarioEntity() {
         setId(UUIDHelper.getDefault());
         setNombre(TextHelper.EMPTY);
@@ -64,9 +69,10 @@ public class UsuarioEntity {
         setVentas(new ArrayList<>());
         setCuentasCobrar(new ArrayList<>());
         setEstado(EstadoUsuarioEnum.ACTIVO);
+        setSuscripcion(SuscripcionEntity.create());
     }
 
-    public UsuarioEntity(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado) {
+    public UsuarioEntity(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado, SuscripcionEntity suscripcion) {
         setId(id);
         setNombre(nombre);
         setTelefono(telefono);
@@ -77,18 +83,19 @@ public class UsuarioEntity {
         setVentas(ventas);
         setCuentasCobrar(cuentasCobrar);
         setEstado(estado);
+        setSuscripcion(suscripcion);
     }
 
     public static UsuarioEntity create(UUID id, String nombre, String telefono, TipoUsuarioEnum tipoUsuario, CarteraEntity cartera, List<CompraEntity> compras, List<CuentaPagarEntity> cuentasPagar, List<VentaEntity> ventas, List<CuentaCobrarEntity> cuentasCobrar, EstadoUsuarioEnum estado) {
-        return new UsuarioEntity(id, nombre, telefono, tipoUsuario, cartera, compras, cuentasPagar, ventas, cuentasCobrar, estado);
+        return new UsuarioEntity(id, nombre, telefono, tipoUsuario, cartera, compras, cuentasPagar, ventas, cuentasCobrar, estado, SuscripcionEntity.create());
     }
 
     public static UsuarioEntity create(UUID id) {
-        return new UsuarioEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO);
+        return new UsuarioEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO, SuscripcionEntity.create());
     }
 
     public static UsuarioEntity create() {
-        return new UsuarioEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO);
+        return new UsuarioEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, TipoUsuarioEnum.CLIENTE, CarteraEntity.create(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), EstadoUsuarioEnum.ACTIVO, SuscripcionEntity.create());
     }
 
     public UUID getId() {
@@ -169,5 +176,13 @@ public class UsuarioEntity {
 
     public void setEstado(EstadoUsuarioEnum estado) {
         this.estado = ObjectHelper.getDefault(estado, EstadoUsuarioEnum.ACTIVO);
+    }
+
+    public SuscripcionEntity getSuscripcion() {
+        return suscripcion;
+    }
+
+    public void setSuscripcion(SuscripcionEntity suscripcion) {
+        this.suscripcion = ObjectHelper.getDefault(suscripcion, SuscripcionEntity.create());
     }
 }

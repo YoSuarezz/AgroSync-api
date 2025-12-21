@@ -1,6 +1,6 @@
 package com.agrosync.domain.abonos;
 
-import com.agrosync.application.primaryports.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
 
@@ -14,17 +14,22 @@ public class AbonoDomain extends BaseDomain {
     private BigDecimal monto;
     private LocalDateTime fechaPago;
     private MetodoPagoEnum metodoPago;
+    private String concepto;
+    private UUID suscripcionId;
+    private String motivoAnulacion;
 
     public AbonoDomain() {
         super();
     }
 
-    public AbonoDomain(UUID id, CuentaPagarDomain cuentaPagar, BigDecimal monto, LocalDateTime fechaPago, MetodoPagoEnum metodoPago) {
+    public AbonoDomain(UUID id, CuentaPagarDomain cuentaPagar, BigDecimal monto, LocalDateTime fechaPago, MetodoPagoEnum metodoPago, String concepto, UUID suscripcionId) {
         super(id);
         setCuentaPagar(cuentaPagar);
         setMonto(monto);
         setFechaPago(fechaPago);
         setMetodoPago(metodoPago);
+        setConcepto(concepto);
+        setSuscripcionId(suscripcionId);
     }
 
     public CuentaPagarDomain getCuentaPagar() {
@@ -57,5 +62,29 @@ public class AbonoDomain extends BaseDomain {
 
     public void setMetodoPago(MetodoPagoEnum metodoPago) {
         this.metodoPago = metodoPago;
+    }
+
+    public String getConcepto() {
+        return concepto;
+    }
+
+    public void setConcepto(String concepto) {
+        this.concepto = concepto;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
     }
 }

@@ -1,6 +1,6 @@
 package com.agrosync.domain.auth;
 
-import com.agrosync.application.primaryports.enums.auth.RolEnum;
+import com.agrosync.domain.enums.auth.RolEnum;
 import com.agrosync.domain.BaseDomain;
 
 import java.util.UUID;
@@ -10,16 +10,18 @@ public class AuthUserDomain extends BaseDomain {
     private String email;
     private String password;
     private RolEnum rol;
+    private UUID suscripcionId;
 
     public AuthUserDomain() {
         super();
     }
 
-    public AuthUserDomain(UUID id, String email, String password, RolEnum rol) {
+    public AuthUserDomain(UUID id, String email, String password, RolEnum rol, UUID suscripcionId) {
         super(id);
         this.email = email;
         this.password = password;
         this.rol = rol;
+        this.suscripcionId = suscripcionId;
     }
 
     public String getEmail() {
@@ -44,5 +46,13 @@ public class AuthUserDomain extends BaseDomain {
 
     public void setRol(RolEnum rol) {
         this.rol = rol;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

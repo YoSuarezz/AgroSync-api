@@ -1,7 +1,7 @@
 package com.agrosync.domain.animales;
 
-import com.agrosync.application.primaryports.enums.animales.EstadoAnimalEnum;
-import com.agrosync.application.primaryports.enums.animales.SexoEnum;
+import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
+import com.agrosync.domain.enums.animales.SexoEnum;
 import com.agrosync.domain.BaseDomain;
 import com.agrosync.domain.lotes.LoteDomain;
 import com.agrosync.domain.ventas.VentaDomain;
@@ -20,12 +20,13 @@ public class AnimalDomain extends BaseDomain {
     private BigDecimal precioKiloVenta;
     private EstadoAnimalEnum estado;
     private VentaDomain venta;
+    private UUID suscripcionId;
+
 
     public AnimalDomain() {
         super();
     }
-
-    public AnimalDomain(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteDomain lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado, VentaDomain venta) {
+    public AnimalDomain(UUID id, String slot, String numeroAnimal, BigDecimal peso, SexoEnum sexo, LoteDomain lote, BigDecimal precioKiloCompra, BigDecimal precioKiloVenta, EstadoAnimalEnum estado, VentaDomain venta, UUID suscripcionId) {
         super(id);
         setSlot(slot);
         setNumeroAnimal(numeroAnimal);
@@ -36,6 +37,7 @@ public class AnimalDomain extends BaseDomain {
         setPrecioKiloVenta(precioKiloVenta);
         setEstado(estado);
         setVenta(venta);
+        setSuscripcionId(suscripcionId);
     }
 
     public String getSlot() {
@@ -108,5 +110,13 @@ public class AnimalDomain extends BaseDomain {
 
     public void setVenta(VentaDomain venta) {
         this.venta = venta;
+    }
+
+    public UUID getSuscripcionId() {
+        return suscripcionId;
+    }
+
+    public void setSuscripcionId(UUID suscripcionId) {
+        this.suscripcionId = suscripcionId;
     }
 }

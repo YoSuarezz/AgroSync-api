@@ -1,0 +1,106 @@
+package com.agrosync.application.usecase.cobros.impl;
+
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.application.secondaryports.entity.cobros.CobroEntity;
+import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
+import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
+import com.agrosync.application.secondaryports.mapper.cobros.CobroEntityMapper;
+import com.agrosync.application.secondaryports.mapper.cuentascobrar.CuentaCobrarEntityMapper;
+import com.agrosync.application.secondaryports.repository.CobroRepository;
+import com.agrosync.application.secondaryports.repository.CuentaCobrarRepository;
+import com.agrosync.application.usecase.carteras.ActualizarCartera;
+import com.agrosync.application.usecase.cobros.RegistrarNuevoCobro;
+import com.agrosync.application.usecase.cobros.rulesvalidator.RegistrarNuevoCobroRulesValidator;
+import com.agrosync.crosscutting.helpers.ObjectHelper;
+import com.agrosync.domain.cobros.CobroDomain;
+import com.agrosync.domain.cuentascobrar.CuentaCobrarDomain;
+import com.agrosync.domain.cuentascobrar.exceptions.IdentificadorCuentaCobrarNoExisteException;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class RegistrarNuevoCobroImpl implements RegistrarNuevoCobro {
+
+    private final CuentaCobrarRepository cuentaCobrarRepository;
+    private final CobroRepository cobroRepository;
+    private final ActualizarCartera actualizarCartera;
+    private final RegistrarNuevoCobroRulesValidator rulesValidator;
+    private final CuentaCobrarEntityMapper cuentaCobrarMapper;
+    private final CobroEntityMapper cobroEntityMapper;
+
+    public RegistrarNuevoCobroImpl(
+            CuentaCobrarRepository cuentaCobrarRepository,
+            CobroRepository cobroRepository,
+            ActualizarCartera actualizarCartera,
+            RegistrarNuevoCobroRulesValidator rulesValidator,
+            CuentaCobrarEntityMapper cuentaCobrarMapper,
+            CobroEntityMapper cobroEntityMapper
+    ) {
+        this.cuentaCobrarRepository = cuentaCobrarRepository;
+        this.cobroRepository = cobroRepository;
+        this.actualizarCartera = actualizarCartera;
+        this.rulesValidator = rulesValidator;
+        this.cuentaCobrarMapper = cuentaCobrarMapper;
+        this.cobroEntityMapper = cobroEntityMapper;
+    }
+
+    @Override
+    public void ejecutar(CobroDomain cobroDomain) {
+
+        // 1. Buscar cuenta por cobrar
+        CuentaCobrarEntity cuentaEntity = cuentaCobrarRepository
+                .findByIdAndSuscripcion_Id(
+                        cobroDomain.getCuentaCobrar().getId(),
+                        cobroDomain.getSuscripcionId()
+                )
+                .orElseThrow(IdentificadorCuentaCobrarNoExisteException::create);
+
+        // 2. Convertir entity a dominio para validaciones
+        CuentaCobrarDomain cuentaCobrar = cuentaCobrarMapper.toDomain(cuentaEntity);
+        cobroDomain.setCuentaCobrar(cuentaCobrar);
+
+        // 3. Establecer fecha por defecto si es null
+        if (ObjectHelper.isNull(cobroDomain.getFechaCobro())) {
+            cobroDomain.setFechaCobro(LocalDateTime.now());
+        }
+
+        // 4. Validar reglas de negocio
+        rulesValidator.validar(cobroDomain);
+
+        // 5. Crear y guardar el cobro usando el mapper
+        CobroEntity cobroEntity = cobroEntityMapper.toEntity(cobroDomain);
+        cobroEntity.setCuentaCobrar(cuentaEntity);
+        cobroEntity.setSuscripcion(SuscripcionEntity.create(cobroDomain.getSuscripcionId()));
+        cobroEntity.setEstado(EstadoCobroEnum.ACTIVO);
+
+        cobroRepository.save(cobroEntity);
+
+        // 6. Actualizar saldo pendiente
+        BigDecimal nuevoSaldo = cuentaEntity.getSaldoPendiente()
+                .subtract(cobroDomain.getMonto());
+
+        cuentaEntity.setSaldoPendiente(nuevoSaldo);
+
+        // 7. Actualizar estado de la cuenta por cobrar
+        if (nuevoSaldo.compareTo(BigDecimal.ZERO) == 0) {
+            cuentaEntity.setEstado(EstadoCuentaEnum.COBRADA);
+        } else {
+            cuentaEntity.setEstado(EstadoCuentaEnum.PARCIALMENTE_COBRADA);
+        }
+
+        cuentaCobrarRepository.save(cuentaEntity);
+
+        // 8. Actualizar cartera del cliente usando el servicio centralizado
+        actualizarCartera.reducirCuentasCobrarPorCobro(
+                cuentaEntity.getCliente().getId(),
+                cobroDomain.getSuscripcionId(),
+                cobroDomain.getMonto()
+        );
+    }
+}

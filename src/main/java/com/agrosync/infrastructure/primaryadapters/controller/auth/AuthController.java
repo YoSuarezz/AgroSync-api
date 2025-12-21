@@ -8,17 +8,24 @@ import com.agrosync.application.primaryports.interactor.auth.RegisterInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.auth.AuthResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.auth.AuthUserInfoResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private final LoginInteractor loginInteractor;
     private final RegisterInteractor registerInteractor;
@@ -50,11 +57,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
-        System.out.println("Register request received: " + registerRequest);
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest,
+                                                 @RequestHeader(value = "x-subscription-id", required = false) UUID suscripcionId) {
+        logger.info("Register request received: {}", registerRequest);
         HttpStatus status = HttpStatus.ACCEPTED;
         AuthResponse response;
         try {
+            registerRequest.setSuscripcionId(suscripcionId);
             response = registerInteractor.ejecutar(registerRequest);
             response.getMensajes().add("Usuario creado correctamente");
         } catch (AgroSyncException e) {
