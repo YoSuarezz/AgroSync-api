@@ -1,7 +1,10 @@
 package com.agrosync.application.usecase.compras.impl;
 
+import com.agrosync.domain.enums.abonos.EstadoAbonoEnum;
 import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.domain.enums.compras.EstadoCompraEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
+import com.agrosync.application.secondaryports.entity.abonos.AbonoEntity;
 import com.agrosync.application.secondaryports.entity.compras.CompraEntity;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
@@ -9,6 +12,7 @@ import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.mapper.compras.CompraEntityMapper;
+import com.agrosync.application.secondaryports.repository.AbonoRepository;
 import com.agrosync.application.secondaryports.repository.CompraRepository;
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.usecase.animales.rulesvalidator.RegistrarNuevoAnimalRulesValidator;
@@ -26,7 +30,9 @@ import com.agrosync.domain.compras.CompraDomain;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +43,7 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
 
     private final CompraRepository compraRepository;
     private final UsuarioRepository usuarioRepository;
+    private final AbonoRepository abonoRepository;
     private final ActualizarCartera actualizarCartera;
     private final CompensarCuentas compensarCuentas;
     private final RegistrarNuevaCompraRulesValidator registrarNuevaCompraRulesValidator;
@@ -46,6 +53,7 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
 
     public RegistrarNuevaCompraImpl(CompraRepository compraRepository,
                                     UsuarioRepository usuarioRepository,
+                                    AbonoRepository abonoRepository,
                                     ActualizarCartera actualizarCartera,
                                     CompensarCuentas compensarCuentas,
                                     RegistrarNuevaCompraRulesValidator registrarNuevaCompraRulesValidator,
@@ -54,6 +62,7 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
                                     CompraEntityMapper compraEntityMapper) {
         this.compraRepository = compraRepository;
         this.usuarioRepository = usuarioRepository;
+        this.abonoRepository = abonoRepository;
         this.actualizarCartera = actualizarCartera;
         this.compensarCuentas = compensarCuentas;
         this.registrarNuevaCompraRulesValidator = registrarNuevaCompraRulesValidator;
@@ -100,16 +109,23 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
         }
 
         // 6. Procesar compensación PRIMERO (antes de crear la cuenta por pagar)
-        BigDecimal saldoParaCuenta = procesarCompensacionYObtenerSaldo(
+        CompensarCuentas.ResultadoCompensacion resultadoCompensacion = procesarCompensacionYObtenerResultado(
                 compra.getProveedor(), suscripcion, precioTotalCompra, fechaCompra, compra.getNumeroCompra());
+        BigDecimal saldoParaCuenta = resultadoCompensacion.saldoRestante();
 
         // 7. Configurar cuenta por pagar con el saldo restante después de compensación
         configurarCuentaPagar(compra, suscripcion, precioTotalCompra, saldoParaCuenta, fechaCompra);
 
         // 8. Guardar compra
-        compraRepository.save(compra);
+        CompraEntity compraGuardada = compraRepository.save(compra);
 
-        // 9. Actualizar cartera si hay saldo pendiente
+        // 9. Si hubo compensación y quedó saldo, crear abono inicial documentando el cruce
+        if (resultadoCompensacion.huboCompensacion() && saldoParaCuenta.compareTo(BigDecimal.ZERO) > 0) {
+            crearAbonoInicialPorCruceDeCuentas(compraGuardada.getCuentaPagar(), suscripcion,
+                    resultadoCompensacion, fechaCompra, compra.getNumeroCompra());
+        }
+
+        // 10. Actualizar cartera si hay saldo pendiente
         actualizarCarteraSiCorresponde(compra.getProveedor(), suscripcion, saldoParaCuenta);
     }
 
@@ -202,12 +218,13 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
         }
     }
 
-    private BigDecimal procesarCompensacionYObtenerSaldo(UsuarioEntity proveedor, SuscripcionEntity suscripcion,
-                                                          BigDecimal precioTotalCompra, LocalDate fechaCompra,
-                                                          String numeroCompra) {
+    private CompensarCuentas.ResultadoCompensacion procesarCompensacionYObtenerResultado(
+            UsuarioEntity proveedor, SuscripcionEntity suscripcion,
+            BigDecimal precioTotalCompra, LocalDate fechaCompra,
+            String numeroCompra) {
         UUID proveedorId = proveedor != null ? proveedor.getId() : null;
         if (ObjectHelper.isNull(proveedorId)) {
-            return precioTotalCompra;
+            return CompensarCuentas.ResultadoCompensacion.sinCompensacion(precioTotalCompra);
         }
 
         UsuarioEntity proveedorCompleto = usuarioRepository.findByIdAndSuscripcion_Id(proveedorId, suscripcion.getId())
@@ -215,13 +232,55 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
 
         // Si el proveedor es AMBOS, intentar compensar con sus cuentas por cobrar (como cliente)
         if (proveedorCompleto != null && proveedorCompleto.getTipoUsuario() == TipoUsuarioEnum.AMBOS) {
-            CompensarCuentas.ResultadoCompensacion resultado = compensarCuentas.compensarCuentasCobrarConCompra(
+            return compensarCuentas.compensarCuentasCobrarConCompra(
                     proveedorCompleto, suscripcion, precioTotalCompra, fechaCompra, numeroCompra
             );
-            return resultado.saldoRestante();
         }
 
-        return precioTotalCompra;
+        return CompensarCuentas.ResultadoCompensacion.sinCompensacion(precioTotalCompra);
+    }
+
+    /**
+     * Crea un abono inicial en la cuenta por pagar que documenta el cruce de cuentas realizado.
+     * Esto proporciona trazabilidad del pago parcial que ya se hizo mediante compensación.
+     */
+    private void crearAbonoInicialPorCruceDeCuentas(CuentaPagarEntity cuentaPagar, SuscripcionEntity suscripcion,
+                                                     CompensarCuentas.ResultadoCompensacion resultado,
+                                                     LocalDate fecha, String numeroCompra) {
+        if (cuentaPagar == null || !resultado.huboCompensacion()) {
+            return;
+        }
+
+        AbonoEntity abono = new AbonoEntity();
+        abono.setCuentaPagar(cuentaPagar);
+        abono.setMonto(resultado.montoCompensado());
+        abono.setFechaPago(fecha.atStartOfDay());
+        abono.setMetodoPago(MetodoPagoEnum.CRUCE_DE_CUENTAS);
+        abono.setConcepto(generarConceptoAbonoInicial(resultado, numeroCompra));
+        abono.setSuscripcion(suscripcion);
+        abono.setEstado(EstadoAbonoEnum.ACTIVO);
+        abonoRepository.save(abono);
+    }
+
+    /**
+     * Genera el concepto para el abono inicial que documenta el cruce de cuentas.
+     */
+    private String generarConceptoAbonoInicial(CompensarCuentas.ResultadoCompensacion resultado, String numeroCompra) {
+        String nombreUsuario = ObjectHelper.getDefault(resultado.nombreUsuario(), "Usuario");
+        return String.format(
+                "Cruce de cuentas - Se descontó %s de deuda que tenía %s. Compra: %s",
+                formatearMonto(resultado.montoCompensado()),
+                nombreUsuario,
+                numeroCompra
+        );
+    }
+
+    /**
+     * Formatea un monto a formato de moneda legible
+     */
+    private String formatearMonto(BigDecimal monto) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
+        return formatter.format(monto);
     }
 
     private void actualizarCarteraSiCorresponde(UsuarioEntity proveedor, SuscripcionEntity suscripcion,

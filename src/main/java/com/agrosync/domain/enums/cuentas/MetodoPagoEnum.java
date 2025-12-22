@@ -5,6 +5,6 @@ public enum MetodoPagoEnum {
     TRANSFERENCIA,
     TARJETA_CREDITO,
     TARJETA_DEBITO,
-    OTRO
+    OTRO,
+    CRUCE_DE_CUENTAS
 }
-

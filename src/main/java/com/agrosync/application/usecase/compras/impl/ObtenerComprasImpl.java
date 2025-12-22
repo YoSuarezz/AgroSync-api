@@ -8,6 +8,7 @@ import com.agrosync.application.usecase.compras.ObtenerCompras;
 import com.agrosync.application.usecase.compras.rulesvalidator.ObtenerComprasRulesValidator;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.compras.CompraDomain;
+import com.agrosync.domain.enums.compras.EstadoCompraEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -74,6 +75,9 @@ public class ObtenerComprasImpl implements ObtenerCompras {
         if (data.getFechaFin() != null) {
             specs.add((root, query, cb) -> cb.lessThanOrEqualTo(root.get("fechaCompra"), data.getFechaFin()));
         }
+
+        // Filtrar compras anuladas
+        specs.add((root, query, cb) -> cb.notEqual(root.get("estado"), EstadoCompraEnum.ANULADA));
 
         return Specification.allOf(specs);
     }

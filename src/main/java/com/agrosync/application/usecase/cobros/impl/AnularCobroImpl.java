@@ -9,11 +9,13 @@ import com.agrosync.application.usecase.cobros.AnularCobro;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.domain.cobros.CobroDomain;
+import com.agrosync.domain.cobros.exceptions.CobroAutomaticoNoAnulableException;
 import com.agrosync.domain.cobros.exceptions.CobroYaAnuladoException;
 import com.agrosync.domain.cobros.exceptions.IdentificadorCobroNoExisteException;
 import com.agrosync.domain.cobros.exceptions.MotivoAnulacionCobroRequeridoException;
 import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,17 +55,22 @@ public class AnularCobroImpl implements AnularCobro {
             throw CobroYaAnuladoException.create();
         }
 
-        // 4. Obtener la cuenta por cobrar asociada
+        // 4. Validar que no sea un cobro automático por cruce de cuentas
+        if (cobro.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS) {
+            throw CobroAutomaticoNoAnulableException.create();
+        }
+
+        // 5. Obtener la cuenta por cobrar asociada
         CuentaCobrarEntity cuentaCobrar = cobro.getCuentaCobrar();
         BigDecimal montoCobro = ObjectHelper.getDefault(cobro.getMonto(), BigDecimal.ZERO);
 
-        // 5. Anular el cobro
+        // 6. Anular el cobro
         cobro.setEstado(EstadoCobroEnum.ANULADO);
         cobro.setMotivoAnulacion(data.getMotivoAnulacion());
         cobro.setFechaAnulacion(LocalDateTime.now());
         cobroRepository.save(cobro);
 
-        // 6. Restaurar el saldo pendiente en la cuenta por cobrar
+        // 7. Restaurar el saldo pendiente en la cuenta por cobrar
         if (!ObjectHelper.isNull(cuentaCobrar)) {
             BigDecimal saldoActual = ObjectHelper.getDefault(cuentaCobrar.getSaldoPendiente(), BigDecimal.ZERO);
             BigDecimal nuevoSaldo = saldoActual.add(montoCobro);
@@ -79,7 +86,7 @@ public class AnularCobroImpl implements AnularCobro {
 
             cuentaCobrarRepository.save(cuentaCobrar);
 
-            // 7. Revertir la cartera del cliente
+            // 8. Revertir la cartera del cliente
             if (!ObjectHelper.isNull(cuentaCobrar.getCliente())) {
                 actualizarCartera.revertirCobro(
                         cuentaCobrar.getCliente().getId(),
@@ -90,4 +97,3 @@ public class AnularCobroImpl implements AnularCobro {
         }
     }
 }
-

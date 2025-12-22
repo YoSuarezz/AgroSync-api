@@ -30,4 +30,6 @@ public interface CobroRepository extends JpaRepository<CobroEntity, UUID>, JpaSp
     Page<CobroEntity> findAll(Specification<CobroEntity> spec, Pageable pageable);
 
     boolean existsByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
+
+    List<CobroEntity> findBySuscripcion_Id(UUID suscripcionId);
 }
