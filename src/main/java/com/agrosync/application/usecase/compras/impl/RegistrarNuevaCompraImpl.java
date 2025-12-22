@@ -122,7 +122,7 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
         // 9. Si hubo compensación y quedó saldo, crear abono inicial documentando el cruce
         if (resultadoCompensacion.huboCompensacion() && saldoParaCuenta.compareTo(BigDecimal.ZERO) > 0) {
             crearAbonoInicialPorCruceDeCuentas(compraGuardada.getCuentaPagar(), suscripcion,
-                    resultadoCompensacion, fechaCompra);
+                    resultadoCompensacion, fechaCompra, compra.getNumeroCompra());
         }
 
         // 10. Actualizar cartera si hay saldo pendiente
@@ -246,7 +246,7 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
      */
     private void crearAbonoInicialPorCruceDeCuentas(CuentaPagarEntity cuentaPagar, SuscripcionEntity suscripcion,
                                                      CompensarCuentas.ResultadoCompensacion resultado,
-                                                     LocalDate fecha) {
+                                                     LocalDate fecha, String numeroCompra) {
         if (cuentaPagar == null || !resultado.huboCompensacion()) {
             return;
         }
@@ -255,8 +255,8 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
         abono.setCuentaPagar(cuentaPagar);
         abono.setMonto(resultado.montoCompensado());
         abono.setFechaPago(fecha.atStartOfDay());
-        abono.setMetodoPago(MetodoPagoEnum.OTRO);
-        abono.setConcepto(generarConceptoAbonoInicial(resultado));
+        abono.setMetodoPago(MetodoPagoEnum.CRUCE_DE_CUENTAS);
+        abono.setConcepto(generarConceptoAbonoInicial(resultado, numeroCompra));
         abono.setSuscripcion(suscripcion);
         abono.setEstado(EstadoAbonoEnum.ACTIVO);
         abonoRepository.save(abono);
@@ -265,12 +265,13 @@ public class RegistrarNuevaCompraImpl implements RegistrarNuevaCompra {
     /**
      * Genera el concepto para el abono inicial que documenta el cruce de cuentas.
      */
-    private String generarConceptoAbonoInicial(CompensarCuentas.ResultadoCompensacion resultado) {
+    private String generarConceptoAbonoInicial(CompensarCuentas.ResultadoCompensacion resultado, String numeroCompra) {
         String nombreUsuario = ObjectHelper.getDefault(resultado.nombreUsuario(), "Usuario");
         return String.format(
-                "Cruce de cuentas - Se descontó %s de deuda que tenía %s",
+                "Cruce de cuentas - Se descontó %s de deuda que tenía %s. Compra: %s",
                 formatearMonto(resultado.montoCompensado()),
-                nombreUsuario
+                nombreUsuario,
+                numeroCompra
         );
     }
 

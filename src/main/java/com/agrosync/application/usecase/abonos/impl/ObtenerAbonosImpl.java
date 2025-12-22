@@ -8,6 +8,7 @@ import com.agrosync.application.secondaryports.repository.AbonoRepository;
 import com.agrosync.application.usecase.abonos.ObtenerAbonos;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.abonos.AbonoDomain;
+import com.agrosync.domain.enums.abonos.EstadoAbonoEnum;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -69,6 +70,9 @@ public class ObtenerAbonosImpl implements ObtenerAbonos {
             specs.add((root, query, cb) -> cb.equal(root.get("metodoPago"), data.getMetodoPago()));
         }
 
+        // Excluir abonos anulados
+        specs.add((root, query, cb) -> cb.notEqual(root.get("estado"), EstadoAbonoEnum.ANULADO));
+
         if (filtro != null) {
             if (StringUtils.hasText(filtro.getNumeroCuentaPagar())) {
                 String numeroCuenta = filtro.getNumeroCuentaPagar().toLowerCase().trim();
@@ -84,4 +88,3 @@ public class ObtenerAbonosImpl implements ObtenerAbonos {
         return specs.stream().reduce(Specification::and).orElse(null);
     }
 }
-

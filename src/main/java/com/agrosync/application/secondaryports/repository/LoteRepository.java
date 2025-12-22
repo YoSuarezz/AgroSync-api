@@ -16,8 +16,8 @@ import java.util.UUID;
 @Repository
 public interface LoteRepository extends JpaRepository<LoteEntity, UUID>, JpaSpecificationExecutor<LoteEntity> {
 
-    @Query("SELECT CASE WHEN COUNT(l) > 0 THEN TRUE ELSE FALSE END FROM LoteEntity l WHERE l.contramarca = :contramarca AND EXTRACT(YEAR FROM l.fecha) = :year AND EXTRACT(WEEK FROM l.fecha) = :weekNumber AND l.suscripcion.id = :suscripcionId")
-    boolean existsByContramarcaAndWeekAndYearAndSuscripcionId(String contramarca, int weekNumber, int year, UUID suscripcionId);
+    @Query("SELECT CASE WHEN COUNT(l) > 0 THEN TRUE ELSE FALSE END FROM LoteEntity l WHERE l.contramarca = :contramarca AND EXTRACT(YEAR FROM l.fecha) = :year AND EXTRACT(WEEK FROM l.fecha) = :weekNumber AND l.suscripcion.id = :suscripcionId AND l.compra.estado != 'ANULADA'")
+    boolean existsByContramarcaAndWeekAndYearAndSuscripcionIdAndCompraNotAnulada(String contramarca, int weekNumber, int year, UUID suscripcionId);
 
     @EntityGraph(attributePaths = {"compra", "animales"})
     Optional<LoteEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);

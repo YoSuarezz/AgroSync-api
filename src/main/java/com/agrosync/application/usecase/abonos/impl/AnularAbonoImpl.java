@@ -12,8 +12,10 @@ import com.agrosync.domain.abonos.AbonoDomain;
 import com.agrosync.domain.abonos.exceptions.AbonoYaAnuladoException;
 import com.agrosync.domain.abonos.exceptions.IdentificadorAbonoNoExisteException;
 import com.agrosync.domain.abonos.exceptions.MotivoAnulacionAbonoRequeridoException;
+import com.agrosync.domain.abonos.exceptions.AbonoAutomaticoNoAnulableException;
 import com.agrosync.domain.enums.abonos.EstadoAbonoEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,17 +55,22 @@ public class AnularAbonoImpl implements AnularAbono {
             throw AbonoYaAnuladoException.create();
         }
 
-        // 4. Obtener la cuenta por pagar asociada
+        // 4. Validar que no sea un abono automático por cruce de cuentas
+        if (abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS) {
+            throw AbonoAutomaticoNoAnulableException.create();
+        }
+
+        // 5. Obtener la cuenta por pagar asociada
         CuentaPagarEntity cuentaPagar = abono.getCuentaPagar();
         BigDecimal montoAbono = ObjectHelper.getDefault(abono.getMonto(), BigDecimal.ZERO);
 
-        // 5. Anular el abono
+        // 6. Anular el abono
         abono.setEstado(EstadoAbonoEnum.ANULADO);
         abono.setMotivoAnulacion(data.getMotivoAnulacion());
         abono.setFechaAnulacion(LocalDateTime.now());
         abonoRepository.save(abono);
 
-        // 6. Restaurar el saldo pendiente en la cuenta por pagar
+        // 7. Restaurar el saldo pendiente en la cuenta por pagar
         if (!ObjectHelper.isNull(cuentaPagar)) {
             BigDecimal saldoActual = ObjectHelper.getDefault(cuentaPagar.getSaldoPendiente(), BigDecimal.ZERO);
             BigDecimal nuevoSaldo = saldoActual.add(montoAbono);
@@ -79,7 +86,7 @@ public class AnularAbonoImpl implements AnularAbono {
 
             cuentaPagarRepository.save(cuentaPagar);
 
-            // 7. Revertir la cartera del proveedor
+            // 8. Revertir la cartera del proveedor
             if (!ObjectHelper.isNull(cuentaPagar.getProveedor())) {
                 actualizarCartera.revertirAbono(
                         cuentaPagar.getProveedor().getId(),
@@ -90,4 +97,3 @@ public class AnularAbonoImpl implements AnularAbono {
         }
     }
 }
-

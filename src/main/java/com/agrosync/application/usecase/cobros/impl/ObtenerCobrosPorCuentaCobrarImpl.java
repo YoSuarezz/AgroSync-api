@@ -7,6 +7,7 @@ import com.agrosync.application.secondaryports.repository.CobroRepository;
 import com.agrosync.application.usecase.cobros.ObtenerCobrosPorCuentaCobrar;
 import com.agrosync.domain.cobros.CobroDomain;
 import com.agrosync.domain.cuentascobrar.rules.IdentificadorCuentaCobrarExisteRule;
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,13 @@ public class ObtenerCobrosPorCuentaCobrarImpl implements ObtenerCobrosPorCuentaC
         suscripcionExisteRule.validate(data.getSuscripcionId());
         identificadorCuentaCobrarExisteRule.validate(data.getId());
 
-        List<CobroEntity> cobros = cobroRepository.findByCuentaCobrar_IdAndSuscripcion_Id(
-                data.getId(), data.getSuscripcionId());
+        List<CobroEntity> cobros = cobroRepository.findAll(
+                (root, query, cb) -> cb.and(
+                        cb.equal(root.get("cuentaCobrar").get("id"), data.getId()),
+                        cb.equal(root.get("suscripcion").get("id"), data.getSuscripcionId()),
+                        cb.notEqual(root.get("estado"), EstadoCobroEnum.ANULADO)
+                )
+        );
 
         return cobroEntityMapper.toDomainCollection(cobros);
     }

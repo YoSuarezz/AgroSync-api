@@ -102,7 +102,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
             // Crear abono automático con mensaje simplificado
             AbonoEntity abono = crearAbonoAutomatico(
                     cuenta, suscripcion, montoAAbonar, fecha,
-                    generarConceptoAbono(nombreUsuario, montoAAbonar)
+                    generarConceptoAbono(nombreUsuario, montoAAbonar, numeroOperacion)
             );
             abonoRepository.save(abono);
 
@@ -163,7 +163,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
             // Crear cobro automático con mensaje simplificado
             CobroEntity cobro = crearCobroAutomatico(
                     cuenta, suscripcion, montoACobrar, fecha,
-                    generarConceptoCobro(nombreUsuario, montoACobrar)
+                    generarConceptoCobro(nombreUsuario, montoACobrar, numeroOperacion)
             );
             cobroRepository.save(cobro);
 
@@ -187,7 +187,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         abono.setCuentaPagar(cuenta);
         abono.setMonto(monto);
         abono.setFechaPago(fecha.atStartOfDay());
-        abono.setMetodoPago(MetodoPagoEnum.OTRO);
+        abono.setMetodoPago(MetodoPagoEnum.CRUCE_DE_CUENTAS);
         abono.setConcepto(concepto);
         abono.setSuscripcion(suscripcion);
         abono.setEstado(EstadoAbonoEnum.ACTIVO);
@@ -200,7 +200,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         cobro.setCuentaCobrar(cuenta);
         cobro.setMonto(monto);
         cobro.setFechaCobro(fecha.atStartOfDay());
-        cobro.setMetodoPago(MetodoPagoEnum.OTRO);
+        cobro.setMetodoPago(MetodoPagoEnum.CRUCE_DE_CUENTAS);
         cobro.setConcepto(concepto);
         cobro.setSuscripcion(suscripcion);
         cobro.setEstado(EstadoCobroEnum.ACTIVO);
@@ -229,11 +229,12 @@ public class CompensarCuentasImpl implements CompensarCuentas {
      * Genera concepto simplificado para abono automático por cruce de cuentas.
      * Mensaje claro para la secretaria sin números de cuenta confusos.
      */
-    private String generarConceptoAbono(String nombreUsuario, BigDecimal monto) {
+    private String generarConceptoAbono(String nombreUsuario, BigDecimal monto, String numeroOperacion) {
         return String.format(
-                "Cruce de cuentas - Pago automático de %s a %s por venta realizada",
+                "Cruce de cuentas - Pago automático de %s a %s por venta realizada. Operación: %s",
                 formatearMonto(monto),
-                nombreUsuario
+                nombreUsuario,
+                numeroOperacion
         );
     }
 
@@ -241,11 +242,12 @@ public class CompensarCuentasImpl implements CompensarCuentas {
      * Genera concepto simplificado para cobro automático por cruce de cuentas.
      * Mensaje claro para la secretaria sin números de cuenta confusos.
      */
-    private String generarConceptoCobro(String nombreUsuario, BigDecimal monto) {
+    private String generarConceptoCobro(String nombreUsuario, BigDecimal monto, String numeroOperacion) {
         return String.format(
-                "Cruce de cuentas - Cobro automático de %s a %s por compra realizada",
+                "Cruce de cuentas - Cobro automático de %s a %s por compra realizada. Operación: %s",
                 formatearMonto(monto),
-                nombreUsuario
+                nombreUsuario,
+                numeroOperacion
         );
     }
 

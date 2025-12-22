@@ -111,7 +111,7 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         // 8. Si hubo compensación y quedó saldo, crear cobro inicial documentando el cruce
         if (resultadoCompensacion.huboCompensacion() && saldoParaCuenta.compareTo(BigDecimal.ZERO) > 0) {
             crearCobroInicialPorCruceDeCuentas(ventaGuardada.getCuentaCobrar(), suscripcion,
-                    resultadoCompensacion, fechaVenta);
+                    resultadoCompensacion, fechaVenta, ventaGuardada.getNumeroVenta());
         }
 
         // 9. Asociar animales a la venta
@@ -181,7 +181,7 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
      */
     private void crearCobroInicialPorCruceDeCuentas(CuentaCobrarEntity cuentaCobrar, SuscripcionEntity suscripcion,
                                                      CompensarCuentas.ResultadoCompensacion resultado,
-                                                     LocalDate fecha) {
+                                                     LocalDate fecha, String numeroVenta) {
         if (cuentaCobrar == null || !resultado.huboCompensacion()) {
             return;
         }
@@ -190,8 +190,8 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         cobro.setCuentaCobrar(cuentaCobrar);
         cobro.setMonto(resultado.montoCompensado());
         cobro.setFechaCobro(fecha.atStartOfDay());
-        cobro.setMetodoPago(MetodoPagoEnum.OTRO);
-        cobro.setConcepto(generarConceptoCobroInicial(resultado));
+        cobro.setMetodoPago(MetodoPagoEnum.CRUCE_DE_CUENTAS);
+        cobro.setConcepto(generarConceptoCobroInicial(resultado, numeroVenta));
         cobro.setSuscripcion(suscripcion);
         cobro.setEstado(EstadoCobroEnum.ACTIVO);
         cobroRepository.save(cobro);
@@ -200,12 +200,13 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
     /**
      * Genera el concepto para el cobro inicial que documenta el cruce de cuentas.
      */
-    private String generarConceptoCobroInicial(CompensarCuentas.ResultadoCompensacion resultado) {
+    private String generarConceptoCobroInicial(CompensarCuentas.ResultadoCompensacion resultado, String numeroVenta) {
         String nombreUsuario = ObjectHelper.getDefault(resultado.nombreUsuario(), "Usuario");
         return String.format(
-                "Cruce de cuentas - Se descontó %s de deuda pendiente de %s",
+                "Cruce de cuentas - Se descontó %s de deuda pendiente de %s. Venta #: %s",
                 formatearMonto(resultado.montoCompensado()),
-                nombreUsuario
+                nombreUsuario,
+                numeroVenta
         );
     }
 

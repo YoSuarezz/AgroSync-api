@@ -8,6 +8,7 @@ import com.agrosync.application.secondaryports.repository.CobroRepository;
 import com.agrosync.application.usecase.cobros.ObtenerCobros;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.cobros.CobroDomain;
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -81,7 +82,9 @@ public class ObtenerCobrosImpl implements ObtenerCobros {
             }
         }
 
+        // Filtrar cobros anulados
+        specs.add((root, query, cb) -> cb.notEqual(root.get("estado"), EstadoCobroEnum.ANULADO));
+
         return specs.stream().reduce(Specification::and).orElse(null);
     }
 }
-

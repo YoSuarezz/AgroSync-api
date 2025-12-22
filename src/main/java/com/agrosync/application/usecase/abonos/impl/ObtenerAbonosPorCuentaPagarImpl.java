@@ -7,6 +7,7 @@ import com.agrosync.application.secondaryports.repository.AbonoRepository;
 import com.agrosync.application.usecase.abonos.ObtenerAbonosPorCuentaPagar;
 import com.agrosync.domain.abonos.AbonoDomain;
 import com.agrosync.domain.cuentaspagar.rules.IdentificadorCuentaPagarExisteRule;
+import com.agrosync.domain.enums.abonos.EstadoAbonoEnum;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,13 @@ public class ObtenerAbonosPorCuentaPagarImpl implements ObtenerAbonosPorCuentaPa
         suscripcionExisteRule.validate(data.getSuscripcionId());
         identificadorCuentaPagarExisteRule.validate(data.getId());
 
-        List<AbonoEntity> abonos = abonoRepository.findByCuentaPagar_IdAndSuscripcion_Id(
-                data.getId(), data.getSuscripcionId());
+        List<AbonoEntity> abonos = abonoRepository.findAll(
+                (root, query, cb) -> cb.and(
+                        cb.equal(root.get("cuentaPagar").get("id"), data.getId()),
+                        cb.equal(root.get("suscripcion").get("id"), data.getSuscripcionId()),
+                        cb.notEqual(root.get("estado"), EstadoAbonoEnum.ANULADO)
+                )
+        );
 
         return abonoEntityMapper.toDomainCollection(abonos);
     }
