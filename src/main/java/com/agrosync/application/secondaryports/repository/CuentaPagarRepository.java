@@ -20,4 +20,6 @@ public interface CuentaPagarRepository extends JpaRepository<CuentaPagarEntity, 
      */
     List<CuentaPagarEntity> findByProveedor_IdAndSuscripcion_IdAndEstadoInOrderByFechaEmisionAsc(
             UUID proveedorId, UUID suscripcionId, List<EstadoCuentaEnum> estados);
+
+    List<CuentaPagarEntity> findByProveedor_IdAndSuscripcion_Id(UUID proveedorId, UUID suscripcionId);
 }

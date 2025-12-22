@@ -20,4 +20,6 @@ public interface CuentaCobrarRepository extends JpaRepository<CuentaCobrarEntity
      */
     List<CuentaCobrarEntity> findByCliente_IdAndSuscripcion_IdAndEstadoInOrderByFechaEmisionAsc(
             UUID clienteId, UUID suscripcionId, List<EstadoCuentaEnum> estados);
+
+    List<CuentaCobrarEntity> findByCliente_IdAndSuscripcion_Id(UUID clienteId, UUID suscripcionId);
 }

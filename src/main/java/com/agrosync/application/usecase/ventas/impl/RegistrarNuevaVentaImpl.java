@@ -1,16 +1,20 @@
 package com.agrosync.application.usecase.ventas.impl;
 
 import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.domain.enums.ventas.EstadoVentaEnum;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
+import com.agrosync.application.secondaryports.entity.cobros.CobroEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
 import com.agrosync.application.secondaryports.entity.usuarios.UsuarioEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
 import com.agrosync.application.secondaryports.mapper.ventas.VentaEntityMapper;
 import com.agrosync.application.secondaryports.repository.AnimalRepository;
+import com.agrosync.application.secondaryports.repository.CobroRepository;
 import com.agrosync.application.secondaryports.repository.UsuarioRepository;
 import com.agrosync.application.secondaryports.repository.VentaRepository;
 import com.agrosync.application.usecase.carteras.ActualizarCartera;
@@ -27,9 +31,11 @@ import com.agrosync.domain.ventas.VentaDomain;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +47,7 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
     private final VentaRepository ventaRepository;
     private final AnimalRepository animalRepository;
     private final UsuarioRepository usuarioRepository;
+    private final CobroRepository cobroRepository;
     private final ActualizarCartera actualizarCartera;
     private final CompensarCuentas compensarCuentas;
     private final RegistrarNuevaVentaRulesValidator registrarNuevaVentaRulesValidator;
@@ -49,6 +56,7 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
     public RegistrarNuevaVentaImpl(VentaRepository ventaRepository,
                                    AnimalRepository animalRepository,
                                    UsuarioRepository usuarioRepository,
+                                   CobroRepository cobroRepository,
                                    ActualizarCartera actualizarCartera,
                                    CompensarCuentas compensarCuentas,
                                    RegistrarNuevaVentaRulesValidator registrarNuevaVentaRulesValidator,
@@ -56,6 +64,7 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         this.ventaRepository = ventaRepository;
         this.animalRepository = animalRepository;
         this.usuarioRepository = usuarioRepository;
+        this.cobroRepository = cobroRepository;
         this.actualizarCartera = actualizarCartera;
         this.compensarCuentas = compensarCuentas;
         this.registrarNuevaVentaRulesValidator = registrarNuevaVentaRulesValidator;
@@ -89,8 +98,9 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         venta.setPrecioTotalVenta(precioTotalVenta);
 
         // 5. Procesar compensación PRIMERO (antes de crear la cuenta por cobrar)
-        BigDecimal saldoParaCuenta = procesarCompensacionYObtenerSaldo(
-                venta.getCliente(), suscripcion, precioTotalVenta, fechaVenta, venta.getNumeroVenta(), data);
+        CompensarCuentas.ResultadoCompensacion resultadoCompensacion = procesarCompensacionYObtenerResultado(
+                venta.getCliente(), suscripcion, precioTotalVenta, fechaVenta, venta.getNumeroVenta());
+        BigDecimal saldoParaCuenta = resultadoCompensacion.saldoRestante();
 
         // 6. Configurar cuenta por cobrar con el saldo restante después de compensación
         configurarCuentaCobrar(venta, suscripcion, precioTotalVenta, saldoParaCuenta, fechaVenta, data);
@@ -98,10 +108,16 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         // 7. Guardar venta
         VentaEntity ventaGuardada = ventaRepository.save(venta);
 
-        // 8. Asociar animales a la venta
+        // 8. Si hubo compensación y quedó saldo, crear cobro inicial documentando el cruce
+        if (resultadoCompensacion.huboCompensacion() && saldoParaCuenta.compareTo(BigDecimal.ZERO) > 0) {
+            crearCobroInicialPorCruceDeCuentas(ventaGuardada.getCuentaCobrar(), suscripcion,
+                    resultadoCompensacion, fechaVenta, ventaGuardada.getNumeroVenta());
+        }
+
+        // 9. Asociar animales a la venta
         asociarAnimalesAVenta(ventaGuardada, animalesVendidos, suscripcion);
 
-        // 9. Actualizar cartera si hay saldo pendiente
+        // 10. Actualizar cartera si hay saldo pendiente
         actualizarCarteraSiCorresponde(venta.getCliente(), suscripcion, saldoParaCuenta);
     }
 
@@ -137,12 +153,13 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
         }
     }
 
-    private BigDecimal procesarCompensacionYObtenerSaldo(UsuarioEntity cliente, SuscripcionEntity suscripcion,
-                                                          BigDecimal precioTotalVenta, LocalDate fechaVenta,
-                                                          String numeroVenta, VentaDomain data) {
+    private CompensarCuentas.ResultadoCompensacion procesarCompensacionYObtenerResultado(
+            UsuarioEntity cliente, SuscripcionEntity suscripcion,
+            BigDecimal precioTotalVenta, LocalDate fechaVenta,
+            String numeroVenta) {
         UUID clienteId = cliente != null ? cliente.getId() : null;
         if (ObjectHelper.isNull(clienteId)) {
-            return precioTotalVenta;
+            return CompensarCuentas.ResultadoCompensacion.sinCompensacion(precioTotalVenta);
         }
 
         UsuarioEntity clienteCompleto = usuarioRepository.findByIdAndSuscripcion_Id(clienteId, suscripcion.getId())
@@ -150,13 +167,55 @@ public class RegistrarNuevaVentaImpl implements RegistrarNuevaVenta {
 
         // Si el cliente es AMBOS, intentar compensar con sus cuentas por pagar (como proveedor)
         if (clienteCompleto != null && clienteCompleto.getTipoUsuario() == TipoUsuarioEnum.AMBOS) {
-            CompensarCuentas.ResultadoCompensacion resultado = compensarCuentas.compensarCuentasPagarConVenta(
+            return compensarCuentas.compensarCuentasPagarConVenta(
                     clienteCompleto, suscripcion, precioTotalVenta, fechaVenta, numeroVenta
             );
-            return resultado.saldoRestante();
         }
 
-        return precioTotalVenta;
+        return CompensarCuentas.ResultadoCompensacion.sinCompensacion(precioTotalVenta);
+    }
+
+    /**
+     * Crea un cobro inicial en la cuenta por cobrar que documenta el cruce de cuentas realizado.
+     * Esto proporciona trazabilidad del pago parcial que ya se hizo mediante compensación.
+     */
+    private void crearCobroInicialPorCruceDeCuentas(CuentaCobrarEntity cuentaCobrar, SuscripcionEntity suscripcion,
+                                                     CompensarCuentas.ResultadoCompensacion resultado,
+                                                     LocalDate fecha, String numeroVenta) {
+        if (cuentaCobrar == null || !resultado.huboCompensacion()) {
+            return;
+        }
+
+        CobroEntity cobro = new CobroEntity();
+        cobro.setCuentaCobrar(cuentaCobrar);
+        cobro.setMonto(resultado.montoCompensado());
+        cobro.setFechaCobro(fecha.atStartOfDay());
+        cobro.setMetodoPago(MetodoPagoEnum.CRUCE_DE_CUENTAS);
+        cobro.setConcepto(generarConceptoCobroInicial(resultado, numeroVenta));
+        cobro.setSuscripcion(suscripcion);
+        cobro.setEstado(EstadoCobroEnum.ACTIVO);
+        cobroRepository.save(cobro);
+    }
+
+    /**
+     * Genera el concepto para el cobro inicial que documenta el cruce de cuentas.
+     */
+    private String generarConceptoCobroInicial(CompensarCuentas.ResultadoCompensacion resultado, String numeroVenta) {
+        String nombreUsuario = ObjectHelper.getDefault(resultado.nombreUsuario(), "Usuario");
+        return String.format(
+                "Cruce de cuentas - Se descontó %s de deuda pendiente de %s. Venta #: %s",
+                formatearMonto(resultado.montoCompensado()),
+                nombreUsuario,
+                numeroVenta
+        );
+    }
+
+    /**
+     * Formatea un monto a formato de moneda legible
+     */
+    private String formatearMonto(BigDecimal monto) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
+        return formatter.format(monto);
     }
 
     private void actualizarCarteraSiCorresponde(UsuarioEntity cliente, SuscripcionEntity suscripcion,

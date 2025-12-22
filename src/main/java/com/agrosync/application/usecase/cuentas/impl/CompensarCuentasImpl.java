@@ -21,9 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional
@@ -81,6 +83,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         BigDecimal saldoDisponible = ObjectHelper.getDefault(montoDisponible, BigDecimal.ZERO);
         BigDecimal totalCompensado = BigDecimal.ZERO;
         String nombreUsuario = ObjectHelper.getDefault(usuario.getNombre(), "Usuario");
+        BigDecimal montoOriginal = saldoDisponible;
 
         // Compensar cada cuenta pendiente (FIFO - más antigua primero)
         for (CuentaPagarEntity cuenta : cuentasPendientes) {
@@ -96,10 +99,10 @@ public class CompensarCuentasImpl implements CompensarCuentas {
             BigDecimal montoAAbonar = saldoDisponible.min(saldoPendiente);
             BigDecimal nuevoSaldo = saldoPendiente.subtract(montoAAbonar);
 
-            // Crear abono automático
+            // Crear abono automático con mensaje simplificado
             AbonoEntity abono = crearAbonoAutomatico(
                     cuenta, suscripcion, montoAAbonar, fecha,
-                    generarConceptoAbono(nombreUsuario, cuenta.getNumeroCuenta(), montoAAbonar, numeroOperacion)
+                    generarConceptoAbono(nombreUsuario, montoAAbonar, numeroOperacion)
             );
             abonoRepository.save(abono);
 
@@ -114,7 +117,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
             totalCompensado = totalCompensado.add(montoAAbonar);
         }
 
-        return new ResultadoCompensacion(totalCompensado, saldoDisponible);
+        return new ResultadoCompensacion(totalCompensado, saldoDisponible, nombreUsuario, montoOriginal);
     }
 
     @Override
@@ -141,6 +144,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         BigDecimal saldoDisponible = ObjectHelper.getDefault(montoDisponible, BigDecimal.ZERO);
         BigDecimal totalCompensado = BigDecimal.ZERO;
         String nombreUsuario = ObjectHelper.getDefault(usuario.getNombre(), "Usuario");
+        BigDecimal montoOriginal = saldoDisponible;
 
         // Compensar cada cuenta pendiente (FIFO - más antigua primero)
         for (CuentaCobrarEntity cuenta : cuentasPendientes) {
@@ -156,10 +160,10 @@ public class CompensarCuentasImpl implements CompensarCuentas {
             BigDecimal montoACobrar = saldoDisponible.min(saldoPendiente);
             BigDecimal nuevoSaldo = saldoPendiente.subtract(montoACobrar);
 
-            // Crear cobro automático
+            // Crear cobro automático con mensaje simplificado
             CobroEntity cobro = crearCobroAutomatico(
                     cuenta, suscripcion, montoACobrar, fecha,
-                    generarConceptoCobro(nombreUsuario, cuenta.getNumeroCuenta(), montoACobrar, numeroOperacion)
+                    generarConceptoCobro(nombreUsuario, montoACobrar, numeroOperacion)
             );
             cobroRepository.save(cobro);
 
@@ -174,7 +178,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
             totalCompensado = totalCompensado.add(montoACobrar);
         }
 
-        return new ResultadoCompensacion(totalCompensado, saldoDisponible);
+        return new ResultadoCompensacion(totalCompensado, saldoDisponible, nombreUsuario, montoOriginal);
     }
 
     private AbonoEntity crearAbonoAutomatico(CuentaPagarEntity cuenta, SuscripcionEntity suscripcion,
@@ -183,7 +187,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         abono.setCuentaPagar(cuenta);
         abono.setMonto(monto);
         abono.setFechaPago(fecha.atStartOfDay());
-        abono.setMetodoPago(MetodoPagoEnum.OTRO);
+        abono.setMetodoPago(MetodoPagoEnum.CRUCE_DE_CUENTAS);
         abono.setConcepto(concepto);
         abono.setSuscripcion(suscripcion);
         abono.setEstado(EstadoAbonoEnum.ACTIVO);
@@ -196,7 +200,7 @@ public class CompensarCuentasImpl implements CompensarCuentas {
         cobro.setCuentaCobrar(cuenta);
         cobro.setMonto(monto);
         cobro.setFechaCobro(fecha.atStartOfDay());
-        cobro.setMetodoPago(MetodoPagoEnum.OTRO);
+        cobro.setMetodoPago(MetodoPagoEnum.CRUCE_DE_CUENTAS);
         cobro.setConcepto(concepto);
         cobro.setSuscripcion(suscripcion);
         cobro.setEstado(EstadoCobroEnum.ACTIVO);
@@ -223,29 +227,35 @@ public class CompensarCuentasImpl implements CompensarCuentas {
 
     /**
      * Genera concepto simplificado para abono automático por cruce de cuentas.
+     * Mensaje claro para la secretaria sin números de cuenta confusos.
      */
-    private String generarConceptoAbono(String nombreUsuario, String numeroCuentaPagar,
-                                         BigDecimal monto, String numeroVenta) {
+    private String generarConceptoAbono(String nombreUsuario, BigDecimal monto, String numeroOperacion) {
         return String.format(
-                "Cruce de cuentas: Pago de $%s a %s por venta %s (Cuenta %s)",
-                monto.toPlainString(),
+                "Cruce de cuentas - Pago automático de %s a %s por venta realizada. Operación: %s",
+                formatearMonto(monto),
                 nombreUsuario,
-                numeroVenta,
-                ObjectHelper.getDefault(numeroCuentaPagar, "N/A")
+                numeroOperacion
         );
     }
 
     /**
      * Genera concepto simplificado para cobro automático por cruce de cuentas.
+     * Mensaje claro para la secretaria sin números de cuenta confusos.
      */
-    private String generarConceptoCobro(String nombreUsuario, String numeroCuentaCobrar,
-                                         BigDecimal monto, String numeroCompra) {
+    private String generarConceptoCobro(String nombreUsuario, BigDecimal monto, String numeroOperacion) {
         return String.format(
-                "Cruce de cuentas: Cobro de $%s a %s por compra %s (Cuenta %s)",
-                monto.toPlainString(),
+                "Cruce de cuentas - Cobro automático de %s a %s por compra realizada. Operación: %s",
+                formatearMonto(monto),
                 nombreUsuario,
-                numeroCompra,
-                ObjectHelper.getDefault(numeroCuentaCobrar, "N/A")
+                numeroOperacion
         );
+    }
+
+    /**
+     * Formatea un monto a formato de moneda legible (ej: $1.500.000)
+     */
+    private String formatearMonto(BigDecimal monto) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
+        return formatter.format(monto);
     }
 }

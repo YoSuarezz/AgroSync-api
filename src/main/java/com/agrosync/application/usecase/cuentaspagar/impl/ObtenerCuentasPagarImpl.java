@@ -8,6 +8,7 @@ import com.agrosync.application.secondaryports.repository.CuentaPagarRepository;
 import com.agrosync.application.usecase.cuentaspagar.ObtenerCuentasPagar;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.cuentaspagar.CuentaPagarDomain;
+import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
 import com.agrosync.domain.suscripcion.rules.SuscripcionExisteRule;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -64,6 +65,9 @@ public class ObtenerCuentasPagarImpl implements ObtenerCuentasPagar {
         if (data.getEstado() != null) {
             specs.add((root, query, cb) -> cb.equal(root.get("estado"), data.getEstado()));
         }
+
+        // Excluir cuentas anuladas
+        specs.add((root, query, cb) -> cb.notEqual(root.get("estado"), EstadoCuentaEnum.ANULADA));
 
         // Filtrar por cuentas con saldo pendiente (PENDIENTE o PARCIALMENTE_PAGADA)
         if (Boolean.TRUE.equals(data.getSoloConSaldoPendiente())) {

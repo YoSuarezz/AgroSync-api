@@ -24,7 +24,7 @@ public class ContramarcaSemanalUnicaRuleImpl implements ContramarcaSemanalUnicaR
         int weekNumber = lote.getFecha().get(weekFields.weekOfWeekBasedYear());
         int year = lote.getFecha().getYear();
 
-        if (loteRepository.existsByContramarcaAndWeekAndYearAndSuscripcionId(
+        if (loteRepository.existsByContramarcaAndWeekAndYearAndSuscripcionIdAndCompraNotAnulada(
                 lote.getContramarca(),
                 weekNumber,
                 year,
@@ -33,4 +33,3 @@ public class ContramarcaSemanalUnicaRuleImpl implements ContramarcaSemanalUnicaR
         }
     }
 }
-

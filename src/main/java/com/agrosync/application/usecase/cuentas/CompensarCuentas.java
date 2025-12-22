@@ -16,17 +16,28 @@ public interface CompensarCuentas {
      * Resultado de una operación de compensación de cuentas.
      * @param montoCompensado Total que se logró compensar con cuentas existentes
      * @param saldoRestante Dinero que sobró después de compensar todas las cuentas
+     * @param nombreUsuario Nombre del usuario involucrado en el cruce
+     * @param montoOriginal Monto original de la operación antes del cruce
      */
     record ResultadoCompensacion(
             BigDecimal montoCompensado,
-            BigDecimal saldoRestante
+            BigDecimal saldoRestante,
+            String nombreUsuario,
+            BigDecimal montoOriginal
     ) {
         public static ResultadoCompensacion sinCompensacion(BigDecimal montoOriginal) {
-            return new ResultadoCompensacion(BigDecimal.ZERO, montoOriginal);
+            return new ResultadoCompensacion(BigDecimal.ZERO, montoOriginal, null, montoOriginal);
         }
 
         public static ResultadoCompensacion vacio() {
-            return new ResultadoCompensacion(BigDecimal.ZERO, BigDecimal.ZERO);
+            return new ResultadoCompensacion(BigDecimal.ZERO, BigDecimal.ZERO, null, BigDecimal.ZERO);
+        }
+
+        /**
+         * Indica si hubo compensación de cuentas
+         */
+        public boolean huboCompensacion() {
+            return montoCompensado != null && montoCompensado.compareTo(BigDecimal.ZERO) > 0;
         }
     }
 

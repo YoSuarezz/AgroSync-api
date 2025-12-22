@@ -19,6 +19,8 @@ public interface AbonoRepository extends JpaRepository<AbonoEntity, UUID>, JpaSp
     @EntityGraph(attributePaths = {"cuentaPagar"})
     List<AbonoEntity> findByCuentaPagar_IdAndSuscripcion_Id(UUID cuentaPagarId, UUID suscripcionId);
 
+    List<AbonoEntity> findBySuscripcion_Id(UUID suscripcionId);
+
     @EntityGraph(attributePaths = {"cuentaPagar"})
     Optional<AbonoEntity> findByIdAndSuscripcion_Id(UUID id, UUID suscripcionId);
 

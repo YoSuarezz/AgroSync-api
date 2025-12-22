@@ -8,6 +8,7 @@ import com.agrosync.application.usecase.ventas.ObtenerVentas;
 import com.agrosync.application.usecase.ventas.rulesvalidator.ObtenerVentasRulesValidator;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.ventas.VentaDomain;
+import com.agrosync.domain.enums.ventas.EstadoVentaEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -72,6 +73,9 @@ public class ObtenerVentasImpl implements ObtenerVentas {
         if (clienteId != null && !UUIDHelper.isDefault(clienteId)) {
             specs.add((root, query, cb) -> cb.equal(root.get("cliente").get("id"), clienteId));
         }
+
+        // Filtrar ventas anuladas
+        specs.add((root, query, cb) -> cb.notEqual(root.get("estado"), EstadoVentaEnum.ANULADA));
 
         return Specification.allOf(specs);
     }
