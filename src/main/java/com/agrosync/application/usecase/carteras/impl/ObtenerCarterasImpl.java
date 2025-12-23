@@ -6,6 +6,7 @@ import com.agrosync.application.secondaryports.mapper.carteras.CarteraEntityMapp
 import com.agrosync.application.secondaryports.repository.CarteraRepository;
 import com.agrosync.application.usecase.carteras.ObtenerCarteras;
 import com.agrosync.application.usecase.carteras.rulesvalidator.ObtenerCarterasRulesValidator;
+import com.agrosync.crosscutting.helpers.UUIDHelper;
 import com.agrosync.domain.carteras.CarteraDomain;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ObtenerCarterasImpl implements ObtenerCarteras {
@@ -61,20 +63,38 @@ public class ObtenerCarterasImpl implements ObtenerCarteras {
             specs.add((root, query, cb) -> cb.equal(root.get("usuario").get("tipoUsuario"), data.getTipoUsuario()));
         }
 
-        // Filtro por nombre de usuario (búsqueda parcial)
-        if (data.getUsuario() != null && StringUtils.hasText(data.getUsuario().getNombre())) {
-            List<String> palabrasNombre = Arrays.stream(data.getUsuario().getNombre().trim().split("\\s+"))
-                    .filter(StringUtils::hasText)
-                    .map(String::toLowerCase)
-                    .toList();
+        // Filtro por usuario
+        UUID usuarioId = data.getUsuarioId();
+        if (data.getUsuarioId() != null && !UUIDHelper.isDefault(data.getUsuarioId())) {
+            specs.add((root, query, cb) -> cb.equal(root.get("usuario").get("id"), usuarioId));
+        }
 
-            for (String palabra : palabrasNombre) {
-                specs.add((root, query, cb) ->
-                        cb.like(
-                                cb.lower(root.get("usuario").get("nombre")),
-                                "%" + palabra + "%"
-                        )
-                );
+        if (data.getSaldoActual() != null && !data.getSaldoActual().trim().isEmpty()) {
+            String saldoFiltro = data.getSaldoActual().trim();
+
+            switch (saldoFiltro) {
+                case "Saldo pendiente":
+                    specs.add((root, query, cb) ->
+                            cb.notEqual(root.get("saldoActual"), 0)
+                    );
+                    break;
+
+                case "Saldo pendiente positivo":
+                    specs.add((root, query, cb) ->
+                            cb.greaterThan(root.get("saldoActual"), 0)
+                    );
+                    break;
+
+                case "Saldo pendiente negativo":
+                    specs.add((root, query, cb) ->
+                            cb.lessThan(root.get("saldoActual"), 0)
+                    );
+                    break;
+
+                case "Todos":
+                default:
+                    // No se agrega filtro
+                    break;
             }
         }
 
