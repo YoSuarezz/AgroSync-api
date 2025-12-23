@@ -69,6 +69,35 @@ public class ObtenerCarterasImpl implements ObtenerCarteras {
             specs.add((root, query, cb) -> cb.equal(root.get("usuario").get("id"), usuarioId));
         }
 
+        if (data.getSaldoActual() != null && !data.getSaldoActual().trim().isEmpty()) {
+            String saldoFiltro = data.getSaldoActual().trim();
+
+            switch (saldoFiltro) {
+                case "Saldo pendiente":
+                    specs.add((root, query, cb) ->
+                            cb.notEqual(root.get("saldoActual"), 0)
+                    );
+                    break;
+
+                case "Saldo pendiente positivo":
+                    specs.add((root, query, cb) ->
+                            cb.greaterThan(root.get("saldoActual"), 0)
+                    );
+                    break;
+
+                case "Saldo pendiente negativo":
+                    specs.add((root, query, cb) ->
+                            cb.lessThan(root.get("saldoActual"), 0)
+                    );
+                    break;
+
+                case "Todos":
+                default:
+                    // No se agrega filtro
+                    break;
+            }
+        }
+
         return Specification.allOf(specs);
     }
 }
