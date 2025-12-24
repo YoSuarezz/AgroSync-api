@@ -4,14 +4,15 @@ import com.agrosync.application.primaryports.dto.animales.request.EditarAnimalDT
 import com.agrosync.application.primaryports.dto.animales.request.RegistrarNuevoAnimalDTO;
 import com.agrosync.application.primaryports.dto.lotes.request.EditarLoteDTO;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
+import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
 import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
 import com.agrosync.application.secondaryports.entity.lotes.LoteEntity;
 import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEntity;
-import com.agrosync.application.secondaryports.repository.AnimalRepository;
-import com.agrosync.application.secondaryports.repository.LoteRepository;
+import com.agrosync.application.secondaryports.repository.*;
 import com.agrosync.application.usecase.animales.rulesvalidator.EditarAnimalRulesValidator;
 import com.agrosync.application.usecase.animales.rulesvalidator.RegistrarNuevoAnimalRulesValidator;
 import com.agrosync.application.usecase.carteras.ActualizarCartera;
+import com.agrosync.application.usecase.cuentas.CompensarCuentas;
 import com.agrosync.application.usecase.lotes.EditarLote;
 import com.agrosync.application.usecase.lotes.rulesvalidator.EditarLoteRulesValidator;
 import com.agrosync.crosscutting.helpers.GenerarNumeroHelper;
@@ -20,11 +21,14 @@ import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.domain.animales.AnimalDomain;
 import com.agrosync.domain.animales.exceptions.AnimalNoEditableException;
 import com.agrosync.domain.animales.exceptions.IdentificadorAnimalNoExisteException;
-import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
+import com.agrosync.domain.enums.abonos.EstadoAbonoEnum;
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.domain.lotes.LoteDomain;
 import com.agrosync.domain.lotes.exceptions.IdentificadorLoteNoExisteException;
 import com.agrosync.domain.lotes.exceptions.ListaAnimalesVaciaException;
+import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,19 +45,33 @@ public class EditarLoteImpl implements EditarLote {
     private final EditarLoteRulesValidator editarLoteRulesValidator;
     private final EditarAnimalRulesValidator editarAnimalRulesValidator;
     private final RegistrarNuevoAnimalRulesValidator registrarNuevoAnimalRulesValidator;
+    private final AbonoRepository abonoRepository;
+    private final CobroRepository cobroRepository;
+    private final CuentaCobrarRepository cuentaCobrarRepository;
+    private final CompensarCuentas compensarCuentas;
+    private final CuentaPagarRepository cuentaPagarRepository;
 
     public EditarLoteImpl(LoteRepository loteRepository,
-            AnimalRepository animalRepository,
-            ActualizarCartera actualizarCartera,
-            EditarLoteRulesValidator editarLoteRulesValidator,
-            EditarAnimalRulesValidator editarAnimalRulesValidator,
-            RegistrarNuevoAnimalRulesValidator registrarNuevoAnimalRulesValidator) {
+                          AnimalRepository animalRepository,
+                          ActualizarCartera actualizarCartera,
+                          EditarLoteRulesValidator editarLoteRulesValidator,
+                          EditarAnimalRulesValidator editarAnimalRulesValidator,
+                          RegistrarNuevoAnimalRulesValidator registrarNuevoAnimalRulesValidator,
+                          AbonoRepository abonoRepository,
+                          CobroRepository cobroRepository,
+                          CuentaCobrarRepository cuentaCobrarRepository,
+                          CompensarCuentas compensarCuentas, CuentaPagarRepository cuentaPagarRepository) {
         this.loteRepository = loteRepository;
         this.animalRepository = animalRepository;
         this.actualizarCartera = actualizarCartera;
         this.editarLoteRulesValidator = editarLoteRulesValidator;
         this.editarAnimalRulesValidator = editarAnimalRulesValidator;
         this.registrarNuevoAnimalRulesValidator = registrarNuevoAnimalRulesValidator;
+        this.abonoRepository = abonoRepository;
+        this.cobroRepository = cobroRepository;
+        this.cuentaCobrarRepository = cuentaCobrarRepository;
+        this.compensarCuentas = compensarCuentas;
+        this.cuentaPagarRepository = cuentaPagarRepository;
     }
 
     @Override
@@ -87,7 +105,7 @@ public class EditarLoteImpl implements EditarLote {
         if (!ObjectHelper.isNull(data.getAnimalesAEliminar())) {
             for (UUID animalId : data.getAnimalesAEliminar()) {
                 diferenciaPrecioCompra = diferenciaPrecioCompra
-                        .add(procesarEliminacionAnimal(animalId, lote, suscripcionId));
+                        .add(procesarEliminacionAnimal(animalId, suscripcionId));
             }
         }
 
@@ -127,7 +145,7 @@ public class EditarLoteImpl implements EditarLote {
     }
 
     private BigDecimal procesarEdicionAnimal(EditarAnimalDTO animalDTO, UUID suscripcionId) {
-        BigDecimal diferenciaPrecioCompra = BigDecimal.ZERO;
+        BigDecimal diferenciaPrecioCompra;
 
         AnimalEntity animal = animalRepository.findByIdAndSuscripcion_Id(animalDTO.getId(), suscripcionId)
                 .orElseThrow(IdentificadorAnimalNoExisteException::create);
@@ -142,11 +160,8 @@ public class EditarLoteImpl implements EditarLote {
 
         boolean esVendido = animal.getEstado() == EstadoAnimalEnum.VENDIDO;
 
-        // Si el animal está vendido, NO permitir cambios en peso ni sexo
-        if (esVendido) {
-            if (animalDTO.getSexo() != null || animalDTO.getPeso() != null) {
-                throw AnimalNoEditableException.createPorVendido();
-            }
+        if (esVendido && (animalDTO.getSexo() != null || animalDTO.getPeso() != null)) {
+            throw AnimalNoEditableException.createPorVendido();
         }
 
         // Calcular costo anterior
@@ -178,7 +193,7 @@ public class EditarLoteImpl implements EditarLote {
         return diferenciaPrecioCompra;
     }
 
-    private BigDecimal procesarEliminacionAnimal(UUID animalId, LoteEntity lote, UUID suscripcionId) {
+    private BigDecimal procesarEliminacionAnimal(UUID animalId, UUID suscripcionId) {
         AnimalEntity animal = animalRepository.findByIdAndSuscripcion_Id(animalId, suscripcionId)
                 .orElseThrow(IdentificadorAnimalNoExisteException::create);
 
@@ -273,6 +288,9 @@ public class EditarLoteImpl implements EditarLote {
                     actualizarCartera.reducirCuentasPagarPorAbono(proveedorId, suscripcionId, diferenciaPrecio.abs());
                 }
             }
+
+            // Anular pagos/cruces y regenerar siempre que haya cambio
+            anularYRegenerarPagosYCruces(cuentaPagar, lote.getSuscripcion().getId());
         }
     }
 
@@ -286,6 +304,61 @@ public class EditarLoteImpl implements EditarLote {
             cuenta.setEstado(EstadoCuentaEnum.PARCIALMENTE_PAGADA);
         } else {
             cuenta.setEstado(EstadoCuentaEnum.PENDIENTE);
+        }
+    }
+
+    private void anularYRegenerarPagosYCruces(CuentaPagarEntity cuentaPagar, UUID suscripcionId) {
+        // Anular abonos automáticos por cruce de cuentas
+        if (!ObjectHelper.isNull(cuentaPagar.getAbonos())) {
+            cuentaPagar.getAbonos().stream()
+                    .filter(abono -> abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
+                                     abono.getEstado() != EstadoAbonoEnum.ANULADO)
+                    .forEach(abono -> {
+                        abono.setEstado(EstadoAbonoEnum.ANULADO);
+                        abono.setMotivoAnulacion("Anulación automática por edición de lote");
+                        abono.setFechaAnulacion(java.time.LocalDateTime.now());
+                    });
+        }
+
+        // Anular cuentas por cobrar creadas por cruce
+        List<CuentaCobrarEntity> cuentasCreadasPorCruce = cuentaCobrarRepository
+            .findByCliente_IdAndSuscripcion_Id(cuentaPagar.getCompra().getProveedor().getId(), suscripcionId)
+            .stream()
+            .filter(cuenta -> ObjectHelper.isNull(cuenta.getVenta()) &&
+                              !ObjectHelper.isNull(cuenta.getCobros()) &&
+                              cuenta.getCobros().stream()
+                                  .anyMatch(cobro -> cobro.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
+                                                    cobro.getEstado() != EstadoCobroEnum.ANULADO))
+            .toList();
+
+        for (CuentaCobrarEntity cuenta : cuentasCreadasPorCruce) {
+            cuenta.setEstado(EstadoCuentaEnum.ANULADA);
+            cuenta.setSaldoPendiente(BigDecimal.ZERO);
+            cuenta.getCobros().stream()
+                .filter(cobro -> cobro.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
+                                cobro.getEstado() != EstadoCobroEnum.ANULADO)
+                .forEach(cobro -> {
+                    cobro.setEstado(EstadoCobroEnum.ANULADO);
+                    cobro.setMotivoAnulacion("Anulación automática por edición de lote");
+                    cobro.setFechaAnulacion(java.time.LocalDateTime.now());
+                });
+            cuentaCobrarRepository.save(cuenta);
+        }
+
+        // Regenerar pagos/cruces basados en el nuevo saldo llamando a la lógica de compensación
+        BigDecimal nuevoSaldoPendiente = ObjectHelper.getDefault(cuentaPagar.getSaldoPendiente(), BigDecimal.ZERO);
+        if (nuevoSaldoPendiente.compareTo(BigDecimal.ZERO) > 0) {
+            CompensarCuentas.ResultadoCompensacion resultado = compensarCuentas.compensarCuentasCobrarConCompra(
+                    cuentaPagar.getCompra().getProveedor(),
+                    cuentaPagar.getCompra().getSuscripcion(),
+                    nuevoSaldoPendiente,
+                    cuentaPagar.getCompra().getFechaCompra(),
+                    cuentaPagar.getCompra().getNumeroCompra()
+            );
+
+            // Actualizar el saldo pendiente de la cuenta por pagar con el saldo restante
+            cuentaPagar.setSaldoPendiente(resultado.saldoRestante());
+            cuentaPagarRepository.save(cuentaPagar);
         }
     }
 }
