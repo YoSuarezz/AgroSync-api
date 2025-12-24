@@ -4,14 +4,21 @@ import com.agrosync.application.primaryports.dto.ventas.request.EditarPrecioVent
 import com.agrosync.application.primaryports.dto.ventas.request.EditarVentaDTO;
 import com.agrosync.application.secondaryports.entity.animales.AnimalEntity;
 import com.agrosync.application.secondaryports.entity.cuentascobrar.CuentaCobrarEntity;
+import com.agrosync.application.secondaryports.entity.cuentaspagar.CuentaPagarEntity;
 import com.agrosync.application.secondaryports.entity.ventas.VentaEntity;
 import com.agrosync.application.secondaryports.repository.AnimalRepository;
+import com.agrosync.application.secondaryports.repository.CuentaCobrarRepository;
+import com.agrosync.application.secondaryports.repository.CuentaPagarRepository;
 import com.agrosync.application.secondaryports.repository.VentaRepository;
 import com.agrosync.application.usecase.carteras.ActualizarCartera;
+import com.agrosync.application.usecase.cuentas.CompensarCuentas;
 import com.agrosync.application.usecase.ventas.EditarVenta;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.domain.animales.exceptions.IdentificadorAnimalNoExisteException;
+import com.agrosync.domain.enums.abonos.EstadoAbonoEnum;
+import com.agrosync.domain.enums.cobros.EstadoCobroEnum;
 import com.agrosync.domain.enums.cuentas.EstadoCuentaEnum;
+import com.agrosync.domain.enums.cuentas.MetodoPagoEnum;
 import com.agrosync.domain.enums.ventas.EstadoVentaEnum;
 import com.agrosync.domain.ventas.exceptions.IdentificadorVentaNoExisteException;
 import com.agrosync.domain.ventas.exceptions.VentaNoEditableException;
@@ -19,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,13 +36,21 @@ public class EditarVentaImpl implements EditarVenta {
     private final VentaRepository ventaRepository;
     private final AnimalRepository animalRepository;
     private final ActualizarCartera actualizarCartera;
+    private final CuentaPagarRepository cuentaPagarRepository;
+    private final CompensarCuentas compensarCuentas;
+    private final CuentaCobrarRepository cuentaCobrarRepository;
 
     public EditarVentaImpl(VentaRepository ventaRepository,
-            AnimalRepository animalRepository,
-            ActualizarCartera actualizarCartera) {
+                           AnimalRepository animalRepository,
+                           ActualizarCartera actualizarCartera,
+                           CuentaPagarRepository cuentaPagarRepository,
+                           CompensarCuentas compensarCuentas, CuentaCobrarRepository cuentaCobrarRepository) {
         this.ventaRepository = ventaRepository;
         this.animalRepository = animalRepository;
         this.actualizarCartera = actualizarCartera;
+        this.cuentaPagarRepository = cuentaPagarRepository;
+        this.compensarCuentas = compensarCuentas;
+        this.cuentaCobrarRepository = cuentaCobrarRepository;
     }
 
     @Override
@@ -127,6 +143,9 @@ public class EditarVentaImpl implements EditarVenta {
                     actualizarCartera.reducirCuentasCobrarPorCobro(clienteId, suscripcionId, diferenciaPrecio.abs());
                 }
             }
+
+            // Anular pagos/cruces y regenerar siempre que haya cambio
+            anularYRegenerarPagosYCruces(cuentaCobrar, suscripcionId);
         }
     }
 
@@ -140,6 +159,61 @@ public class EditarVentaImpl implements EditarVenta {
             cuenta.setEstado(EstadoCuentaEnum.PARCIALMENTE_PAGADA);
         } else {
             cuenta.setEstado(EstadoCuentaEnum.PENDIENTE);
+        }
+    }
+
+    private void anularYRegenerarPagosYCruces(CuentaCobrarEntity cuentaCobrar, UUID suscripcionId) {
+        // Anular cobros automáticos por cruce de cuentas
+        if (!ObjectHelper.isNull(cuentaCobrar.getCobros())) {
+            cuentaCobrar.getCobros().stream()
+                    .filter(cobro -> cobro.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
+                                     cobro.getEstado() != EstadoCobroEnum.ANULADO)
+                    .forEach(cobro -> {
+                        cobro.setEstado(EstadoCobroEnum.ANULADO);
+                        cobro.setMotivoAnulacion("Anulación automática por edición de venta");
+                        cobro.setFechaAnulacion(java.time.LocalDateTime.now());
+                    });
+        }
+
+        // Anular cuentas por pagar creadas por cruce
+        List<CuentaPagarEntity> cuentasCreadasPorCruce = cuentaPagarRepository
+            .findByProveedor_IdAndSuscripcion_Id(cuentaCobrar.getVenta().getCliente().getId(), suscripcionId)
+            .stream()
+            .filter(cuenta -> ObjectHelper.isNull(cuenta.getCompra()) &&
+                              !ObjectHelper.isNull(cuenta.getAbonos()) &&
+                              cuenta.getAbonos().stream()
+                                  .anyMatch(abono -> abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
+                                                    abono.getEstado() != EstadoAbonoEnum.ANULADO))
+            .toList();
+
+        for (CuentaPagarEntity cuenta : cuentasCreadasPorCruce) {
+            cuenta.setEstado(EstadoCuentaEnum.ANULADA);
+            cuenta.setSaldoPendiente(BigDecimal.ZERO);
+            cuenta.getAbonos().stream()
+                .filter(abono -> abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
+                                abono.getEstado() != EstadoAbonoEnum.ANULADO)
+                .forEach(abono -> {
+                    abono.setEstado(EstadoAbonoEnum.ANULADO);
+                    abono.setMotivoAnulacion("Anulación automática por edición de venta");
+                    abono.setFechaAnulacion(java.time.LocalDateTime.now());
+                });
+            cuentaPagarRepository.save(cuenta);
+        }
+
+        // Regenerar pagos/cruces basados en el nuevo saldo llamando a la lógica de compensación
+        BigDecimal nuevoSaldoPendiente = ObjectHelper.getDefault(cuentaCobrar.getSaldoPendiente(), BigDecimal.ZERO);
+        if (nuevoSaldoPendiente.compareTo(BigDecimal.ZERO) > 0) {
+            CompensarCuentas.ResultadoCompensacion resultado = compensarCuentas.compensarCuentasPagarConVenta(
+                    cuentaCobrar.getVenta().getCliente(),
+                    cuentaCobrar.getVenta().getSuscripcion(),
+                    nuevoSaldoPendiente,
+                    cuentaCobrar.getVenta().getFechaVenta(),
+                    cuentaCobrar.getVenta().getNumeroVenta()
+            );
+
+            // Actualizar el saldo pendiente de la cuenta por cobrar con el saldo restante
+            cuentaCobrar.setSaldoPendiente(resultado.saldoRestante());
+            cuentaCobrarRepository.save(cuentaCobrar);
         }
     }
 }
