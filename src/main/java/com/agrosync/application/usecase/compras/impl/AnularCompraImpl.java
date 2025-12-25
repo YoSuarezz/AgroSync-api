@@ -170,6 +170,15 @@ public class AnularCompraImpl implements AnularCompra {
                     .filter(abono -> abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
                                      abono.getEstado() != EstadoAbonoEnum.ANULADO)
                     .forEach(abono -> {
+                        // Revertir efecto en cartera antes de anular
+                        if (!ObjectHelper.isNull(cuentaPagar.getProveedor())) {
+                            actualizarCartera.revertirAbono(
+                                    cuentaPagar.getProveedor().getId(),
+                                    cuentaPagar.getSuscripcion().getId(),
+                                    ObjectHelper.getDefault(abono.getMonto(), BigDecimal.ZERO)
+                            );
+                        }
+
                         abono.setEstado(EstadoAbonoEnum.ANULADO);
                         abono.setMotivoAnulacion("Anulación automática por anulación de compra origen");
                         abono.setFechaAnulacion(LocalDateTime.now());

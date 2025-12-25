@@ -118,7 +118,8 @@ public class EditarVentaImpl implements EditarVenta {
     private void actualizarVentaYCuentaCobrar(VentaEntity venta, BigDecimal diferenciaPrecio, UUID suscripcionId) {
         // Actualizar precio total de venta
         BigDecimal precioActual = ObjectHelper.getDefault(venta.getPrecioTotalVenta(), BigDecimal.ZERO);
-        venta.setPrecioTotalVenta(precioActual.add(diferenciaPrecio));
+        BigDecimal nuevoPrecioTotal = precioActual.add(diferenciaPrecio);
+        venta.setPrecioTotalVenta(nuevoPrecioTotal.max(BigDecimal.ZERO));
 
         // Actualizar cuenta por cobrar
         CuentaCobrarEntity cuentaCobrar = venta.getCuentaCobrar();
@@ -127,8 +128,14 @@ public class EditarVentaImpl implements EditarVenta {
             BigDecimal saldoPendienteActual = ObjectHelper.getDefault(cuentaCobrar.getSaldoPendiente(),
                     BigDecimal.ZERO);
 
-            cuentaCobrar.setMontoTotal(montoTotalActual.add(diferenciaPrecio));
-            cuentaCobrar.setSaldoPendiente(saldoPendienteActual.add(diferenciaPrecio));
+            BigDecimal nuevoMontoTotal = montoTotalActual.add(diferenciaPrecio).max(BigDecimal.ZERO);
+            BigDecimal nuevoSaldo = saldoPendienteActual.add(diferenciaPrecio);
+            if (nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
+                nuevoSaldo = BigDecimal.ZERO;
+            }
+
+            cuentaCobrar.setMontoTotal(nuevoMontoTotal);
+            cuentaCobrar.setSaldoPendiente(nuevoSaldo);
 
             // Actualizar estado de la cuenta
             actualizarEstadoCuentaCobrar(cuentaCobrar);
@@ -140,7 +147,8 @@ public class EditarVentaImpl implements EditarVenta {
                 if (diferenciaPrecio.compareTo(BigDecimal.ZERO) > 0) {
                     actualizarCartera.incrementarCuentasCobrar(clienteId, suscripcionId, diferenciaPrecio);
                 } else {
-                    actualizarCartera.reducirCuentasCobrarPorCobro(clienteId, suscripcionId, diferenciaPrecio.abs());
+                    actualizarCartera.reducirCuentasCobrarPorCobro(clienteId, suscripcionId,
+                            diferenciaPrecio.abs());
                 }
             }
 
@@ -154,9 +162,9 @@ public class EditarVentaImpl implements EditarVenta {
         BigDecimal montoTotal = ObjectHelper.getDefault(cuenta.getMontoTotal(), BigDecimal.ZERO);
 
         if (saldo.compareTo(BigDecimal.ZERO) <= 0) {
-            cuenta.setEstado(EstadoCuentaEnum.PAGADA);
+            cuenta.setEstado(EstadoCuentaEnum.COBRADA);
         } else if (saldo.compareTo(montoTotal) < 0) {
-            cuenta.setEstado(EstadoCuentaEnum.PARCIALMENTE_PAGADA);
+            cuenta.setEstado(EstadoCuentaEnum.PARCIALMENTE_COBRADA);
         } else {
             cuenta.setEstado(EstadoCuentaEnum.PENDIENTE);
         }
@@ -169,6 +177,20 @@ public class EditarVentaImpl implements EditarVenta {
                     .filter(cobro -> cobro.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
                                      cobro.getEstado() != EstadoCobroEnum.ANULADO)
                     .forEach(cobro -> {
+                        // Restaurar saldo y cartera antes de anular
+                        BigDecimal monto = ObjectHelper.getDefault(cobro.getMonto(), BigDecimal.ZERO);
+                        BigDecimal nuevoSaldo = ObjectHelper.getDefault(cuentaCobrar.getSaldoPendiente(),
+                                BigDecimal.ZERO).add(monto);
+                        cuentaCobrar.setSaldoPendiente(nuevoSaldo);
+                        actualizarEstadoCuentaCobrar(cuentaCobrar);
+                        if (!ObjectHelper.isNull(cuentaCobrar.getCliente())) {
+                            actualizarCartera.revertirCobro(
+                                    cuentaCobrar.getCliente().getId(),
+                                    suscripcionId,
+                                    monto
+                            );
+                        }
+
                         cobro.setEstado(EstadoCobroEnum.ANULADO);
                         cobro.setMotivoAnulacion("Anulación automática por edición de venta");
                         cobro.setFechaAnulacion(java.time.LocalDateTime.now());
@@ -177,26 +199,37 @@ public class EditarVentaImpl implements EditarVenta {
 
         // Anular cuentas por pagar creadas por cruce
         List<CuentaPagarEntity> cuentasCreadasPorCruce = cuentaPagarRepository
-            .findByProveedor_IdAndSuscripcion_Id(cuentaCobrar.getVenta().getCliente().getId(), suscripcionId)
-            .stream()
-            .filter(cuenta -> ObjectHelper.isNull(cuenta.getCompra()) &&
-                              !ObjectHelper.isNull(cuenta.getAbonos()) &&
-                              cuenta.getAbonos().stream()
-                                  .anyMatch(abono -> abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
-                                                    abono.getEstado() != EstadoAbonoEnum.ANULADO))
-            .toList();
+                .findByProveedor_IdAndSuscripcion_Id(cuentaCobrar.getVenta().getCliente().getId(), suscripcionId)
+                .stream()
+                .filter(cuenta -> !ObjectHelper.isNull(cuenta.getAbonos()) &&
+                        cuenta.getAbonos().stream()
+                                .anyMatch(abono -> abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
+                                                   abono.getEstado() != EstadoAbonoEnum.ANULADO))
+                .toList();
 
         for (CuentaPagarEntity cuenta : cuentasCreadasPorCruce) {
-            cuenta.setEstado(EstadoCuentaEnum.ANULADA);
-            cuenta.setSaldoPendiente(BigDecimal.ZERO);
             cuenta.getAbonos().stream()
-                .filter(abono -> abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
-                                abono.getEstado() != EstadoAbonoEnum.ANULADO)
-                .forEach(abono -> {
-                    abono.setEstado(EstadoAbonoEnum.ANULADO);
-                    abono.setMotivoAnulacion("Anulación automática por edición de venta");
-                    abono.setFechaAnulacion(java.time.LocalDateTime.now());
-                });
+                    .filter(abono -> abono.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
+                                     abono.getEstado() != EstadoAbonoEnum.ANULADO)
+                    .forEach(abono -> {
+                        BigDecimal monto = ObjectHelper.getDefault(abono.getMonto(), BigDecimal.ZERO);
+                        BigDecimal nuevoSaldo = ObjectHelper.getDefault(cuenta.getSaldoPendiente(), BigDecimal.ZERO)
+                                .add(monto);
+                        cuenta.setSaldoPendiente(nuevoSaldo);
+                        actualizarEstadoCuentaPagar(cuenta);
+
+                        abono.setEstado(EstadoAbonoEnum.ANULADO);
+                        abono.setMotivoAnulacion("Anulación automática por edición de venta");
+                        abono.setFechaAnulacion(java.time.LocalDateTime.now());
+
+                        if (!ObjectHelper.isNull(cuenta.getProveedor())) {
+                            actualizarCartera.revertirAbono(
+                                    cuenta.getProveedor().getId(),
+                                    suscripcionId,
+                                    monto
+                            );
+                        }
+                    });
             cuentaPagarRepository.save(cuenta);
         }
 
@@ -212,8 +245,27 @@ public class EditarVentaImpl implements EditarVenta {
             );
 
             // Actualizar el saldo pendiente de la cuenta por cobrar con el saldo restante
-            cuentaCobrar.setSaldoPendiente(resultado.saldoRestante());
+            BigDecimal saldoRestante = resultado.saldoRestante();
+            if (saldoRestante.compareTo(BigDecimal.ZERO) < 0) {
+                saldoRestante = BigDecimal.ZERO;
+            }
+            cuentaCobrar.setSaldoPendiente(saldoRestante);
+            actualizarEstadoCuentaCobrar(cuentaCobrar);
             cuentaCobrarRepository.save(cuentaCobrar);
+        }
+    }
+
+    private void actualizarEstadoCuentaPagar(CuentaPagarEntity cuenta) {
+        BigDecimal saldo = ObjectHelper.getDefault(cuenta.getSaldoPendiente(), BigDecimal.ZERO);
+        BigDecimal montoTotal = ObjectHelper.getDefault(cuenta.getMontoTotal(), BigDecimal.ZERO);
+
+        if (saldo.compareTo(BigDecimal.ZERO) <= 0) {
+            cuenta.setEstado(EstadoCuentaEnum.PAGADA);
+            cuenta.setSaldoPendiente(BigDecimal.ZERO);
+        } else if (saldo.compareTo(montoTotal) < 0) {
+            cuenta.setEstado(EstadoCuentaEnum.PARCIALMENTE_PAGADA);
+        } else {
+            cuenta.setEstado(EstadoCuentaEnum.PENDIENTE);
         }
     }
 }
