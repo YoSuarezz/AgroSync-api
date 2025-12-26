@@ -2,6 +2,7 @@ package com.agrosync.application.primaryports.dto.suscripcion.response;
 
 import com.agrosync.application.primaryports.dto.auth.AuthUserDTO;
 import com.agrosync.domain.enums.suscripcion.EstadoSuscripcionEnum;
+import com.agrosync.domain.enums.suscripcion.PlanSuscripcionEnum;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
 
@@ -21,13 +22,15 @@ public class ObtenerSuscripcionPorIdDTO {
     private String email;
     private List<AuthUserDTO> usuarios;
     private EstadoSuscripcionEnum estadoSuscripcion;
+    private PlanSuscripcionEnum planSuscripcion;
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaUltimoPago;
     private LocalDateTime fechaProximoCobro;
 
     public ObtenerSuscripcionPorIdDTO(UUID id, String nombreEmpresa, String direccionEmpresa, Long telefonoEmpresa,
                                       String nit, String logoUrl, String email, List<AuthUserDTO> usuarios,
-                                      EstadoSuscripcionEnum estadoSuscripcion, LocalDateTime fechaInicio,
+                                      EstadoSuscripcionEnum estadoSuscripcion, PlanSuscripcionEnum planSuscripcion,
+                                      LocalDateTime fechaInicio,
                                       LocalDateTime fechaUltimoPago, LocalDateTime fechaProximoCobro) {
         setId(id);
         setNombreEmpresa(nombreEmpresa);
@@ -38,6 +41,7 @@ public class ObtenerSuscripcionPorIdDTO {
         setEmail(email);
         setUsuarios(usuarios);
         setEstadoSuscripcion(estadoSuscripcion);
+        setPlanSuscripcion(planSuscripcion);
         setFechaInicio(fechaInicio);
         setFechaUltimoPago(fechaUltimoPago);
         setFechaProximoCobro(fechaProximoCobro);
@@ -53,6 +57,7 @@ public class ObtenerSuscripcionPorIdDTO {
         setEmail(TextHelper.EMPTY);
         setUsuarios(new ArrayList<>());
         setEstadoSuscripcion(EstadoSuscripcionEnum.ACTIVA);
+        setPlanSuscripcion(PlanSuscripcionEnum.MENSUAL);
         setFechaInicio(LocalDateTime.now());
         setFechaUltimoPago(LocalDateTime.now());
         setFechaProximoCobro(LocalDateTime.now());
@@ -60,10 +65,11 @@ public class ObtenerSuscripcionPorIdDTO {
 
     public static ObtenerSuscripcionPorIdDTO create(UUID id, String nombreEmpresa, String direccionEmpresa, Long telefonoEmpresa,
                                                     String nit, String logoUrl, String email, List<AuthUserDTO> usuarios,
-                                                    EstadoSuscripcionEnum estadoSuscripcion, LocalDateTime fechaInicio,
-                                                    LocalDateTime fechaUltimoPago, LocalDateTime fechaProximoCobro) {
+                                                    EstadoSuscripcionEnum estadoSuscripcion, PlanSuscripcionEnum planSuscripcion,
+                                                    LocalDateTime fechaInicio, LocalDateTime fechaUltimoPago,
+                                                    LocalDateTime fechaProximoCobro) {
         return new ObtenerSuscripcionPorIdDTO(id, nombreEmpresa, direccionEmpresa, telefonoEmpresa, nit, logoUrl, email,
-                usuarios, estadoSuscripcion, fechaInicio, fechaUltimoPago, fechaProximoCobro);
+                usuarios, estadoSuscripcion, planSuscripcion, fechaInicio, fechaUltimoPago, fechaProximoCobro);
     }
 
     public static ObtenerSuscripcionPorIdDTO create() {
@@ -140,6 +146,14 @@ public class ObtenerSuscripcionPorIdDTO {
 
     public void setEstadoSuscripcion(EstadoSuscripcionEnum estadoSuscripcion) {
         this.estadoSuscripcion = estadoSuscripcion;
+    }
+
+    public PlanSuscripcionEnum getPlanSuscripcion() {
+        return planSuscripcion;
+    }
+
+    public void setPlanSuscripcion(PlanSuscripcionEnum planSuscripcion) {
+        this.planSuscripcion = planSuscripcion;
     }
 
     public LocalDateTime getFechaInicio() {

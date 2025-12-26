@@ -1,6 +1,7 @@
 package com.agrosync.domain.suscripcion;
 
 import com.agrosync.domain.enums.suscripcion.EstadoSuscripcionEnum;
+import com.agrosync.domain.enums.suscripcion.PlanSuscripcionEnum;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.domain.BaseDomain;
@@ -20,6 +21,7 @@ public class SuscripcionDomain extends BaseDomain {
     private String email;
     private List<AuthUserDomain> usuarios;
     private EstadoSuscripcionEnum estadoSuscripcion;
+    private PlanSuscripcionEnum planSuscripcion;
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaUltimoPago;
     private LocalDateTime fechaProximoCobro;
@@ -30,8 +32,8 @@ public class SuscripcionDomain extends BaseDomain {
 
     public SuscripcionDomain(UUID id, String nombreEmpresa, String direccionEmpresa, Long telefonoEmpresa, String nit,
                              String logoUrl, String email, List<AuthUserDomain> usuarios,
-                             EstadoSuscripcionEnum estadoSuscripcion, LocalDateTime fechaInicio,
-                             LocalDateTime fechaUltimoPago, LocalDateTime fechaProximoCobro) {
+                             EstadoSuscripcionEnum estadoSuscripcion, PlanSuscripcionEnum planSuscripcion,
+                             LocalDateTime fechaInicio, LocalDateTime fechaUltimoPago, LocalDateTime fechaProximoCobro) {
         super(id);
         setNombreEmpresa(nombreEmpresa);
         setDireccionEmpresa(direccionEmpresa);
@@ -41,6 +43,7 @@ public class SuscripcionDomain extends BaseDomain {
         setEmail(email);
         setUsuarios(usuarios);
         setEstadoSuscripcion(estadoSuscripcion);
+        setPlanSuscripcion(planSuscripcion);
         setFechaInicio(fechaInicio);
         setFechaUltimoPago(fechaUltimoPago);
         setFechaProximoCobro(fechaProximoCobro);
@@ -108,6 +111,14 @@ public class SuscripcionDomain extends BaseDomain {
 
     public void setEstadoSuscripcion(EstadoSuscripcionEnum estadoSuscripcion) {
         this.estadoSuscripcion = ObjectHelper.getDefault(estadoSuscripcion, EstadoSuscripcionEnum.ACTIVA);
+    }
+
+    public PlanSuscripcionEnum getPlanSuscripcion() {
+        return planSuscripcion;
+    }
+
+    public void setPlanSuscripcion(PlanSuscripcionEnum planSuscripcion) {
+        this.planSuscripcion = ObjectHelper.getDefault(planSuscripcion, PlanSuscripcionEnum.MENSUAL);
     }
 
     public LocalDateTime getFechaInicio() {

@@ -1,6 +1,7 @@
 package com.agrosync.infrastructure.primaryadapters.adapter.response.auth;
 
 import com.agrosync.domain.enums.suscripcion.EstadoSuscripcionEnum;
+import com.agrosync.domain.enums.suscripcion.PlanSuscripcionEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,9 @@ public class AuthUserInfoResponse {
     private String rol;
     private UUID suscripcionId;
     private EstadoSuscripcionEnum estadoSuscripcionEnum;
+    private PlanSuscripcionEnum planSuscripcion;
+    private java.time.LocalDateTime fechaInicio;
+    private java.time.LocalDateTime fechaProximoCobro;
 
     public AuthUserInfoResponse() {
         this.mensajes = new ArrayList<>();
@@ -65,5 +69,29 @@ public class AuthUserInfoResponse {
 
     public void setEstadoSuscripcionEnum(EstadoSuscripcionEnum estadoSuscripcionEnum) {
         this.estadoSuscripcionEnum = estadoSuscripcionEnum;
+    }
+
+    public PlanSuscripcionEnum getPlanSuscripcion() {
+        return planSuscripcion;
+    }
+
+    public void setPlanSuscripcion(PlanSuscripcionEnum planSuscripcion) {
+        this.planSuscripcion = planSuscripcion;
+    }
+
+    public java.time.LocalDateTime getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(java.time.LocalDateTime fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public java.time.LocalDateTime getFechaProximoCobro() {
+        return fechaProximoCobro;
+    }
+
+    public void setFechaProximoCobro(java.time.LocalDateTime fechaProximoCobro) {
+        this.fechaProximoCobro = fechaProximoCobro;
     }
 }

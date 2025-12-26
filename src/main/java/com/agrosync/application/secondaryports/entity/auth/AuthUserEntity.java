@@ -25,6 +25,9 @@ public class AuthUserEntity {
     @Column(name = "rol", nullable = false)
     private RolEnum rol;
 
+    @Column(name = "activo", nullable = false)
+    private boolean activo;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_suscripcion")
     private SuscripcionEntity suscripcion;
@@ -32,6 +35,7 @@ public class AuthUserEntity {
     public AuthUserEntity() {
         this.id = UUIDHelper.getDefault();
         this.suscripcion = null;
+        this.activo = true;
     }
 
     public AuthUserEntity(UUID id, String email, String password, RolEnum rol, SuscripcionEntity suscripcion) {
@@ -40,6 +44,7 @@ public class AuthUserEntity {
         this.password = password;
         this.rol = rol;
         this.suscripcion = suscripcion;
+        this.activo = true;
     }
 
     public static AuthUserEntity create(UUID id, String email, String password, RolEnum rol) {
@@ -92,6 +97,15 @@ public class AuthUserEntity {
 
     public AuthUserEntity setSuscripcion(SuscripcionEntity suscripcion) {
         this.suscripcion = suscripcion;
+        return this;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public AuthUserEntity setActivo(boolean activo) {
+        this.activo = activo;
         return this;
     }
 }
