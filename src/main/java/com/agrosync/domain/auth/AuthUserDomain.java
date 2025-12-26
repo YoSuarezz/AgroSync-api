@@ -11,6 +11,7 @@ public class AuthUserDomain extends BaseDomain {
     private String password;
     private RolEnum rol;
     private UUID suscripcionId;
+    private boolean activo;
 
     public AuthUserDomain() {
         super();
@@ -22,6 +23,7 @@ public class AuthUserDomain extends BaseDomain {
         this.password = password;
         this.rol = rol;
         this.suscripcionId = suscripcionId;
+        this.activo = true;
     }
 
     public String getEmail() {
@@ -54,5 +56,13 @@ public class AuthUserDomain extends BaseDomain {
 
     public void setSuscripcionId(UUID suscripcionId) {
         this.suscripcionId = suscripcionId;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

@@ -5,15 +5,12 @@ import com.agrosync.application.secondaryports.entity.suscripcion.SuscripcionEnt
 import com.agrosync.domain.auth.AuthUserDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.UUID;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AuthUserEntityMapper {
-
-    AuthUserEntityMapper INSTANCE = Mappers.getMapper(AuthUserEntityMapper.class);
 
     @Mapping(target = "suscripcion", source = "suscripcionId")
     AuthUserEntity toEntity(AuthUserDomain domain);

@@ -28,6 +28,9 @@ public class ObtenerUsuarioAutenticadoInteractorImpl implements ObtenerUsuarioAu
         response.setRol(domain.getRol().name());
         response.setSuscripcionId(suscripcion.getId());
         response.setEstadoSuscripcionEnum(suscripcion.getEstadoSuscripcion());
+        response.setPlanSuscripcion(suscripcion.getPlanSuscripcion());
+        response.setFechaInicio(suscripcion.getFechaInicio());
+        response.setFechaProximoCobro(suscripcion.getFechaProximoCobro());
         response.getMensajes().add("Usuario autenticado");
         return response;
     }

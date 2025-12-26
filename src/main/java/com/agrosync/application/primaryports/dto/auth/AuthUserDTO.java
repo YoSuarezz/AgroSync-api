@@ -11,17 +11,20 @@ public class AuthUserDTO {
     private UUID id;
     private String email;
     private RolEnum rol;
+    private boolean activo;
 
     public AuthUserDTO(UUID id, String email, RolEnum rol) {
         setId(id);
         setEmail(email);
         setRol(rol);
+        setActivo(true);
     }
 
     public AuthUserDTO() {
         setId(UUIDHelper.getDefault());
         setEmail(TextHelper.EMPTY);
         setRol(RolEnum.EMPLEADO);
+        setActivo(true);
     }
 
     public static AuthUserDTO create(UUID id, String email, RolEnum rol) {
@@ -54,5 +57,13 @@ public class AuthUserDTO {
 
     public void setRol(RolEnum rol) {
         this.rol = rol;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

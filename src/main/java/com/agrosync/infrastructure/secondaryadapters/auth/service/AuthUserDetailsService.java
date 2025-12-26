@@ -43,7 +43,8 @@ public class AuthUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AuthUserEntity user = authUserRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+                .filter(AuthUserEntity::isActivo)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado o inactivo"));
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRol().name()));
@@ -56,9 +57,14 @@ public class AuthUserDetailsService implements UserDetailsService {
             throw new IllegalArgumentException("El email ya se encuentra registrado");
         }
 
-        suscripcionExisteRule.validate(suscripcionId);
-
         RolEnum rolAsignado = rol != null ? rol : RolEnum.EMPLEADO;
+
+        if (rolAsignado != RolEnum.SUPER_ADMINISTRADOR) {
+            suscripcionExisteRule.validate(suscripcionId);
+        } else {
+            suscripcionId = null;
+        }
+
         AuthUserEntity entity = AuthUserEntity.create()
                 .setEmail(email)
                 .setPassword(passwordEncoder.encode(password))
@@ -77,6 +83,10 @@ public class AuthUserDetailsService implements UserDetailsService {
         AuthUserEntity user = authUserRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario o contraseña inválida"));
 
+        if (!user.isActivo()) {
+            throw new UsernameNotFoundException("El usuario no se encuentra activo");
+        }
+
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Usuario o contraseña inválida");
         }
@@ -92,6 +102,13 @@ public class AuthUserDetailsService implements UserDetailsService {
 
         return authUserRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario autenticado no encontrado"));
+    }
+
+    public void actualizarEstadoUsuario(UUID userId, boolean activo) {
+        AuthUserEntity user = authUserRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        user.setActivo(activo);
+        authUserRepository.save(user);
     }
 
     private AuthResponse buildAuthResponse(AuthUserEntity user) {

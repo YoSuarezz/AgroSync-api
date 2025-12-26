@@ -13,6 +13,7 @@ INSERT INTO suscripcion (
     logo_url,
     email,
     estado_suscripcion,
+    plan_suscripcion,
     fecha_inicio,
     fecha_ultimo_pago,
     fecha_proximo_cobro,
@@ -27,6 +28,7 @@ INSERT INTO suscripcion (
     'https://example.com/logo.png',
     'contacto@agrosync.com',
     'ACTIVA',
+    'MENSUAL',
     '2024-01-01 00:00:00',
     '2024-12-01 00:00:00',
     '2025-01-01 00:00:00',
@@ -43,13 +45,15 @@ INSERT INTO auth_user (
     email,
     password,
     rol,
-    id_suscripcion
+    id_suscripcion,
+    activo
 ) VALUES (
     '00000000-0000-0000-0000-000000000002',
     'admin@agrosync.com',
     '$2a$10$dnHcCv9OXKFAGUp1UyvCAOAD9wPFl9ONrDlcthUzbJv2jNLg14Ez2',
-    'ADMINISTRADOR',
-    '00000000-0000-0000-0000-000000000001'
+    'SUPER_ADMINISTRADOR',
+    '00000000-0000-0000-0000-000000000001',
+    true
 )
 ON CONFLICT (id) DO NOTHING;
 -- =====================================================

@@ -10,14 +10,17 @@ import org.springframework.stereotype.Service;
 public class ObtenerUsuarioAutenticadoImpl implements ObtenerUsuarioAutenticado {
 
     private final AuthUserDetailsService authUserDetailsService;
+    private final AuthUserEntityMapper authUserEntityMapper;
 
-    public ObtenerUsuarioAutenticadoImpl(AuthUserDetailsService authUserDetailsService) {
+    public ObtenerUsuarioAutenticadoImpl(AuthUserDetailsService authUserDetailsService,
+                                         AuthUserEntityMapper authUserEntityMapper) {
         this.authUserDetailsService = authUserDetailsService;
+        this.authUserEntityMapper = authUserEntityMapper;
     }
 
     @Override
     public AuthUserDomain ejecutar() {
         var entity = authUserDetailsService.getLoggedUser();
-        return AuthUserEntityMapper.INSTANCE.toDomain(entity);
+        return authUserEntityMapper.toDomain(entity);
     }
 }

@@ -16,17 +16,20 @@ public class ObtenerSuscripcionPorIdImpl implements ObtenerSuscripcionPorId {
 
     private final SuscripcionRepository suscripcionRepository;
     private final ObtenerSuscripcionPorIdRulesValidator obtenerSuscripcionPorIdRulesValidator;
+    private final SuscripcionEntityMapper suscripcionEntityMapper;
 
     public ObtenerSuscripcionPorIdImpl(SuscripcionRepository suscripcionRepository,
-                                       ObtenerSuscripcionPorIdRulesValidator obtenerSuscripcionPorIdRulesValidator) {
+                                       ObtenerSuscripcionPorIdRulesValidator obtenerSuscripcionPorIdRulesValidator,
+                                       SuscripcionEntityMapper suscripcionEntityMapper) {
         this.suscripcionRepository = suscripcionRepository;
         this.obtenerSuscripcionPorIdRulesValidator = obtenerSuscripcionPorIdRulesValidator;
+        this.suscripcionEntityMapper = suscripcionEntityMapper;
     }
 
     @Override
     public SuscripcionDomain ejecutar(UUID data) {
         obtenerSuscripcionPorIdRulesValidator.validar(data);
         Optional<SuscripcionEntity> entity = suscripcionRepository.findById(data);
-        return SuscripcionEntityMapper.INSTANCE.toDomain(entity.get());
+        return suscripcionEntityMapper.toDomain(entity.get());
     }
 }
