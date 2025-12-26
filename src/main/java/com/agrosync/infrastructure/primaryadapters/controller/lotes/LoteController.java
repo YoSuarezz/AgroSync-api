@@ -1,14 +1,17 @@
 package com.agrosync.infrastructure.primaryadapters.controller.lotes;
 
+import com.agrosync.application.primaryports.dto.lotes.request.EditarLoteDTO;
 import com.agrosync.application.primaryports.dto.lotes.request.LoteIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.lotes.request.LotePageDTO;
 import com.agrosync.application.primaryports.dto.lotes.response.ObtenerLoteDTO;
+import com.agrosync.application.primaryports.interactor.lotes.EditarLoteInteractor;
 import com.agrosync.application.primaryports.interactor.lotes.ObtenerLotePorIdInteractor;
 import com.agrosync.application.primaryports.interactor.lotes.ObtenerLotesInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.GenericResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
-import com.agrosync.infrastructure.primaryadapters.adapter.response.lotes.LoteResponse; // Clase asumida
+import com.agrosync.infrastructure.primaryadapters.adapter.response.lotes.LoteResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +28,15 @@ public class LoteController {
 
     private final ObtenerLotesInteractor obtenerLotesInteractor;
     private final ObtenerLotePorIdInteractor obtenerLotePorIdInteractor;
+    private final EditarLoteInteractor editarLoteInteractor;
 
     public LoteController(ObtenerLotesInteractor obtenerLotesInteractor,
-                          ObtenerLotePorIdInteractor obtenerLotePorIdInteractor) {
+            ObtenerLotePorIdInteractor obtenerLotePorIdInteractor,
+            EditarLoteInteractor editarLoteInteractor) {
         this.obtenerLotesInteractor = obtenerLotesInteractor;
         this.obtenerLotePorIdInteractor = obtenerLotePorIdInteractor;
+        this.editarLoteInteractor = editarLoteInteractor;
     }
-
 
     @GetMapping
     public ResponseEntity<LoteResponse<PageResponse<ObtenerLoteDTO>>> consultarLotes(
@@ -55,13 +60,16 @@ public class LoteController {
             return GenerateResponse.generateSuccessResponseWithData(response);
 
         } catch (final AgroSyncException excepcion) {
-            var response = LoteResponse.build(List.of(excepcion.getMensajeUsuario()), PageResponse.from(Page.<ObtenerLoteDTO>empty()));
+            var response = LoteResponse.build(List.of(excepcion.getMensajeUsuario()),
+                    PageResponse.from(Page.<ObtenerLoteDTO>empty()));
             return GenerateResponse.generateBadRequestResponseWithData(response);
         } catch (final IllegalArgumentException excepcion) {
-            var response = LoteResponse.build(List.of(excepcion.getMessage()), PageResponse.from(Page.<ObtenerLoteDTO>empty()));
+            var response = LoteResponse.build(List.of(excepcion.getMessage()),
+                    PageResponse.from(Page.<ObtenerLoteDTO>empty()));
             return GenerateResponse.generateBadRequestResponseWithData(response);
         } catch (final Exception excepcion) {
-            var response = LoteResponse.build(List.of("Error al consultar los Lotes"), PageResponse.from(Page.<ObtenerLoteDTO>empty()));
+            var response = LoteResponse.build(List.of("Error al consultar los Lotes"),
+                    PageResponse.from(Page.<ObtenerLoteDTO>empty()));
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -70,7 +78,7 @@ public class LoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<LoteResponse<ObtenerLoteDTO>> consultarLotePorId(@PathVariable UUID id,
-                                                                           @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             LoteIdSuscripcionDTO request = LoteIdSuscripcionDTO.create(id, suscripcionId);
             ObtenerLoteDTO lote = obtenerLotePorIdInteractor.ejecutar(request);
@@ -84,6 +92,25 @@ public class LoteController {
             var userMessage = "Error al consultar el Lote";
             var loteResponse = LoteResponse.<ObtenerLoteDTO>build(List.of(userMessage), null);
             return new ResponseEntity<>(loteResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------
+
+    @PutMapping("/{id}")
+    public ResponseEntity<GenericResponse> editarLote(@PathVariable UUID id,
+            @RequestBody EditarLoteDTO editarLoteDTO,
+            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+        try {
+            editarLoteDTO.setId(id);
+            editarLoteDTO.setSuscripcionId(suscripcionId);
+            editarLoteInteractor.ejecutar(editarLoteDTO);
+            return GenerateResponse.generateSuccessResponse(List.of("Lote editado correctamente"));
+        } catch (final AgroSyncException excepcion) {
+            return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al editar el lote";
+            return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -17,9 +17,12 @@ import java.util.List;
 public class ObtenerSuscripcionesImpl implements ObtenerSuscripciones {
 
     private final SuscripcionRepository suscripcionRepository;
+    private final SuscripcionEntityMapper suscripcionEntityMapper;
 
-    public ObtenerSuscripcionesImpl(SuscripcionRepository suscripcionRepository) {
+    public ObtenerSuscripcionesImpl(SuscripcionRepository suscripcionRepository,
+                                    SuscripcionEntityMapper suscripcionEntityMapper) {
         this.suscripcionRepository = suscripcionRepository;
+        this.suscripcionEntityMapper = suscripcionEntityMapper;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class ObtenerSuscripcionesImpl implements ObtenerSuscripciones {
 
         Page<SuscripcionEntity> entities = suscripcionRepository.findAll(specs, pageable);
 
-        return new PageImpl<>(SuscripcionEntityMapper.INSTANCE.toDomainCollection(entities.getContent()), pageable,
+        return new PageImpl<>(suscripcionEntityMapper.toDomainCollection(entities.getContent()), pageable,
                 entities.getTotalElements());
     }
 

@@ -6,6 +6,7 @@ import com.agrosync.application.secondaryports.entity.auth.AuthUserEntity;
 import com.agrosync.crosscutting.helpers.ObjectHelper;
 import com.agrosync.crosscutting.helpers.TextHelper;
 import com.agrosync.crosscutting.helpers.UUIDHelper;
+import com.agrosync.domain.enums.suscripcion.PlanSuscripcionEnum;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -45,6 +46,9 @@ public class SuscripcionEntity extends Auditoria {
     @Enumerated(EnumType.STRING)
     private EstadoSuscripcionEnum estadoSuscripcion;
 
+    @Enumerated(EnumType.STRING)
+    private PlanSuscripcionEnum planSuscripcion;
+
     @Column(name = "fecha_inicio")
     private LocalDateTime fechaInicio;
 
@@ -64,6 +68,7 @@ public class SuscripcionEntity extends Auditoria {
         setEmail(TextHelper.EMPTY);
         setUsuarios(new ArrayList<>());
         setEstadoSuscripcion(EstadoSuscripcionEnum.ACTIVA);
+        setPlanSuscripcion(PlanSuscripcionEnum.MENSUAL);
         setFechaInicio(LocalDateTime.now());
         setFechaUltimoPago(LocalDateTime.now());
         setFechaProximoCobro(LocalDateTime.now());
@@ -71,8 +76,8 @@ public class SuscripcionEntity extends Auditoria {
 
     public SuscripcionEntity(UUID id, String nombreEmpresa, String direccionEmpresa, Long telefonoEmpresa, String nit,
                              String logoUrl, String email, List<AuthUserEntity> usuarios,
-                             EstadoSuscripcionEnum estadoSuscripcion, LocalDateTime fechaInicio,
-                             LocalDateTime fechaUltimoPago, LocalDateTime fechaProximoCobro) {
+                             EstadoSuscripcionEnum estadoSuscripcion, PlanSuscripcionEnum planSuscripcion,
+                             LocalDateTime fechaInicio, LocalDateTime fechaUltimoPago, LocalDateTime fechaProximoCobro) {
         setId(id);
         setNombreEmpresa(nombreEmpresa);
         setDireccionEmpresa(direccionEmpresa);
@@ -82,6 +87,7 @@ public class SuscripcionEntity extends Auditoria {
         setEmail(email);
         setUsuarios(usuarios);
         setEstadoSuscripcion(estadoSuscripcion);
+        setPlanSuscripcion(planSuscripcion);
         setFechaInicio(fechaInicio);
         setFechaUltimoPago(fechaUltimoPago);
         setFechaProximoCobro(fechaProximoCobro);
@@ -89,21 +95,23 @@ public class SuscripcionEntity extends Auditoria {
 
     public static SuscripcionEntity create(UUID id, String nombreEmpresa, String direccionEmpresa, Long telefonoEmpresa,
                                            String nit, String logoUrl, String email, List<AuthUserEntity> usuarios,
-                                           EstadoSuscripcionEnum estadoSuscripcion, LocalDateTime fechaInicio,
-                                           LocalDateTime fechaUltimoPago, LocalDateTime fechaProximoCobro) {
+                                           EstadoSuscripcionEnum estadoSuscripcion, PlanSuscripcionEnum planSuscripcion,
+                                           LocalDateTime fechaInicio, LocalDateTime fechaUltimoPago, LocalDateTime fechaProximoCobro) {
         return new SuscripcionEntity(id, nombreEmpresa, direccionEmpresa, telefonoEmpresa, nit, logoUrl, email, usuarios,
-                estadoSuscripcion, fechaInicio, fechaUltimoPago, fechaProximoCobro);
+                estadoSuscripcion, planSuscripcion, fechaInicio, fechaUltimoPago, fechaProximoCobro);
     }
 
     public static SuscripcionEntity create(UUID id) {
         return new SuscripcionEntity(id, TextHelper.EMPTY, TextHelper.EMPTY, 0L, TextHelper.EMPTY, TextHelper.EMPTY,
-                TextHelper.EMPTY, new ArrayList<>(), EstadoSuscripcionEnum.ACTIVA, LocalDateTime.now(), LocalDateTime.now(),
+                TextHelper.EMPTY, new ArrayList<>(), EstadoSuscripcionEnum.ACTIVA, PlanSuscripcionEnum.MENSUAL,
+                LocalDateTime.now(), LocalDateTime.now(),
                 LocalDateTime.now());
     }
 
     public static SuscripcionEntity create() {
         return new SuscripcionEntity(UUIDHelper.getDefault(), TextHelper.EMPTY, TextHelper.EMPTY, 0L, TextHelper.EMPTY,
-                TextHelper.EMPTY, TextHelper.EMPTY, new ArrayList<>(), EstadoSuscripcionEnum.ACTIVA, LocalDateTime.now(),
+                TextHelper.EMPTY, TextHelper.EMPTY, new ArrayList<>(), EstadoSuscripcionEnum.ACTIVA, PlanSuscripcionEnum.MENSUAL,
+                LocalDateTime.now(),
                 LocalDateTime.now(), LocalDateTime.now());
     }
 
@@ -177,6 +185,14 @@ public class SuscripcionEntity extends Auditoria {
 
     public void setEstadoSuscripcion(EstadoSuscripcionEnum estadoSuscripcion) {
         this.estadoSuscripcion = ObjectHelper.getDefault(estadoSuscripcion, EstadoSuscripcionEnum.ACTIVA);
+    }
+
+    public PlanSuscripcionEnum getPlanSuscripcion() {
+        return planSuscripcion;
+    }
+
+    public void setPlanSuscripcion(PlanSuscripcionEnum planSuscripcion) {
+        this.planSuscripcion = ObjectHelper.getDefault(planSuscripcion, PlanSuscripcionEnum.MENSUAL);
     }
 
     public LocalDateTime getFechaInicio() {

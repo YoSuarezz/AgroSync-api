@@ -36,11 +36,11 @@ public class CarteraController {
                                                                                              @RequestParam(defaultValue = "10") int size,
                                                                                              @RequestParam(defaultValue = "usuario.nombre") String sortBy,
                                                                                              @RequestParam(defaultValue = "ASC") String sortDirection,
-                                                                                             @RequestParam(required = false) String nombreUsuario,
+                                                                                             @RequestParam(required = false) UUID usuarioId,
                                                                                              @RequestParam(required = false) String tipoUsuario,
+                                                                                             @RequestParam(required = false) String saldoActual,
                                                                                              @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
-            ObtenerUsuarioDTO filtroUsuario = nombreUsuario != null ? ObtenerUsuarioDTO.create(null, nombreUsuario, null, null) : null;
 
             // Convertir String a TipoUsuarioEnum si no es null
             TipoUsuarioEnum tipoUsuarioEnum = null;
@@ -53,7 +53,7 @@ public class CarteraController {
                 }
             }
 
-            CarteraPageDTO request = CarteraPageDTO.create(page, size, sortBy, sortDirection, filtroUsuario, suscripcionId, tipoUsuarioEnum);
+            CarteraPageDTO request = CarteraPageDTO.create(page, size, sortBy, sortDirection, usuarioId, saldoActual, suscripcionId, tipoUsuarioEnum);
             PageResponse<ObtenerCarteraDTO> resultados = obtenerCarterasInteractor.ejecutar(request);
 
             CarteraResponse<PageResponse<ObtenerCarteraDTO>> response = CarteraResponse.build(List.of("Carteras consultadas correctamente"), resultados);

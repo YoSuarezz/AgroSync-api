@@ -9,4 +9,8 @@ import java.util.UUID;
 
 @Repository
 public interface SuscripcionRepository extends JpaRepository<SuscripcionEntity, UUID>, JpaSpecificationExecutor<SuscripcionEntity> {
+
+    boolean existsByNitIgnoreCase(String nit);
+
+    boolean existsByEmailIgnoreCase(String email);
 }

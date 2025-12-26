@@ -152,6 +152,15 @@ public class AnularVentaImpl implements AnularVenta {
                     .filter(cobro -> cobro.getMetodoPago() == MetodoPagoEnum.CRUCE_DE_CUENTAS &&
                                      cobro.getEstado() != EstadoCobroEnum.ANULADO)
                     .forEach(cobro -> {
+                        // Revertir efecto en cartera antes de anular
+                        if (!ObjectHelper.isNull(cuentaCobrar.getCliente())) {
+                            actualizarCartera.revertirCobro(
+                                    cuentaCobrar.getCliente().getId(),
+                                    cuentaCobrar.getSuscripcion().getId(),
+                                    ObjectHelper.getDefault(cobro.getMonto(), BigDecimal.ZERO)
+                            );
+                        }
+
                         cobro.setEstado(EstadoCobroEnum.ANULADO);
                         cobro.setMotivoAnulacion("Anulación automática por anulación de venta origen");
                         cobro.setFechaAnulacion(LocalDateTime.now());

@@ -11,7 +11,8 @@ public class CarteraPageDTO {
     private int size;
     private String sortBy;
     private String sortDirection;
-    private ObtenerUsuarioDTO usuario;
+    private UUID usuarioId;
+    private String saldoActual;
     private UUID suscripcionId;
     private TipoUsuarioEnum tipoUsuario;
 
@@ -19,19 +20,20 @@ public class CarteraPageDTO {
     }
 
     public CarteraPageDTO(int page, int size, String sortBy, String sortDirection,
-                          ObtenerUsuarioDTO usuario, UUID suscripcionId, TipoUsuarioEnum tipoUsuario) {
+                          UUID usuarioId, String saldoActual, UUID suscripcionId, TipoUsuarioEnum tipoUsuario) {
         setPage(page);
         setSize(size);
         setSortBy(sortBy);
         setSortDirection(sortDirection);
-        setUsuario(usuario);
+        setUsuarioId(usuarioId);
+        setSaldoActual(saldoActual);
         setSuscripcionId(suscripcionId);
         setTipoUsuario(tipoUsuario);
     }
 
     public static CarteraPageDTO create(int page, int size, String sortBy, String sortDirection,
-                                        ObtenerUsuarioDTO usuario, UUID suscripcionId, TipoUsuarioEnum tipoUsuario) {
-        return new CarteraPageDTO(page, size, sortBy, sortDirection, usuario, suscripcionId, tipoUsuario);
+                                        UUID usuarioId, String saldoActual, UUID suscripcionId, TipoUsuarioEnum tipoUsuario) {
+        return new CarteraPageDTO(page, size, sortBy, sortDirection, usuarioId, saldoActual, suscripcionId, tipoUsuario);
     }
 
     public int getPage() {
@@ -66,12 +68,20 @@ public class CarteraPageDTO {
         this.sortDirection = sortDirection;
     }
 
-    public ObtenerUsuarioDTO getUsuario() {
-        return usuario;
+    public UUID getUsuarioId() {
+        return usuarioId;
     }
 
-    public void setUsuario(ObtenerUsuarioDTO usuario) {
-        this.usuario = usuario;
+    public void setUsuarioId(UUID usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public String getSaldoActual() {
+        return saldoActual;
+    }
+
+    public void setSaldoActual(String saldoActual) {
+        this.saldoActual = saldoActual;
     }
 
     public UUID getSuscripcionId() {
