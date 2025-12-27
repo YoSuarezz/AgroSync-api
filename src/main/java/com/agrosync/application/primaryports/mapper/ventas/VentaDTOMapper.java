@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Mapper(uses = {AnimalDTOMapper.class, UsuarioDTOMapper.class, CuentaCobrarDTOMapper.class})
+@Mapper
 public interface VentaDTOMapper {
 
     VentaDTOMapper INSTANCE = Mappers.getMapper(VentaDTOMapper.class);

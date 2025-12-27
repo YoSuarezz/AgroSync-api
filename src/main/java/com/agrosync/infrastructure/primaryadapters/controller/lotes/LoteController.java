@@ -31,8 +31,8 @@ public class LoteController {
     private final EditarLoteInteractor editarLoteInteractor;
 
     public LoteController(ObtenerLotesInteractor obtenerLotesInteractor,
-            ObtenerLotePorIdInteractor obtenerLotePorIdInteractor,
-            EditarLoteInteractor editarLoteInteractor) {
+                          ObtenerLotePorIdInteractor obtenerLotePorIdInteractor,
+                          EditarLoteInteractor editarLoteInteractor) {
         this.obtenerLotesInteractor = obtenerLotesInteractor;
         this.obtenerLotePorIdInteractor = obtenerLotePorIdInteractor;
         this.editarLoteInteractor = editarLoteInteractor;
@@ -78,7 +78,7 @@ public class LoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<LoteResponse<ObtenerLoteDTO>> consultarLotePorId(@PathVariable UUID id,
-            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                                           @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             LoteIdSuscripcionDTO request = LoteIdSuscripcionDTO.create(id, suscripcionId);
             ObtenerLoteDTO lote = obtenerLotePorIdInteractor.ejecutar(request);
@@ -99,8 +99,8 @@ public class LoteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GenericResponse> editarLote(@PathVariable UUID id,
-            @RequestBody EditarLoteDTO editarLoteDTO,
-            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                      @RequestBody EditarLoteDTO editarLoteDTO,
+                                                      @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             editarLoteDTO.setId(id);
             editarLoteDTO.setSuscripcionId(suscripcionId);

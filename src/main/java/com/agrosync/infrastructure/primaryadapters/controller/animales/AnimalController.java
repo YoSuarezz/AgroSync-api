@@ -73,7 +73,7 @@ public class AnimalController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AnimalResponse<ObtenerAnimalDTO>> consultarAnimalPorId(@PathVariable UUID id,
-                                                                                    @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                                                 @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             AnimalIdSuscripcionDTO request = AnimalIdSuscripcionDTO.create(id, suscripcionId);
             ObtenerAnimalDTO animal = obtenerAnimalPorIdInteractor.ejecutar(request);

@@ -33,13 +33,13 @@ public class CarteraController {
 
     @GetMapping
     public ResponseEntity<CarteraResponse<PageResponse<ObtenerCarteraDTO>>> consultarCarteras(@RequestParam(defaultValue = "0") int page,
-                                                                                             @RequestParam(defaultValue = "10") int size,
-                                                                                             @RequestParam(defaultValue = "usuario.nombre") String sortBy,
-                                                                                             @RequestParam(defaultValue = "ASC") String sortDirection,
-                                                                                             @RequestParam(required = false) UUID usuarioId,
-                                                                                             @RequestParam(required = false) String tipoUsuario,
-                                                                                             @RequestParam(required = false) String saldoActual,
-                                                                                             @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                                                              @RequestParam(defaultValue = "10") int size,
+                                                                                              @RequestParam(defaultValue = "usuario.nombre") String sortBy,
+                                                                                              @RequestParam(defaultValue = "ASC") String sortDirection,
+                                                                                              @RequestParam(required = false) UUID usuarioId,
+                                                                                              @RequestParam(required = false) String tipoUsuario,
+                                                                                              @RequestParam(required = false) String saldoActual,
+                                                                                              @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
 
             // Convertir String a TipoUsuarioEnum si no es null

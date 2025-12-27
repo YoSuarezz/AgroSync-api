@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 
-@Mapper(uses = {CobroDTOMapper.class, UsuarioDTOMapper.class})
+@Mapper
 public interface CuentaCobrarDTOMapper {
 
     CuentaCobrarDTOMapper INSTANCE = Mappers.getMapper(CuentaCobrarDTOMapper.class);

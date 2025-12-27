@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(uses = {UsuarioDTOMapper.class})
+@Mapper
 public interface CarteraDTOMapper {
 
     CarteraDTOMapper INSTANCE = Mappers.getMapper(CarteraDTOMapper.class);

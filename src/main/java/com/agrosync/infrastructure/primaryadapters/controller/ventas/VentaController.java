@@ -29,10 +29,10 @@ public class VentaController {
     private final EditarVentaInteractor editarVentaInteractor;
 
     public VentaController(RegistrarNuevaVentaInteractor registrarNuevaVentaInteractor,
-            ObtenerVentasInteractor obtenerVentasInteractor,
-            ObtenerVentaPorIdInteractor obtenerVentaPorIdInteractor,
-            AnularVentaInteractor anularVentaInteractor,
-            EditarVentaInteractor editarVentaInteractor) {
+                           ObtenerVentasInteractor obtenerVentasInteractor,
+                           ObtenerVentaPorIdInteractor obtenerVentaPorIdInteractor,
+                           AnularVentaInteractor anularVentaInteractor,
+                           EditarVentaInteractor editarVentaInteractor) {
         this.registrarNuevaVentaInteractor = registrarNuevaVentaInteractor;
         this.obtenerVentasInteractor = obtenerVentasInteractor;
         this.obtenerVentaPorIdInteractor = obtenerVentaPorIdInteractor;
@@ -42,7 +42,7 @@ public class VentaController {
 
     @PostMapping
     public ResponseEntity<GenericResponse> registrarVenta(@RequestBody RegistrarNuevaVentaDTO venta,
-            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                          @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             venta.setSuscripcionId(suscripcionId);
             registrarNuevaVentaInteractor.ejecutar(venta);
@@ -93,7 +93,7 @@ public class VentaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<VentaResponse<ObtenerVentaDetalleDTO>> consultarVentaPorId(@PathVariable UUID id,
-            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                                                     @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             VentaIdSuscripcionDTO request = VentaIdSuscripcionDTO.create(id, suscripcionId);
             ObtenerVentaDetalleDTO venta = obtenerVentaPorIdInteractor.ejecutar(request);
@@ -112,8 +112,8 @@ public class VentaController {
 
     @PutMapping("/{id}/anular")
     public ResponseEntity<GenericResponse> anularVenta(@PathVariable UUID id,
-            @RequestBody AnularVentaDTO anularVentaDTO,
-            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                       @RequestBody AnularVentaDTO anularVentaDTO,
+                                                       @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             anularVentaDTO.setVentaId(id);
             anularVentaDTO.setSuscripcionId(suscripcionId);
@@ -129,8 +129,8 @@ public class VentaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GenericResponse> editarVenta(@PathVariable UUID id,
-            @RequestBody EditarVentaDTO editarVentaDTO,
-            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                       @RequestBody EditarVentaDTO editarVentaDTO,
+                                                       @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             editarVentaDTO.setVentaId(id);
             editarVentaDTO.setSuscripcionId(suscripcionId);

@@ -4,7 +4,6 @@ import com.agrosync.application.primaryports.dto.usuarios.request.*;
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDTO;
 import com.agrosync.application.primaryports.dto.usuarios.response.ObtenerUsuarioDetalladoDTO;
 import com.agrosync.application.primaryports.interactor.usuarios.*;
-import com.agrosync.application.usecase.usuarios.ObtenerUsuarioDetallado;
 import com.agrosync.domain.enums.usuarios.TipoUsuarioEnum;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
@@ -30,7 +29,7 @@ public class UsuarioController {
     private final ActualizarUsuarioInteractor actualizarUsuarioInteractor;
     private final ObtenerUsuarioDetalladoInteractor obtenerUsuarioDetalladoInteractor;
 
-    public UsuarioController(RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor, ObtenerUsuariosInteractor obtenerUsuarioInteractor, ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor, ActualizarUsuarioInteractor actualizarUsuarioInteractor, ObtenerUsuarioDetallado obtenerUsuarioDetallado, ObtenerUsuarioDetalladoInteractor obtenerUsuarioDetalladoInteractor) {
+    public UsuarioController(RegistrarNuevoUsuarioInteractor registrarNuevoUsuarioInteractor, ObtenerUsuariosInteractor obtenerUsuarioInteractor, ObtenerUsuarioPorIdInteractor obtenerUsuarioPorIdInteractor, ActualizarUsuarioInteractor actualizarUsuarioInteractor, ObtenerUsuarioDetalladoInteractor obtenerUsuarioDetalladoInteractor) {
         this.registrarNuevoUsuarioInteractor = registrarNuevoUsuarioInteractor;
         this.obtenerUsuarioInteractor = obtenerUsuarioInteractor;
         this.obtenerUsuarioPorIdInteractor = obtenerUsuarioPorIdInteractor;
@@ -40,7 +39,7 @@ public class UsuarioController {
 
     @PostMapping()
     public ResponseEntity<GenericResponse> registrarUsuario(@RequestBody RegistrarNuevoUsuarioDTO usuario,
-                                                           @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                            @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
         try {
             usuario.setSuscripcionId(suscripcionId);
             registrarNuevoUsuarioInteractor.ejecutar(usuario);
@@ -55,13 +54,13 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<UsuarioResponse<PageResponse<ObtenerUsuarioDTO>>> consultarUsuarios(@RequestParam(defaultValue = "0") int page,
-                                                                                                     @RequestParam(defaultValue = "10") int size,
-                                                                                                     @RequestParam(defaultValue = "nombre") String sortBy,
-                                                                                                     @RequestParam(defaultValue = "ASC") String sortDirection,
-                                                                                                     @RequestParam(required = false) String nombre,
-                                                                                                     @RequestParam(required = false) String telefono,
-                                                                                                     @RequestParam(required = false, name = "tipoUsuario") TipoUsuarioEnum tipoUsuario,
-                                                                                                     @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                                                              @RequestParam(defaultValue = "10") int size,
+                                                                                              @RequestParam(defaultValue = "nombre") String sortBy,
+                                                                                              @RequestParam(defaultValue = "ASC") String sortDirection,
+                                                                                              @RequestParam(required = false) String nombre,
+                                                                                              @RequestParam(required = false) String telefono,
+                                                                                              @RequestParam(required = false, name = "tipoUsuario") TipoUsuarioEnum tipoUsuario,
+                                                                                              @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
             ObtenerUsuarioDTO filtro = ObtenerUsuarioDTO.create(null, nombre, telefono, tipoUsuario);
@@ -85,7 +84,7 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponse<ObtenerUsuarioDTO>> consultarUsuarioPorId(@PathVariable UUID id,
-                                                                                   @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+                                                                                    @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
 
         try {
             UsuarioIdSuscripcionDTO request = UsuarioIdSuscripcionDTO.create(id, suscripcionId);
@@ -124,9 +123,9 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse<ObtenerUsuarioDetalladoDTO>> consultarUsuarioDetallado(
             @PathVariable UUID id,
             @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId,
-            @RequestHeader LocalDate fechaInicio,
-            @RequestHeader LocalDate fechaFin,
-            @RequestHeader boolean saldoPendiente) {
+            @RequestParam(required = false) LocalDate fechaInicio,
+            @RequestParam(required = false) LocalDate fechaFin,
+            @RequestParam boolean saldoPendiente) {
 
         try {
             UsuarioDetalladoFiltroDTO request = UsuarioDetalladoFiltroDTO.create(fechaInicio, fechaFin, saldoPendiente, id, suscripcionId);
@@ -138,6 +137,7 @@ public class UsuarioController {
             var usuarioResponse = UsuarioResponse.<ObtenerUsuarioDetalladoDTO>build(List.of(excepcion.getMensajeUsuario()), null);
             return GenerateResponse.generateBadRequestResponseWithData(usuarioResponse);
         } catch (final Exception excepcion) {
+            excepcion.printStackTrace(); // 👈 CLAVE
             var userMessage = "Error al consultar el detalle de usuario";
             var usuarioResponse = UsuarioResponse.<ObtenerUsuarioDetalladoDTO>build(List.of(userMessage), null);
             return new ResponseEntity<>(usuarioResponse, HttpStatus.INTERNAL_SERVER_ERROR);

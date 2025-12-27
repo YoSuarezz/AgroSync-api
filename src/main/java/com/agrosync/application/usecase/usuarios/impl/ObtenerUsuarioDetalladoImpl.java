@@ -97,10 +97,10 @@ public class ObtenerUsuarioDetalladoImpl implements ObtenerUsuarioDetallado {
             specs.add((root, query, cb) -> cb.equal(root.get("suscripcion").get("id"), filtro.getSuscripcionId()));
         }
         if (filtro.getFechaInicio() != null) {
-            specs.add((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("fechaVenta"), filtro.getFechaInicio()));
+            specs.add((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("fechaCompra"), filtro.getFechaInicio()));
         }
         if (filtro.getFechaFin() != null) {
-            specs.add((root, query, cb) -> cb.lessThanOrEqualTo(root.get("fechaVenta"), filtro.getFechaFin()));
+            specs.add((root, query, cb) -> cb.lessThanOrEqualTo(root.get("fechaCompra"), filtro.getFechaFin()));
         }
         if (!UUIDHelper.isDefault(filtro.getUsuarioId())) {
             specs.add((root, query, cb) -> cb.equal(root.get("proveedor").get("id"), filtro.getUsuarioId()));

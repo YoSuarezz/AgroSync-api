@@ -17,7 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(uses = {LoteDTOMapper.class, UsuarioDTOMapper.class, CuentaPagarDTOMapper.class})
+@Mapper
 public interface CompraDTOMapper {
 
     CompraDTOMapper INSTANCE = Mappers.getMapper(CompraDTOMapper.class);

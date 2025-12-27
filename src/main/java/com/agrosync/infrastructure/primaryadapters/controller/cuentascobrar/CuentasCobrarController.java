@@ -45,12 +45,12 @@ public class CuentasCobrarController {
     private final ObtenerCobrosInteractor obtenerCobrosInteractor;
 
     public CuentasCobrarController(ObtenerCuentasCobrarInteractor obtenerCuentasCobrarInteractor,
-            ObtenerCuentaCobrarPorIdInteractor obtenerCuentaCobrarPorIdInteractor,
-            RegistrarNuevoCobroInteractor registrarNuevoCobroInteractor,
-            AnularCobroInteractor anularCobroInteractor,
-            ObtenerCobrosPorCuentaCobrarInteractor obtenerCobrosPorCuentaCobrarInteractor,
-            ObtenerCobroPorIdInteractor obtenerCobroPorIdInteractor,
-            ObtenerCobrosInteractor obtenerCobrosInteractor) {
+                                   ObtenerCuentaCobrarPorIdInteractor obtenerCuentaCobrarPorIdInteractor,
+                                   RegistrarNuevoCobroInteractor registrarNuevoCobroInteractor,
+                                   AnularCobroInteractor anularCobroInteractor,
+                                   ObtenerCobrosPorCuentaCobrarInteractor obtenerCobrosPorCuentaCobrarInteractor,
+                                   ObtenerCobroPorIdInteractor obtenerCobroPorIdInteractor,
+                                   ObtenerCobrosInteractor obtenerCobrosInteractor) {
         this.obtenerCuentasCobrarInteractor = obtenerCuentasCobrarInteractor;
         this.obtenerCuentaCobrarPorIdInteractor = obtenerCuentaCobrarPorIdInteractor;
         this.registrarNuevoCobroInteractor = registrarNuevoCobroInteractor;
