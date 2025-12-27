@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "cuenta_pagar")
+@Table(name = "cuenta_pagar", schema = "agryxo")
 public class CuentaPagarEntity extends Auditoria {
 
     @Id
