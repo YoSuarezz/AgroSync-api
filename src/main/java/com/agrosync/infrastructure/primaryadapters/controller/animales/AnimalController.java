@@ -3,12 +3,15 @@ package com.agrosync.infrastructure.primaryadapters.controller.animales;
 import com.agrosync.application.primaryports.dto.animales.request.AnimalIdSuscripcionDTO;
 import com.agrosync.application.primaryports.dto.animales.request.AnimalPageDTO;
 import com.agrosync.application.primaryports.dto.animales.response.ObtenerAnimalDTO;
+import com.agrosync.application.primaryports.dto.animales.request.ReportarMuerteAnimalDTO;
 import com.agrosync.domain.enums.animales.EstadoAnimalEnum;
 import com.agrosync.domain.enums.animales.SexoEnum;
 import com.agrosync.application.primaryports.interactor.animales.ObtenerAnimalPorIdInteractor;
 import com.agrosync.application.primaryports.interactor.animales.ObtenerAnimalesInteractor;
+import com.agrosync.application.primaryports.interactor.animales.ReportarMuerteAnimalInteractor;
 import com.agrosync.crosscutting.exception.custom.AgroSyncException;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.GenerateResponse;
+import com.agrosync.infrastructure.primaryadapters.adapter.response.GenericResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.PageResponse;
 import com.agrosync.infrastructure.primaryadapters.adapter.response.animales.AnimalResponse;
 import org.springframework.data.domain.Page;
@@ -26,11 +29,14 @@ public class AnimalController {
 
     private final ObtenerAnimalesInteractor obtenerAnimalesInteractor;
     private final ObtenerAnimalPorIdInteractor obtenerAnimalPorIdInteractor;
+    private final ReportarMuerteAnimalInteractor reportarMuerteAnimalInteractor;
 
     public AnimalController(ObtenerAnimalesInteractor obtenerAnimalesInteractor,
-                            ObtenerAnimalPorIdInteractor obtenerAnimalPorIdInteractor) {
+                            ObtenerAnimalPorIdInteractor obtenerAnimalPorIdInteractor,
+                            ReportarMuerteAnimalInteractor reportarMuerteAnimalInteractor) {
         this.obtenerAnimalesInteractor = obtenerAnimalesInteractor;
         this.obtenerAnimalPorIdInteractor = obtenerAnimalPorIdInteractor;
+        this.reportarMuerteAnimalInteractor = reportarMuerteAnimalInteractor;
     }
 
 
@@ -81,6 +87,21 @@ public class AnimalController {
             var userMessage = "Error al consultar el Animal";
             var animalResponse = AnimalResponse.<ObtenerAnimalDTO>build(List.of(userMessage), null);
             return new ResponseEntity<>(animalResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}/muerte")
+    public ResponseEntity<GenericResponse> reportarMuerteAnimal(@PathVariable UUID id,
+                                                                @RequestHeader(value = "x-suscripcion-id", required = false) UUID suscripcionId) {
+        try {
+            var request = ReportarMuerteAnimalDTO.create(id, suscripcionId);
+            reportarMuerteAnimalInteractor.ejecutar(request);
+            return GenerateResponse.generateSuccessResponse(List.of("El animal fue marcado como muerto correctamente"));
+        } catch (final AgroSyncException excepcion) {
+            return GenerateResponse.generateBadRequestResponse(List.of(excepcion.getMensajeUsuario()));
+        } catch (final Exception excepcion) {
+            var userMessage = "Error al actualizar el estado del animal";
+            return new ResponseEntity<>(GenericResponse.build(List.of(userMessage)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
