@@ -1,6 +1,7 @@
 package com.agrosync.application.primaryports.mapper.animales;
 
 import com.agrosync.application.primaryports.dto.animales.request.RegistrarNuevoAnimalDTO;
+import com.agrosync.application.primaryports.dto.animales.request.ReportarMuerteAnimalDTO;
 import com.agrosync.application.primaryports.dto.animales.response.ObtenerAnimalDTO;
 import com.agrosync.domain.animales.AnimalDomain;
 import org.mapstruct.Mapper;
@@ -16,6 +17,8 @@ public interface AnimalDTOMapper {
     AnimalDTOMapper INSTANCE = Mappers.getMapper(AnimalDTOMapper.class);
 
     AnimalDomain toDomain(RegistrarNuevoAnimalDTO dto);
+
+    AnimalDomain toDomain(ReportarMuerteAnimalDTO dto);
 
     ObtenerAnimalDTO toObtenerDTO(AnimalDomain domain);
 
