@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "lote")
+@Table(name = "lote", schema = "agryxo")
 public class LoteEntity extends Auditoria {
 
     @Id

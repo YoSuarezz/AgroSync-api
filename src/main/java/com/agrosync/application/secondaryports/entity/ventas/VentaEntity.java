@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "venta")
+@Table(name = "venta", schema = "agryxo")
 public class VentaEntity extends Auditoria {
 
     @Id

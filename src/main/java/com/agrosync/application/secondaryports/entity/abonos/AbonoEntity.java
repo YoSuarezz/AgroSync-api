@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "abono")
+@Table(name = "abono", schema = "agryxo")
 public class AbonoEntity extends Auditoria {
 
     @Id
