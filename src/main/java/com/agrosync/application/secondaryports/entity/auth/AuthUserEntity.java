@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "auth_user")
+@Table(name = "auth_user", schema = "agryxo")
 public class AuthUserEntity {
 
     @Id

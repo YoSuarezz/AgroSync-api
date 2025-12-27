@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "cartera")
+@Table(name = "cartera", schema = "agryxo")
 public class CarteraEntity extends Auditoria {
 
     @Id

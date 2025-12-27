@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "animal")
+@Table(name = "animal", schema = "agryxo")
 public class AnimalEntity extends Auditoria {
 
     @Id
