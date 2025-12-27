@@ -1,6 +1,8 @@
 package com.agrosync.application.primaryports.mapper.cuentascobrar;
 
 import com.agrosync.application.primaryports.dto.cuentascobrar.response.ObtenerCuentaCobrarDTO;
+import com.agrosync.application.primaryports.mapper.cobros.CobroDTOMapper;
+import com.agrosync.application.primaryports.mapper.usuarios.UsuarioDTOMapper;
 import com.agrosync.domain.cuentascobrar.CuentaCobrarDomain;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

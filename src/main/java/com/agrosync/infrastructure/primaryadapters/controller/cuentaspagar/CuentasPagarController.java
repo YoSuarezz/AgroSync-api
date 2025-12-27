@@ -45,12 +45,12 @@ public class CuentasPagarController {
     private final ObtenerAbonosInteractor obtenerAbonosInteractor;
 
     public CuentasPagarController(ObtenerCuentasPagarInteractor obtenerCuentasPagarInteractor,
-            ObtenerCuentaPagarPorIdInteractor obtenerCuentaPagarPorIdInteractor,
-            RegistrarNuevoAbonoInteractor registrarNuevoAbonoInteractor,
-            AnularAbonoInteractor anularAbonoInteractor,
-            ObtenerAbonosPorCuentaPagarInteractor obtenerAbonosPorCuentaPagarInteractor,
-            ObtenerAbonoPorIdInteractor obtenerAbonoPorIdInteractor,
-            ObtenerAbonosInteractor obtenerAbonosInteractor) {
+                                  ObtenerCuentaPagarPorIdInteractor obtenerCuentaPagarPorIdInteractor,
+                                  RegistrarNuevoAbonoInteractor registrarNuevoAbonoInteractor,
+                                  AnularAbonoInteractor anularAbonoInteractor,
+                                  ObtenerAbonosPorCuentaPagarInteractor obtenerAbonosPorCuentaPagarInteractor,
+                                  ObtenerAbonoPorIdInteractor obtenerAbonoPorIdInteractor,
+                                  ObtenerAbonosInteractor obtenerAbonosInteractor) {
         this.obtenerCuentasPagarInteractor = obtenerCuentasPagarInteractor;
         this.obtenerCuentaPagarPorIdInteractor = obtenerCuentaPagarPorIdInteractor;
         this.registrarNuevoAbonoInteractor = registrarNuevoAbonoInteractor;

@@ -65,11 +65,11 @@ public class SuscripcionController {
     @GetMapping
     @PreAuthorize("hasRole('SUPER_ADMINISTRADOR')")
     public ResponseEntity<ObtenerSuscripcionesResponse> consultarSuscripciones(@RequestParam(defaultValue = "0") int page,
-                                                                              @RequestParam(defaultValue = "10") int size,
-                                                                              @RequestParam(defaultValue = "nombreEmpresa") String sortBy,
-                                                                              @RequestParam(defaultValue = "ASC") String sortDirection,
-                                                                              @RequestParam(name = "nombreEmpresa", required = false) String nombreEmpresa,
-                                                                              @RequestParam(name = "nit", required = false) String nit) {
+                                                                               @RequestParam(defaultValue = "10") int size,
+                                                                               @RequestParam(defaultValue = "nombreEmpresa") String sortBy,
+                                                                               @RequestParam(defaultValue = "ASC") String sortDirection,
+                                                                               @RequestParam(name = "nombreEmpresa", required = false) String nombreEmpresa,
+                                                                               @RequestParam(name = "nit", required = false) String nit) {
         try {
             SuscripcionPageDTO suscripcionPageDTO = SuscripcionPageDTO.create(page, size, sortBy, sortDirection, nombreEmpresa, nit);
             PageResponse<ObtenerSuscripcionDTO> resultados = obtenerSuscripcionesInteractor.ejecutar(suscripcionPageDTO);
